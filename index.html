@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zuzia S. - Hub lekcyjny</title>
+<link rel="icon" href="data:image/webp;base64,UklGRioEAABXRUJQVlA4IB4EAABwEwCdASpgAGAAPmEwk0akIyGhJzYKkIAMCWIA1efPKn+08Tsa3sNnGcqr6ivMB5wHou9AD+x9QV6Dvlv+yt+0X7L+05SDMgLfTlA8ANJxMv8jGV32GSyPHEOAlRY2f8F5w4I3Jbp20M53YeC8HTsxcHImBjimv8RlMOQns7dgYDgM8ZiK1xIKqOZbKB2FWJTiPZD+4a66c70udutYv//2vm0MAAD+/NlKcJtOcdUOgvwH9O0w0/l5fBeJY/hyl/v5zPyqWk9jRXt7qRh/+P/aMgieer5eW/zmA7EnJN8HIf+PSocGgCLXeseADbIxAB2LnOTbx7eymA6LAdaoq4/nvhku0AfRitpPZfNPttOZpdORk92p4VOaxPI8X28onvAxqzGYo/RflLalhOCNvb8BfCASKZFCCsN/8xhvy/hm+X1f//gm1tB0yyo+zfNO5c2LVer5erHWPGLcLpVD0UZWlVBTUELOo7BY2DJdzW/Zu86FA6ENxFD8MfGVwjqJ0TbQ1uINjtbs7nfn+l1AF0h05wUtK4x4rzH+PNwo0cb+U9P5C7lDQgXx8AZvzPFRYcpabn2E+QxkjjjZfumP+38EZo6XGhMhqKt8Xo0/6/34ICZMAE04yFxW86kluh2ZeFN9htb/46gKOsbrn1iGisACgU+vdf+ufdVoHvl8+aQXNxImYjOMppH/E6cMGvA9FLy3MBPSIb1NSc0bSUislOje2k+iaJ5PnUnHdmQGXKxMxn//LI4BrxCPtfLPF9nOMOP1Z/KKPbK/4/B5U1Du7FH28Y2VXGlxk/qbYvtjNk3YrPDJMl13/8ZXIqsA+nV4Aanrdb9vJO+nPRbvf4/7d7HhGzlWGsCO0/8hEkEappi6ysT0v8LiTN3RjBy9KNxKlf7hwoD3CEd6huAfWfyjQB0MHS6yuPjdQ7bUG0klxxTh7ZAtEwJtGVW5GLDPjDOwqzgGubvQptT9SA0cGk2SMRFU9Ua91qMEcy04IjEXJ/T7UibjuX/nFWxNwEdgi9wIWKLYVyaQ03hHRv9fe97k4ZKR7h12kEBE935mFAiyUdcmn6Oukun08J5T13h3bJJ8TexHvAgwJAmmodAcpa+u/dTwpwrJYpVhXtizzzh7BpQ2jY+pc37Gbs1Mbn2RPb8IoblO/nN3Y+sCPw6ZOjdR7KuZtBwf43FDKyj9kDWFz+s+iCkqI8T+MyatoE45B/I0gg9W+/aZn0gBvrnqZtJ3ASivhvNxohVmeS9gvFcfOsxElvBh/DCjyZoRx4OgiHElRjWfgUJk/zKNIuhXz8cOPtmROHbImthN11FfworqZlf3ZUSHhWGDicp/aJxZzayJx76efgbq871MZajueWIAMncF5kkDIpedTs5Xi+mJTlOjPDr1A/qkxgwzap1/QEAA">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /*
+    Karta jako "1:1" ze wzorca newslettera (~/.claude/commands/newsletter-template.html):
+    biala karta z gornym gradientowym paskiem niebiesko-czerwonym, naglowek z
+    logo/nazwa domeny + tagline kursywa Cormorant Garamond, sekcje z lewym
+    czerwonym akcentem, karta Facebooka i ciemna stopka - te same elementy,
+    ta sama paleta i fonty co w mailu, zeby uczen rozpoznal marke od razu.
+  */
+  :root {
+    color-scheme: light;
+    --primary: #1e5aae;
+    --primary-dark: #164a8f;
+    --primary-light: #e9f0fa;
+    --accent: #ee4352;
+    --accent-dark: #d63446;
+    --background: #fbfaf8;
+    --surface: #ffffff;
+    --ink: #16181d;
+    --muted: #67707e;
+    --divider: #e8e6e1;
+    --deep: #0e1524;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    margin: 0; padding: 24px 12px 40px; color: var(--ink); background: var(--background);
+    display: flex; justify-content: center;
+  }
+  .card {
+    width: 100%; max-width: 600px; background: var(--surface); border-radius: 16px;
+    overflow: hidden; border: 1px solid var(--divider);
+    box-shadow: 0 12px 32px -12px rgba(14,21,36,0.08);
+  }
+  .card-bar { height: 6px; background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%); }
+  header {
+    text-align: center; padding: 32px 40px 24px; border-bottom: 1px solid var(--divider);
+  }
+  header img { width: 40px; height: 40px; border-radius: 10px; margin-bottom: 10px; }
+  header .brand-name {
+    font-size: 22px; font-weight: 800; color: var(--primary); letter-spacing: -.5px;
+  }
+  header .brand-name .dot { color: var(--accent); }
+  header .tagline {
+    font-family: "Cormorant Garamond", Georgia, serif; font-style: italic;
+    font-size: 15px; color: var(--muted); margin-top: 4px;
+  }
+  main { padding: 32px 40px 8px; }
+  h1 { font-size: 18px; font-weight: 600; margin: 0 0 24px; color: var(--ink); }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 8px; }
+  /* Na telefonie Unity ladauja pod Notatkami, nie obok - dwie kolumny po 200px
+     robilyby z etykiet podrecznika slupek pojedynczych liter. */
+  @media (max-width: 520px) { .cols { grid-template-columns: 1fr; gap: 20px; } }
+  h2 {
+    font-size: 16px; font-weight: 700; color: var(--primary); margin: 0 0 14px;
+    border-left: 3px solid var(--accent); padding-left: 10px;
+  }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { margin: 0 0 10px; }
+  /* Pigulki jak przyciski CTA w newsletterze (border-radius:50px + biale tlo +
+     kolorowa ramka) zamiast plaskich linkow na jednolitym tle - Notatki po
+     niebiesku (jak karta "Teksty na lekcje"), Podrecznik po czarnemu (jak
+     karta "Sklep"), zeby dwie kolumny odrozniac tak samo jak w mailu. */
+  a.item {
+    display: block; text-align: center; padding: 11px 18px; background: var(--surface);
+    border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 13px;
+    transition: background .15s, color .15s;
+  }
+  .col-notatki a.item { border: 1px solid var(--primary); color: var(--primary-dark); }
+  .col-notatki a.item:hover { background: var(--primary); color: #fff; }
+  .col-podrecznik a.item { border: 1px solid var(--ink); color: var(--ink); }
+  .col-podrecznik a.item:hover { background: var(--ink); color: #fff; }
+  .sub { display: block; font-weight: 400; font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .col-podrecznik a.item:hover .sub { color: #d8dee9; }
+  .empty { text-align: center; padding: 11px 18px; border: 1px dashed var(--divider); border-radius: 50px; color: #9aa3b2; font-size: 13px; }
+  .fb-card {
+    margin: 28px 0 8px; background: var(--background); border: 1px solid var(--divider);
+    border-radius: 12px; padding: 20px; text-align: center;
+  }
+  .fb-card p.title { margin: 0 0 6px; font-weight: 700; font-size: 15px; color: var(--ink); }
+  .fb-card p.desc { margin: 0 0 16px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .btn {
+    display: inline-block; padding: 10px 22px; border-radius: 50px; text-decoration: none;
+    font-weight: 700; font-size: 13px; color: #fff;
+  }
+  .btn-primary { background: var(--primary); }
+  .btn-primary:hover { background: var(--primary-dark); }
+  footer {
+    background: var(--deep); padding: 28px 40px; text-align: center; color: #9aa3b2; font-size: 13px;
+  }
+  footer .site {
+    font-family: "Plus Jakarta Sans", Arial, sans-serif; font-weight: 700; color: #fff; font-size: 15px; margin: 0 0 12px;
+  }
+  footer .site .dot { color: var(--accent); }
+  footer .desc { margin: 0 0 20px; color: #9aa3b2; }
+  footer .www {
+    display: inline-block; margin-top: 4px; background: var(--primary); color: #fff;
+    text-decoration: none; font-weight: 700; font-size: 13px; padding: 10px 22px; border-radius: 50px;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-bar"></div>
+  <header>
+    <img src="data:image/webp;base64,UklGRioEAABXRUJQVlA4IB4EAABwEwCdASpgAGAAPmEwk0akIyGhJzYKkIAMCWIA1efPKn+08Tsa3sNnGcqr6ivMB5wHou9AD+x9QV6Dvlv+yt+0X7L+05SDMgLfTlA8ANJxMv8jGV32GSyPHEOAlRY2f8F5w4I3Jbp20M53YeC8HTsxcHImBjimv8RlMOQns7dgYDgM8ZiK1xIKqOZbKB2FWJTiPZD+4a66c70udutYv//2vm0MAAD+/NlKcJtOcdUOgvwH9O0w0/l5fBeJY/hyl/v5zPyqWk9jRXt7qRh/+P/aMgieer5eW/zmA7EnJN8HIf+PSocGgCLXeseADbIxAB2LnOTbx7eymA6LAdaoq4/nvhku0AfRitpPZfNPttOZpdORk92p4VOaxPI8X28onvAxqzGYo/RflLalhOCNvb8BfCASKZFCCsN/8xhvy/hm+X1f//gm1tB0yyo+zfNO5c2LVer5erHWPGLcLpVD0UZWlVBTUELOo7BY2DJdzW/Zu86FA6ENxFD8MfGVwjqJ0TbQ1uINjtbs7nfn+l1AF0h05wUtK4x4rzH+PNwo0cb+U9P5C7lDQgXx8AZvzPFRYcpabn2E+QxkjjjZfumP+38EZo6XGhMhqKt8Xo0/6/34ICZMAE04yFxW86kluh2ZeFN9htb/46gKOsbrn1iGisACgU+vdf+ufdVoHvl8+aQXNxImYjOMppH/E6cMGvA9FLy3MBPSIb1NSc0bSUislOje2k+iaJ5PnUnHdmQGXKxMxn//LI4BrxCPtfLPF9nOMOP1Z/KKPbK/4/B5U1Du7FH28Y2VXGlxk/qbYvtjNk3YrPDJMl13/8ZXIqsA+nV4Aanrdb9vJO+nPRbvf4/7d7HhGzlWGsCO0/8hEkEappi6ysT0v8LiTN3RjBy9KNxKlf7hwoD3CEd6huAfWfyjQB0MHS6yuPjdQ7bUG0klxxTh7ZAtEwJtGVW5GLDPjDOwqzgGubvQptT9SA0cGk2SMRFU9Ua91qMEcy04IjEXJ/T7UibjuX/nFWxNwEdgi9wIWKLYVyaQ03hHRv9fe97k4ZKR7h12kEBE935mFAiyUdcmn6Oukun08J5T13h3bJJ8TexHvAgwJAmmodAcpa+u/dTwpwrJYpVhXtizzzh7BpQ2jY+pc37Gbs1Mbn2RPb8IoblO/nN3Y+sCPw6ZOjdR7KuZtBwf43FDKyj9kDWFz+s+iCkqI8T+MyatoE45B/I0gg9W+/aZn0gBvrnqZtJ3ASivhvNxohVmeS9gvFcfOsxElvBh/DCjyZoRx4OgiHElRjWfgUJk/zKNIuhXz8cOPtmROHbImthN11FfworqZlf3ZUSHhWGDicp/aJxZzayJx76efgbq871MZajueWIAMncF5kkDIpedTs5Xi+mJTlOjPDr1A/qkxgwzap1/QEAA" alt="poprostuangielskizgrzechem logo">
+    <div class="brand-name">poprostuangielskizgrzechem<span class="dot">.pl</span></div>
+    <div class="tagline">Baza wiedzy ucznia</div>
+  </header>
+  <main>
+    <h1>Zuzia S.</h1>
+    <div class="cols">
+      <section class="col-notatki">
+        <h2>Notatki</h2>
+        <ul>
+      <li><a class="item" href="2026-09/">Wrzesień 2026</a></li>
+        </ul>
+      </section>
+      <section class="col-podrecznik">
+        <h2>Podręcznik</h2>
+        <ul>
+      <li class="empty">Jeszcze nic tu nie ma</li>
+        </ul>
+      </section>
+    </div>
+    <div class="fb-card">
+      <p class="title">Bądźmy w kontakcie na Facebooku! 💙</p>
+      <p class="desc">Wpadnij na profil po codzienne dawki językowe, materiały i kulisy tworzenia nowych produktów.</p>
+      <a class="btn btn-primary" href="https://www.facebook.com/poprostuangielskizgrzechem" target="_blank" rel="noopener">Zaobserwuj na Facebooku &rarr;</a>
+    </div>
+  </main>
+  <footer>
+    <p class="site">poprostuangielskizgrzechem<span class="dot">.pl</span></p>
+    <p class="desc">Autorskie materiały dydaktyczne, testy i narzędzia do nauki języka angielskiego.</p>
+    <a class="www" href="https://poprostuangielskizgrzechem.pl" target="_blank" rel="noopener">Strona WWW &rarr;</a>
+  </footer>
+</div>
+</body>
+</html>
