@@ -5663,7 +5663,8 @@ video {
                 var wordBox = (ex.wordBox && ex.wordBox.length)
                     ? '<div class="hub-ex-box">' + ex.wordBox.map(function (w) { return '<span>' + escapeHtml(w) + '</span>'; }).join('') + '</div>'
                     : '';
-                return '<details class="hub-lesson-group" open>' +
+                // Rozwiniete tylko pierwsze cwiczenie - cala lista naraz przytlacza.
+                return '<details class="hub-lesson-group"' + (exIdx === 0 ? ' open' : '') + '>' +
                     '<summary class="hub-section-title' + (exIdx === 0 ? ' is-first' : '') + '">' + escapeHtml(ex.title || '') + '</summary>' +
                     (ex.instructions ? '<p class="hub-msg-body" style="margin-bottom:12px">' + escapeHtml(ex.instructions) + '</p>' : '') +
                     wordBox + body +
