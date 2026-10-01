@@ -2748,6 +2748,17 @@ video {
                         <p class="hub-share-status" id="hub-verbs-status"></p>
 
                         <div id="hub-verbs-summary" class="hidden"></div>
+
+                        <div class="hub-share hidden" id="hub-verbs-share">
+                            <div class="hub-share-actions">
+                                <button type="button" class="hub-cta hub-cta-alt hidden" id="hub-verbs-share-native">&#128228; Udost&#281;pnij</button>
+                                <a class="hub-cta hub-cta-wa" id="hub-verbs-share-wa" href="#" target="_blank" rel="noopener">&#128172; Wy&#347;lij na WhatsApp</a>
+                                <button type="button" class="hub-cta hub-cta-alt" id="hub-verbs-share-copy">&#128203; Kopiuj tekst</button>
+                                <a class="hub-cta hub-cta-alt" id="hub-verbs-share-mail" href="#">&#9993;&#65039; Wy&#347;lij mailem</a>
+                            </div>
+                            <p class="hub-share-status" id="hub-verbs-share-status"></p>
+                            <textarea class="hub-share-fallback hidden" id="hub-verbs-share-fallback" readonly></textarea>
+                        </div>
                     </div>
 
                     <div class="hub-footer">
@@ -6670,6 +6681,8 @@ video {
             verbChecked = false;
             var summary = el('hub-verbs-summary');
             if (summary) { summary.className = 'hidden'; summary.innerHTML = ''; }
+            verbLastWrong = [];
+            refreshVerbShare();
             if (!verbActive.length) { renderVerbsExhausted(); return; }
             renderVerbs();
         }
@@ -6811,6 +6824,106 @@ video {
                     '. Do poprawy zostaje ' + count(zle.length, 'czasownik', 'czasowniki', 'czasowników') + '.', zle.length > 0);
             }
             verbActive._zle = zle;
+            verbLastWrong = zle.map(function (v) { return v.base; });
+            refreshVerbShare();
+        }
+
+        // Wysylka wyniku rundy (2026-10-01): dostepna od pierwszego "Sprawdz".
+        // Wynik i podejscia liczone tak samo jak w podsumowaniu rundy.
+        var verbLastWrong = [];
+        function buildVerbShareText() {
+            var dobrze = verbHistory.reduce(function (s, r) { return s + r.correct; }, 0);
+            var prob = verbHistory.reduce(function (s, r) { return s + r.total; }, 0);
+            var pct = prob ? Math.round((dobrze / prob) * 100) : 0;
+            var lines = [
+                (HUB.student || 'Uczeń') + ' - ' + (HUB.monthLabel || '') + ', czasowniki nieregularne',
+                '',
+                'Runda: ' + count(verbRoundAll.length, 'czasownik', 'czasowniki', 'czasowników'),
+                'Wynik: ' + dobrze + '/' + prob + ' (' + pct + '% celności)',
+                'Za pierwszym razem: ' + verbFirstTryOk + '/' + verbRoundAll.length,
+                'Podejścia: ' + verbHistory.map(function (r) { return r.attempt + ') ' + r.correct + '/' + r.total; }).join(', ')
+            ];
+            if (verbLastWrong.length) lines.push('Jeszcze do poprawy: ' + verbLastWrong.join(', '));
+            else lines.push('Runda zakończona, wszystko poprawnie.');
+            return lines.join('\n');
+        }
+        function setVerbShareStatus(msg, warn) {
+            var st = el('hub-verbs-share-status');
+            if (!st) return;
+            st.textContent = msg || '';
+            st.classList.toggle('is-warn', !!warn);
+        }
+        function refreshVerbShare() {
+            var panel = el('hub-verbs-share');
+            if (!panel) return;
+            var any = verbHistory.length > 0;
+            panel.classList.toggle('hidden', !any);
+            if (!any) return;
+            var enc = encodeURIComponent(buildVerbShareText());
+            var num = (HUB.teacherWhatsApp || '').replace(/[^0-9]/g, '');
+            var wa = el('hub-verbs-share-wa'), mail = el('hub-verbs-share-mail');
+            if (wa) wa.setAttribute('href', 'https://wa.me/' + num + '?text=' + enc);
+            if (mail) mail.setAttribute('href', 'mailto:?subject=' +
+                encodeURIComponent((HUB.student || '') + ' - czasowniki ' + (HUB.monthLabel || '')) + '&body=' + enc);
+            setVerbShareStatus('', false);
+            var fb = el('hub-verbs-share-fallback');
+            if (fb) fb.classList.add('hidden');
+        }
+        var verbShareWired = false;
+        function wireVerbShare() {
+            if (verbShareWired) return;
+            verbShareWired = true;
+            var nativeBtn = el('hub-verbs-share-native');
+            if (nativeBtn && typeof navigator.share === 'function') {
+                nativeBtn.classList.remove('hidden');
+                nativeBtn.addEventListener('click', function () {
+                    nativeBtn.blur();
+                    try {
+                        navigator.share({ text: buildVerbShareText() }).catch(function () {
+                            setVerbShareStatus('Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj tekst.', false);
+                        });
+                    } catch (e) {
+                        setVerbShareStatus('Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj tekst.', false);
+                    }
+                });
+            }
+            var copyBtn = el('hub-verbs-share-copy');
+            if (!copyBtn) return;
+            copyBtn.addEventListener('click', function () {
+                copyBtn.blur();
+                var text = buildVerbShareText();
+                var fb = el('hub-verbs-share-fallback');
+                function done() {
+                    if (fb) fb.classList.add('hidden');
+                    setVerbShareStatus('Skopiowane. Wklej na WhatsAppie albo gdzie chcesz.', false);
+                }
+                function manual() {
+                    if (!fb) return;
+                    fb.classList.remove('hidden');
+                    fb.value = text;
+                    fb.focus();
+                    fb.select();
+                    setVerbShareStatus('Zaznacz tekst poniżej i skopiuj ręcznie.', true);
+                }
+                function legacy() {
+                    var ok = false;
+                    try {
+                        var ta = document.createElement('textarea');
+                        ta.value = text;
+                        ta.setAttribute('readonly', '');
+                        ta.style.position = 'fixed';
+                        ta.style.opacity = '0';
+                        document.body.appendChild(ta);
+                        ta.select();
+                        ok = document.execCommand('copy');
+                        document.body.removeChild(ta);
+                    } catch (e) { ok = false; }
+                    if (ok) done(); else manual();
+                }
+                if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+                    navigator.clipboard.writeText(text).then(done).catch(legacy);
+                } else legacy();
+            });
         }
 
         function retryWrongVerbs() {
@@ -6920,6 +7033,7 @@ video {
 
             var fresh = el('hub-verbs-new');
             if (fresh) fresh.addEventListener('click', function () { fresh.blur(); startVerbRound(); });
+            wireVerbShare();
 
             var table = el('hub-verbs-table');
             if (table) {
