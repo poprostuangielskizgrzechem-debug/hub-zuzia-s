@@ -314,6 +314,7 @@
 /* FONTS_END */
     </style>
     
+    
     <style>
 /* TW_BUILD_START - generowane przez _tools/build_engine_css.mjs, nie edytuj recznie */
 *, ::before, ::after {
@@ -2550,23 +2551,42 @@ video {
         <!-- === HUB MODULE - END (writing/speaking view) === -->
         <!-- === HUB MODULE - START (exercises view) === -->
         <style>
-            .hub-ex-item { margin: 0 0 12px; line-height: 2.1; }
-            .hub-ex-text { margin: 0 0 12px; line-height: 2.3; font-size: 15.5px; }
-            .hub-ex-num { font-weight: 700; margin-right: 6px; }
+            /* Karty cwiczen - wzor: osobne pliki z testami (future-forms.html) */
+            .hub-ex-card { background: #fff; border: 1px solid var(--hub-line); border-radius: 16px; padding: 18px 20px 16px;
+                margin: 0 0 18px; box-shadow: 0 6px 20px rgba(22,24,29,.05); }
+            .hub-ex-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; list-style: none; }
+            .hub-ex-head::-webkit-details-marker { display: none; }
+            .hub-ex-title { font-family: 'Plus Jakarta Sans', Arial, sans-serif; font-size: 17px; font-weight: 800; color: var(--hub-ink); }
+            .hub-ex-title::before { content: '\25B8'; display: inline-block; margin-right: 8px; color: var(--hub-muted); transition: transform .15s; }
+            .hub-ex-card[open] .hub-ex-title::before { transform: rotate(90deg); }
+            .hub-ex-score { font-size: 13px; font-weight: 700; color: #1e5aae; background: #e9f0fa; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+            .hub-ex-instr { color: var(--hub-muted); font-size: 14px; line-height: 1.5; margin: 10px 0 12px; }
+            .hub-ex-item { padding: 11px 0; border-top: 1px solid var(--hub-line); line-height: 1.9; font-size: 15.5px; }
+            .hub-ex-item:first-of-type { border-top: none; }
+            /* pre-line: "\n" w tekscie pozycji lamie linie (np. punkty polecenia w wypracowaniu) */
+            .hub-ex-text { margin: 0 0 12px; line-height: 2.3; font-size: 15.5px; white-space: pre-line; }
+            .hub-ex-num { font-weight: 700; color: var(--hub-muted); margin-right: 6px; }
             .hub-ex-gapnum { font-weight: 700; margin: 0 3px 0 2px; }
-            .hub-ex-input { border: none; border-bottom: 2px solid #94a3b8; background: transparent; font: inherit; text-align: center; padding: 0 4px; outline: none; max-width: 100%; }
-            .hub-ex-input:focus { border-bottom-color: #2563eb; }
-            .hub-ex-input.is-ok { border-bottom-color: #16a34a; color: #15803d; }
-            .hub-ex-input.is-bad { border-bottom-color: #dc2626; color: #b91c1c; }
-            .hub-ex-key { color: #15803d; font-size: 0.85em; margin-left: 4px; }
-            .hub-ex-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
-            .hub-ex-score { font-weight: 700; }
+            .hub-ex-hint { color: var(--hub-muted); font-size: 0.9em; }
+            .hub-ex-input { border: 1.5px solid #d6d9df; border-radius: 8px; background: #fff; color: var(--hub-ink); font: inherit;
+                padding: 2px 8px; margin: 0 3px; outline: none; max-width: 100%; box-sizing: border-box; }
+            .hub-ex-item .hub-ex-input { max-width: 12em; }
+            .hub-ex-input:focus { border-color: #1e5aae; }
+            .hub-ex-input.is-ok { border-color: #1f9254; background: #eafaf0; color: #15803d; }
+            .hub-ex-input.is-bad { border-color: #ee4352; background: #fdecec; color: #b91c1c; }
+            .hub-ex-key { color: #15803d; font-size: 0.85em; font-weight: 600; margin-left: 4px; }
+            .hub-ex-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: flex-end; margin-top: 12px; }
+            .hub-ex-btn { font: inherit; font-size: 14px; font-weight: 600; border: none; border-radius: 8px; padding: 7px 14px; cursor: pointer;
+                background: #e9f0fa; color: #1e5aae; }
+            .hub-ex-btn:hover { background: #dcebfa; }
+            .hub-ex-btn-main { background: #1e5aae; color: #fff; }
+            .hub-ex-btn-main:hover { background: #1e5aae; opacity: .9; }
             .hub-ex-box { display: flex; flex-wrap: wrap; gap: 6px 14px; border: 1px solid var(--hub-line); border-radius: 10px;
                           padding: 10px 14px; margin: 0 0 14px; font-weight: 600; }
+            .hub-ex-box span { white-space: nowrap; padding: 3px 10px; border: 1px solid #cbd5e1; border-radius: 6px; background: #f8fafc; }
             .hub-ex-choice { display: inline-flex; flex-wrap: wrap; gap: 4px; vertical-align: middle; }
-            .hub-ex-opt { font: inherit; font-size: 14.5px; line-height: 1.35; padding: 2px 9px; border-radius: 8px; cursor: pointer;
-                          border: 1.5px solid #cbd5e1; background: #fff; color: var(--hub-ink); }
-            .hub-ex-opt:hover { border-color: #2563eb; }
+            .hub-ex-opt { font: inherit; font-size: 14.5px; line-height: 1.35; padding: 5px 12px; margin: 2px 0; border-radius: 8px; cursor: pointer; border: 1.5px solid #d6d9df; background: #fff; color: var(--hub-ink); }
+            .hub-ex-opt:hover { border-color: #1e5aae; }
             .hub-ex-opt.is-picked { border-color: #2563eb; background: #eff6ff; font-weight: 700; }
             .hub-ex-opt.is-ok { border-color: #16a34a; background: #f0fdf4; color: #15803d; }
             .hub-ex-opt.is-bad { border-color: #dc2626; background: #fef2f2; color: #b91c1c; text-decoration: line-through; }
@@ -2579,9 +2599,10 @@ video {
             .hub-ex-table .hub-ex-input { width: 100%; min-width: 90px; text-align: left; }
             .hub-ex-img { width: 1%; }
             .hub-ex-img svg { display: block; height: 40px; width: auto; max-width: 64px; box-shadow: 0 0 0 1px #cbd5e1; }
-            .hub-ex-self { margin: 0 0 16px; }
+            .hub-ex-self { padding: 12px 0; border-top: 1px solid var(--hub-line); }
+            .hub-ex-self:first-of-type { border-top: none; }
             .hub-ex-self-q { margin: 0 0 6px; line-height: 1.5; }
-            .hub-ex-selfinput { width: 100%; box-sizing: border-box; font: inherit; padding: 6px 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; outline: none; background: #fff; color: var(--hub-ink); }
+            .hub-ex-selfinput { width: 100%; box-sizing: border-box; font: inherit; padding: 6px 10px; border: 1.5px solid #d6d9df; border-radius: 8px; outline: none; background: #fff; color: var(--hub-ink); }
             .hub-ex-selfinput:focus { border-color: #2563eb; }
             .hub-ex-model { margin-top: 6px; }
             .hub-ex-model summary { cursor: pointer; font-size: 14px; font-weight: 600; color: #2563eb; }
@@ -2605,8 +2626,9 @@ video {
                     <div class="hub-share hidden" id="hub-ex-share-panel">
                         <div class="hub-share-actions">
                             <button type="button" class="hub-cta hub-cta-alt hidden" id="hub-ex-share-native">&#128228; Udost&#281;pnij</button>
-                            <a class="hub-cta hub-cta-wa" id="hub-ex-share-wa" href="#" target="_blank" rel="noopener">&#128172; Wy&#347;lij wyniki na WhatsApp</a>
-                            <button type="button" class="hub-cta hub-cta-alt" id="hub-ex-share-copy">&#128203; Kopiuj wyniki</button>
+                            <a class="hub-cta hub-cta-wa" id="hub-ex-share-wa" href="#" target="_blank" rel="noopener">&#128172; Wy&#347;lij na WhatsApp</a>
+                            <button type="button" class="hub-cta hub-cta-alt" id="hub-ex-share-copy">&#128203; Kopiuj tekst</button>
+                            <a class="hub-cta hub-cta-alt" id="hub-ex-share-mail" href="#">&#9993;&#65039; Wy&#347;lij mailem</a>
                         </div>
                         <p class="hub-share-status" id="hub-ex-share-status"></p>
                         <textarea class="hub-share-fallback hidden" id="hub-ex-share-fallback" readonly></textarea>
@@ -2925,7 +2947,7 @@ video {
         "teacherWhatsApp": "",
         "storageKey": "hub_zuzia-s_2026-09",
         "studentKey": "hub_zuzia-s",
-        "stamp": "aktualizacja po lekcji 1, 27.09.2026",
+        "stamp": "aktualizacja po lekcji 1, 1.10.2026",
         "lastLessonPhrase": "lekcji 1",
         "lessons": [
                 {
@@ -2933,6 +2955,7 @@ video {
                         "dateLabel": "25.09.2026",
                         "categoryKey": "Lekcja 1 (25.09)",
                         "vocabCount": 21,
+                        "extraVocabCount": 0,
                         "topic": "Present Simple i Present Continuous: różnice między czasami, przysłówki częstotliwości, czasowniki statyczne (stative verbs) oraz have to / don't have to"
                 }
         ],
@@ -3723,12 +3746,35 @@ video {
             const orderedSelectedTasks = taskTypes.filter(t => selectedTaskTypes.includes(t.id));
 
             // Intelligent Rotation Helper
-            function pullWordForTask(taskTypeId) {
+            // rejectFn (optional): words it returns true for are skipped while anything else is
+            // available - used by matching rounds to keep look-alike items out of the same round.
+            function pullWordForTask(taskTypeId, rejectFn) {
                 // gap_hint and abcd_gap both render sentenceWithGap - words missing it must be skipped for these tasks
                 const needsGap = (taskTypeId === 'gap_hint' || taskTypeId === 'abcd_gap');
 
                 if (activePoolToDrawFrom.length === 0) {
                     activePoolToDrawFrom = getRotationPool(authorizedPool, 1);
+                }
+
+                if (rejectFn) {
+                    let idx = activePoolToDrawFrom.findIndex(w => !rejectFn(w) && !(globalWordTaskHistory[w.word] || []).includes(taskTypeId));
+                    if (idx === -1) idx = activePoolToDrawFrom.findIndex(w => !rejectFn(w));
+                    let picked = null;
+                    if (idx !== -1) {
+                        picked = activePoolToDrawFrom.splice(idx, 1)[0];
+                    } else {
+                        // Rotation slice holds only look-alikes - reach into the full selected pool instead
+                        const safe = authorizedPool.filter(w => !rejectFn(w));
+                        if (safe.length > 0) picked = safe[Math.floor(Math.random() * safe.length)];
+                    }
+                    if (picked) {
+                        if (!globalWordTaskHistory[picked.word]) globalWordTaskHistory[picked.word] = [];
+                        globalWordTaskHistory[picked.word].push(taskTypeId);
+                        wordsSelectedThisSession.push(picked.word);
+                        return picked;
+                    }
+                    // Tiny vocabulary with nothing but look-alikes: fall through to the normal pick;
+                    // checkMatchingAnswers still accepts visually identical pairs.
                 }
                 if (needsGap && !activePoolToDrawFrom.some(w => !!w.sentenceWithGap)) {
                     // Current rotation slice has no gap-eligible words left - refill from the full authorized pool
@@ -3779,13 +3825,20 @@ video {
                 for (let i = 0; i < needed; i++) {
                     
                     if (taskDef.id.startsWith('match')) {
-                        let pairItems = [
-                            pullWordForTask(taskDef.id), pullWordForTask(taskDef.id), 
-                            pullWordForTask(taskDef.id), pullWordForTask(taskDef.id)
-                        ];
-                        
                         const rightField = taskDef.id === 'match_def' ? 'definition' : 'translation';
-                        
+
+                        // No two items in one round may look alike on screen: same word, same
+                        // translation/definition, or a marked near-synonym (excludeDistractors).
+                        // Otherwise a student can't tell two buttons apart and gets red for a
+                        // visually correct pair (e.g. "It's freezing." / "It's frosty." = "Jest mroźno.").
+                        const sameText = (a, b) => (a || '').trim().toLowerCase() === (b || '').trim().toLowerCase();
+                        let pairItems = [];
+                        for (let k = 0; k < 4; k++) {
+                            pairItems.push(pullWordForTask(taskDef.id, w => pairItems.some(p =>
+                                sameText(p.word, w.word) || sameText(p[rightField], w[rightField]) ||
+                                (p.excludeDistractors || []).includes(w.word) || (w.excludeDistractors || []).includes(p.word))));
+                        }
+
                         // FREEZE ITEM
                         let frozenQuestion = { assignedTaskType: taskDef.id, globalIndex: globalQCounter++, isCompleted: false, earnedXP: 0 };
                         // Pair identity uses a stable numeric id (pairItems' own index), not the
@@ -4231,6 +4284,23 @@ video {
             }
         }
 
+        // Safety net for rounds where look-alikes could not be kept apart (tiny vocabulary):
+        // a pair is correct when it is correct by id, or when the buttons the student joined
+        // show the same text as a correct pair. Returns the pair as the answer key spells it
+        // (so completedConnections still match correctMatchKey for server-side grading), or null.
+        function canonicalMatchConnection(task, leftId, rightId) {
+            const sameText = (a, b) => (a || '').trim().toLowerCase() === (b || '').trim().toLowerCase();
+            const leftOf = id => task.frozenLeft.find(l => String(l.id) === String(id));
+            const rightOf = id => task.frozenRight.find(r => String(r.id) === String(id));
+            const ownRight = rightOf(leftId), chosenRight = rightOf(rightId);
+            // ids come back as the numbers the answer key uses (button dataset ids are strings)
+            if (String(leftId) === String(rightId) && ownRight) return { leftId: ownRight.id, rightId: ownRight.id };
+            if (ownRight && chosenRight && sameText(ownRight.value, chosenRight.value)) return { leftId: ownRight.id, rightId: ownRight.id };
+            const chosenLeft = leftOf(leftId), ownLeft = leftOf(rightId);
+            if (chosenLeft && ownLeft && sameText(chosenLeft.word, ownLeft.word)) return { leftId: ownLeft.id, rightId: ownLeft.id };
+            return null;
+        }
+
         function checkMatchingAnswers(actionBtn, feedbackContainer, navContainer, task) {
             let mState = task.matchStateMemory;
             let allCorrectThisRound = true;
@@ -4240,13 +4310,14 @@ video {
 
                 const lBtn = findLeftBtn(conn.leftId);
                 const rBtn = findRightBtn(conn.rightId);
+                const canonical = canonicalMatchConnection(task, conn.leftId, conn.rightId);
 
-                if (String(conn.leftId) === String(conn.rightId)) {
+                if (canonical) {
                     conn.status = 'correct';
                     lBtn.className = "matching-btn relative w-full p-4 rounded-xl border-2 border-green-500 bg-green-50 text-green-900 font-display font-bold text-center z-30 opacity-90 cursor-not-allowed text-base";
                     rBtn.className = "matching-btn relative w-full min-h-[64px] p-4 rounded-xl border-2 border-green-500 bg-green-50 text-green-900 font-semibold flex items-center justify-center text-sm md:text-base z-30 opacity-90 cursor-not-allowed text-center";
                     lBtn.disabled = true; rBtn.disabled = true;
-                    task.completedConnections.push({ leftId: conn.leftId, rightId: conn.rightId });
+                    task.completedConnections.push(canonical);
                 } else {
                     conn.status = 'error'; allCorrectThisRound = false; 
                     lBtn.className = "matching-btn relative w-full p-4 rounded-xl border-2 border-red-500 bg-red-50 text-red-900 font-display font-bold text-center z-30 animate-shake text-base"; 
@@ -5025,7 +5096,8 @@ video {
                     '<span class="hub-lesson-head">' +
                         '<strong>' + escapeHtml(l.label || '') + '</strong>' +
                         '<span class="hub-lesson-meta">' + escapeHtml(l.dateLabel || '') +
-                        ' &middot; ' + escapeHtml(count(l.vocabCount || 0, 'słówko', 'słówka', 'słówek')) + '</span>' +
+                        ' &middot; ' + escapeHtml(count(l.vocabCount || 0, 'słówko', 'słówka', 'słówek')) +
+                        (l.extraVocabCount ? ' + ' + escapeHtml(String(l.extraVocabCount)) + ' extra' : '') + '</span>' +
                     '</span>' +
                     (l.topic ? '<span class="hub-lesson-topic">' + escapeHtml(l.topic) + '</span>' : '') +
                     '</div>';
@@ -5409,6 +5481,9 @@ video {
         function playWritingSentence() {
             var wp = writingPlayback;
             if (!wp) return;
+            // Timer przerwy miedzy zdaniami juz sie wykonal - bez wyzerowania
+            // pauza bralaby go za trwajaca cisze i nie przerywala lektora.
+            wp.timer = null;
             var mySession = wp.sessionId;
             if (wp.idx >= wp.sentences.length) { stopWritingPlayback(); return; }
             updateWritingSeekBar(wp.itemIdx, (wp.charOffsets[wp.idx] || 0) / wp.totalChars);
@@ -5464,7 +5539,13 @@ video {
                 writingPlayback.timer = null;
                 writingPlayback.pendingNext = true;
             } else {
-                try { window.speechSynthesis.pause(); } catch (e) { /* ignore */ }
+                // speechSynthesis.pause() bywa ignorowane w Chrome (glosy Google),
+                // wiec przerywamy i po wznowieniu czytamy biezace zdanie od poczatku.
+                // Nowy sessionId sprawia, ze onend przerwanej wypowiedzi nic nie robi.
+                writingSessionCounter++;
+                writingPlayback.sessionId = writingSessionCounter;
+                writingPlayback.pendingNext = true;
+                try { window.speechSynthesis.cancel(); } catch (e) { /* ignore */ }
             }
             updateWritingButtons();
         }
@@ -5546,6 +5627,7 @@ video {
             var k = String(exIdx);
             if (!exState[k] || typeof exState[k] !== 'object') exState[k] = { v: {}, checked: false, peeked: false };
             if (!exState[k].v) exState[k].v = {};
+            if (!exState[k].attempts) exState[k].attempts = 1;
             return exState[k];
         }
         function exSave() { safeSet(EX_KEY, JSON.stringify(exState)); }
@@ -5621,7 +5703,11 @@ video {
                 function itemHtml(it, itIdx) {
                     var parts = it.text.split('[gap]');
                     return parts.map(function (p, i) {
-                        return escapeHtml(p) + (i < parts.length - 1 ? gapHtml(it, itIdx, i) : '');
+                        // Nawias zaraz po luce to podpowiedz ("(rain)", "(✗ will rain)") -
+                        // wyszarzona, zeby nie mieszala sie z trescia zdania.
+                        var txt = escapeHtml(p);
+                        if (i > 0) txt = txt.replace(/^(\s*)(\([^)]*\))/, '$1<span class="hub-ex-hint">$2</span>');
+                        return txt + (i < parts.length - 1 ? gapHtml(it, itIdx, i) : '');
                     }).join('');
                 }
                 var body;
@@ -5664,19 +5750,25 @@ video {
                     ? '<div class="hub-ex-box">' + ex.wordBox.map(function (w) { return '<span>' + escapeHtml(w) + '</span>'; }).join('') + '</div>'
                     : '';
                 // Rozwiniete tylko pierwsze cwiczenie - cala lista naraz przytlacza.
-                return '<details class="hub-lesson-group"' + (exIdx === 0 ? ' open' : '') + '>' +
-                    '<summary class="hub-section-title' + (exIdx === 0 ? ' is-first' : '') + '">' + escapeHtml(ex.title || '') + '</summary>' +
-                    (ex.instructions ? '<p class="hub-msg-body" style="margin-bottom:12px">' + escapeHtml(ex.instructions) + '</p>' : '') +
+                var gapTotal = ex.items.reduce(function (s, it) { return s + (it.answers || []).length; }, 0);
+                return '<details class="hub-lesson-group hub-ex-card"' + (exIdx === 0 ? ' open' : '') + '>' +
+                    '<summary class="hub-ex-head"><span class="hub-ex-title">' + escapeHtml(ex.title || '') + '</span>' +
+                    (isSelf ? '' : '<span class="hub-ex-score" data-ex-score="' + exIdx + '" data-ex-total="' + gapTotal + '">&ndash; / ' + gapTotal + '</span>') +
+                    '</summary>' +
+                    (ex.instructions ? '<p class="hub-ex-instr">' + escapeHtml(ex.instructions) + '</p>' : '') +
                     wordBox + body +
                     (isSelf ? '' :
                     '<div class="hub-ex-actions">' +
-                    '<button type="button" class="hub-link-btn" data-ex-check="' + exIdx + '">Sprawd&#378;</button>' +
-                    '<button type="button" class="hub-link-btn" data-ex-show="' + exIdx + '">Poka&#380; odpowiedzi</button>' +
-                    '<button type="button" class="hub-link-btn" data-ex-reset="' + exIdx + '">Wyczy&#347;&#263;</button>' +
-                    '<span class="hub-ex-score" data-ex-score="' + exIdx + '"></span>' +
+                    '<button type="button" class="hub-ex-btn hub-ex-btn-main" data-ex-check="' + exIdx + '">Sprawd&#378;</button>' +
+                    '<button type="button" class="hub-ex-btn" data-ex-reset="' + exIdx + '">&#8635; Resetuj</button>' +
                     '</div>') + '</details>';
             }).join('');
 
+            // Zasada blokady (2026-10-01, ta sama co w pytaniach pod tekstem):
+            // luka do klikniecia blokuje sie po pierwszym kliknieciu, luka do wpisania
+            // po "Sprawdz". Zablokowana luka pokazuje poprawna odpowiedz. "Resetuj"
+            // czysci cwiczenie i otwiera kolejna probe (st.attempts), ktora trafia
+            // do wiadomosci z wynikami. Caly widok odtwarza sie ze stanu (applyEx).
             function gapsOf(exIdx) {
                 return Array.prototype.slice.call(box.querySelectorAll('[data-ex="' + exIdx + '"]'));
             }
@@ -5684,14 +5776,14 @@ video {
             function answerOf(g) {
                 return EXERCISES[+g.getAttribute('data-ex')].items[+g.getAttribute('data-it')].answers[+g.getAttribute('data-gap')];
             }
-            function valueOf(g) {
-                if (g.tagName === 'INPUT') return g.value;
-                var p = g.querySelector('.hub-ex-opt.is-picked');
-                return p ? p.getAttribute('data-opt') : '';
+            function okValue(g, v) {
+                return !!String(v || '').trim() && exAccepted(answerOf(g)).some(function (x) { return exNorm(x) === exNorm(v); });
             }
-            function isOk(g) {
-                var v = valueOf(g);
-                return !!String(v).trim() && exAccepted(answerOf(g)).some(function (x) { return exNorm(x) === exNorm(v); });
+            function isLocked(g, st) {
+                if (st.checked) return true;
+                if (g.tagName === 'INPUT') return false;
+                var v = st.v[keyOf(g)];
+                return v !== undefined && v !== '';
             }
             function clearMarks(g) {
                 if (g.tagName === 'INPUT') {
@@ -5700,113 +5792,97 @@ video {
                     if (k && k.className === 'hub-ex-key') k.parentNode.removeChild(k);
                 } else {
                     Array.prototype.forEach.call(g.querySelectorAll('.hub-ex-opt'), function (b) {
-                        b.classList.remove('is-ok', 'is-bad', 'is-key');
+                        b.classList.remove('is-ok', 'is-bad', 'is-key', 'is-picked');
                     });
                 }
             }
-            function markCheck(exIdx) {
-                var gs = gapsOf(exIdx), ok = 0;
+            function applyEx(exIdx) {
+                var st = exSt(exIdx), gs = gapsOf(exIdx), ok = 0, locked = 0;
                 gs.forEach(function (g) {
                     clearMarks(g);
-                    var good = isOk(g);
-                    if (good) ok++;
+                    var v = st.v[keyOf(g)] || '';
+                    var lock = isLocked(g, st);
+                    if (lock) { locked++; if (okValue(g, v)) ok++; }
                     if (g.tagName === 'INPUT') {
-                        g.classList.toggle('is-ok', good);
-                        g.classList.toggle('is-bad', !good);
+                        g.value = v;
+                        g.readOnly = lock;
+                        if (!lock) return;
+                        var good = okValue(g, v);
+                        g.classList.add(good ? 'is-ok' : 'is-bad');
+                        if (!good) {
+                            var k = document.createElement('span');
+                            k.className = 'hub-ex-key';
+                            k.textContent = '(' + exAccepted(answerOf(g))[0] + ')';
+                            g.parentNode.insertBefore(k, g.nextSibling);
+                        }
                     } else {
-                        var p = g.querySelector('.hub-ex-opt.is-picked');
-                        if (p) p.classList.add(good ? 'is-ok' : 'is-bad');
+                        Array.prototype.forEach.call(g.querySelectorAll('.hub-ex-opt'), function (b) {
+                            var opt = b.getAttribute('data-opt');
+                            b.disabled = lock;
+                            b.style.cursor = lock ? 'default' : '';
+                            if (!lock) return;
+                            if (okValue(g, opt)) b.classList.add('is-ok');
+                            else if (opt === v) b.classList.add('is-bad');
+                        });
                     }
                 });
-                box.querySelector('[data-ex-score="' + exIdx + '"]').textContent = ok + ' / ' + gs.length;
+                var s = box.querySelector('[data-ex-score="' + exIdx + '"]');
+                if (s) s.textContent = (locked ? ok : '–') + ' / ' + s.getAttribute('data-ex-total') +
+                    (st.attempts > 1 ? ' · próba ' + st.attempts : '');
+                var chk = box.querySelector('[data-ex-check="' + exIdx + '"]');
+                if (chk) { chk.disabled = !!st.checked; chk.style.opacity = st.checked ? '.5' : ''; }
             }
-            function setScoreEmpty(exIdx) { box.querySelector('[data-ex-score="' + exIdx + '"]').textContent = ''; }
 
-            // Przywrocenie zapisanych odpowiedzi.
-            EXERCISES.forEach(function (ex, exIdx) {
-                var st = exSt(exIdx);
-                gapsOf(exIdx).forEach(function (g) {
-                    var v = st.v[keyOf(g)];
-                    if (v === undefined || v === '') return;
-                    if (g.tagName === 'INPUT') g.value = v;
-                    else Array.prototype.forEach.call(g.querySelectorAll('.hub-ex-opt'), function (b) {
-                        b.classList.toggle('is-picked', b.getAttribute('data-opt') === v);
-                    });
-                });
-                if (st.checked) markCheck(exIdx);
-            });
+            EXERCISES.forEach(function (ex, exIdx) { if (ex.layout !== 'selfcheck') applyEx(exIdx); });
             Array.prototype.forEach.call(box.querySelectorAll('.hub-ex-selfinput'), function (inp) {
                 var v = exSt(+inp.getAttribute('data-self-ex')).v['s' + inp.getAttribute('data-it')];
                 if (v) inp.value = v;
             });
 
-            function touched(g) {
-                var exIdx = +g.getAttribute('data-ex');
-                var st = exSt(exIdx);
-                st.v[keyOf(g)] = valueOf(g);
-                if (st.checked) { st.checked = false; setScoreEmpty(exIdx); }
-                clearMarks(g);
-                exSave();
-                refreshExShare();
-            }
             box.addEventListener('input', function (e) {
                 if (e.target && e.target.classList && e.target.classList.contains('hub-ex-selfinput')) {
                     exSt(+e.target.getAttribute('data-self-ex')).v['s' + e.target.getAttribute('data-it')] = e.target.value;
                     exSave();
                     return;
                 }
-                if (e.target && e.target.classList && e.target.classList.contains('hub-ex-input')) touched(e.target);
+                if (e.target && e.target.classList && e.target.classList.contains('hub-ex-input')) {
+                    var g = e.target, st = exSt(+g.getAttribute('data-ex'));
+                    if (st.checked) return;
+                    st.v[keyOf(g)] = g.value;
+                    exSave();
+                    refreshExShare();
+                }
             });
             box.addEventListener('click', function (e) {
                 var opt = e.target.closest ? e.target.closest('.hub-ex-opt') : null;
                 if (opt) {
                     var grp = opt.parentNode;
-                    Array.prototype.forEach.call(grp.querySelectorAll('.hub-ex-opt'), function (b) { b.classList.toggle('is-picked', b === opt); });
-                    touched(grp);
+                    var gEx = +grp.getAttribute('data-ex');
+                    var gSt = exSt(gEx);
+                    if (isLocked(grp, gSt)) return;
+                    gSt.v[keyOf(grp)] = opt.getAttribute('data-opt');
+                    exSave();
+                    applyEx(gEx);
+                    refreshExShare();
                     return;
                 }
-                var t = e.target.closest ? e.target.closest('[data-ex-check],[data-ex-show],[data-ex-reset]') : null;
+                var t = e.target.closest ? e.target.closest('[data-ex-check],[data-ex-reset]') : null;
                 if (!t) return;
                 t.blur();
-                var exIdx;
+                var exIdx, st;
                 if (t.hasAttribute('data-ex-check')) {
                     exIdx = +t.getAttribute('data-ex-check');
-                    markCheck(exIdx);
                     exSt(exIdx).checked = true;
-                    exSave();
-                } else if (t.hasAttribute('data-ex-show')) {
-                    exIdx = +t.getAttribute('data-ex-show');
-                    exSt(exIdx).peeked = true;
-                    exSave();
-                    gapsOf(exIdx).forEach(function (g) {
-                        var a = exAccepted(answerOf(g));
-                        if (g.tagName === 'INPUT') {
-                            var old = g.nextSibling;
-                            if (old && old.className === 'hub-ex-key') old.parentNode.removeChild(old);
-                            var k = document.createElement('span');
-                            k.className = 'hub-ex-key';
-                            k.textContent = '(' + a[0] + ')';
-                            g.parentNode.insertBefore(k, g.nextSibling);
-                        } else {
-                            Array.prototype.forEach.call(g.querySelectorAll('.hub-ex-opt'), function (b) {
-                                var isKey = a.some(function (x) { return exNorm(x) === exNorm(b.getAttribute('data-opt')); });
-                                b.classList.toggle('is-key', isKey);
-                            });
-                        }
-                    });
                 } else {
                     exIdx = +t.getAttribute('data-ex-reset');
-                    var st = exSt(exIdx);
+                    st = exSt(exIdx);
+                    var any = st.checked || Object.keys(st.v).some(function (k) { return String(st.v[k] || '').trim(); });
+                    if (any) st.attempts = (st.attempts || 1) + 1;
                     st.v = {};
                     st.checked = false;
-                    exSave();
-                    gapsOf(exIdx).forEach(function (g) {
-                        clearMarks(g);
-                        if (g.tagName === 'INPUT') g.value = '';
-                        else Array.prototype.forEach.call(g.querySelectorAll('.hub-ex-opt'), function (b) { b.classList.remove('is-picked'); });
-                    });
-                    setScoreEmpty(exIdx);
                 }
+                exSave();
+                applyEx(exIdx);
                 refreshExShare();
             });
 
@@ -5822,11 +5898,15 @@ video {
             EXERCISES.forEach(function (ex, exIdx) {
                 var r = exResult(exIdx);
                 if (!r.filled) return;
-                var head = (ex.title || ('Ćwiczenie ' + (exIdx + 1))) + ': ' + r.ok + '/' + r.total;
-                if (exSt(exIdx).peeked) head += ' (podejrzane odpowiedzi)';
+                var st = exSt(exIdx);
+                var head = (ex.title || ('Ćwiczenie ' + (exIdx + 1))) + ': ' + r.ok + '/' + r.total + ' pkt, próba nr ' + st.attempts;
+                if (!st.checked && r.filled < r.total) head += ' (niedokończone: ' + r.filled + ' z ' + r.total + ')';
+                if (st.peeked) head += ' (podejrzane odpowiedzi)';
                 lines.push(head);
-                if (r.wrong.length) {
-                    lines.push('Błędy: ' + r.wrong.map(function (w) {
+                // Przed "Sprawdz" puste luki to nie bledy, tylko jeszcze nie zrobione.
+                var wrongList = st.checked ? r.wrong : r.wrong.filter(function (w) { return w.val; });
+                if (wrongList.length) {
+                    lines.push('Błędy: ' + wrongList.map(function (w) {
                         return '(' + w.num + ') ' + (w.val || '-');
                     }).join(', '));
                 }
@@ -5848,14 +5928,22 @@ video {
         function refreshExShare() {
             var panel = el('hub-ex-share-panel');
             var wa = el('hub-ex-share-wa');
+            var mail = el('hub-ex-share-mail');
             if (!panel || !wa) return;
             panel.classList.toggle('hidden', !EXERCISES.length);
             var n = exStartedCount();
             if (!n) {
                 wa.classList.add('is-disabled');
                 wa.setAttribute('href', '#');
+                if (mail) { mail.classList.add('is-disabled'); mail.setAttribute('href', '#'); }
                 setExStatus('Zrób przynajmniej jedno ćwiczenie, żeby było co wysłać.', false);
                 return;
+            }
+            if (mail) {
+                mail.classList.remove('is-disabled');
+                mail.setAttribute('href', 'mailto:?subject=' +
+                    encodeURIComponent((HUB.student || '') + ' - ćwiczenia ' + (HUB.monthLabel || '')) +
+                    '&body=' + encodeURIComponent(buildExShareText()));
             }
             var num = (HUB.teacherWhatsApp || '').replace(/[^0-9]/g, '');
             wa.classList.remove('is-disabled');
@@ -5875,10 +5963,10 @@ video {
                     if (!exStartedCount()) { setExStatus('Zrób przynajmniej jedno ćwiczenie, żeby było co wysłać.', true); return; }
                     try {
                         navigator.share({ text: buildExShareText() }).catch(function () {
-                            setExStatus('Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj wyniki.', false);
+                            setExStatus('Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj tekst.', false);
                         });
                     } catch (e) {
-                        setExStatus('Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj wyniki.', false);
+                        setExStatus('Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj tekst.', false);
                     }
                 });
             }
@@ -5924,6 +6012,167 @@ video {
             });
         }
 
+        // Pytania pod tekstem (np. czytanka z testu). Pierwsze klikniecie blokuje
+        // pytanie: zla odpowiedz na czerwono, poprawna zawsze na zielono. Wybory
+        // i liczba prob zapisuja sie w przegladarce (WQ_KEY), "Resetuj" czysci
+        // wybory i otwiera kolejna probe. Pytania bez options = do dyskusji, bez punktow.
+        var WQ_KEY = STORAGE_KEY + '_teksty';
+        function wqLoad() {
+            try { var o = JSON.parse(safeGet(WQ_KEY) || '{}'); return (o && typeof o === 'object') ? o : {}; }
+            catch (e) { return {}; }
+        }
+        var wqState = wqLoad();
+        // Klucz po tytule i poczatku tekstu, nie po pozycji - nowy tekst dopisany
+        // pozniej w miesiacu nie przesunie zapisanych odpowiedzi.
+        function wqId(w) { return (w.title || '') + '|' + String(w.text || '').slice(0, 40); }
+        function wqSt(w) {
+            var k = wqId(w);
+            if (!wqState[k] || typeof wqState[k] !== 'object') wqState[k] = { picks: {}, attempts: 1 };
+            if (!wqState[k].picks) wqState[k].picks = {};
+            if (!wqState[k].attempts) wqState[k].attempts = 1;
+            return wqState[k];
+        }
+        function wqSave() { safeSet(WQ_KEY, JSON.stringify(wqState)); }
+        function wqGraded(w) {
+            return (w.questions || []).filter(function (q) { return q.options && q.options.length; });
+        }
+        function wqResult(w) {
+            var st = wqSt(w), ok = 0, answered = 0, wrong = [];
+            (w.questions || []).forEach(function (q, qi) {
+                if (!q.options || !q.options.length) return;
+                var p = st.picks[qi];
+                if (p === undefined) return;
+                answered++;
+                if (q.options[p] === q.answer) ok++;
+                else wrong.push({ num: qi + 1, picked: String.fromCharCode(65 + p), key: String.fromCharCode(65 + q.options.indexOf(q.answer)) });
+            });
+            return { ok: ok, answered: answered, total: wqGraded(w).length, wrong: wrong, attempts: st.attempts };
+        }
+        function wqShareText(w) {
+            var r = wqResult(w);
+            var lines = [
+                (HUB.student || 'Uczeń') + ' - ' + (HUB.monthLabel || '') + ', Teksty',
+                '',
+                (w.title || 'Tekst') + ': ' + r.ok + '/' + r.total + ' pkt',
+                'Próba nr ' + r.attempts
+            ];
+            if (r.answered < r.total) lines.push('Niedokończone: odpowiedzi na ' + r.answered + ' z ' + r.total + ' pytań');
+            if (r.wrong.length) {
+                lines.push('Błędy: ' + r.wrong.map(function (x) {
+                    return x.num + ' (zaznaczone ' + x.picked + ', poprawna ' + x.key + ')';
+                }).join(', '));
+            }
+            return lines.join('\n');
+        }
+        function wqApply(w, flatIdx) {
+            var box = el('hub-writing-list');
+            if (!box) return;
+            var st = wqSt(w);
+            (w.questions || []).forEach(function (q, qi) {
+                var btns = box.querySelectorAll('[data-wq="' + flatIdx + '"][data-wq-q="' + qi + '"]');
+                var p = st.picks[qi];
+                Array.prototype.forEach.call(btns, function (b, oi) {
+                    b.classList.remove('is-ok', 'is-bad');
+                    b.disabled = p !== undefined;
+                    b.style.cursor = p !== undefined ? 'default' : '';
+                    if (p === undefined) return;
+                    if (q.options[oi] === q.answer) b.classList.add('is-ok');
+                    else if (oi === p) b.classList.add('is-bad');
+                });
+            });
+            var r = wqResult(w);
+            var score = box.querySelector('[data-wq-score="' + flatIdx + '"]');
+            if (score) score.textContent = 'Wynik: ' + r.ok + '/' + r.total + ' pkt · próba nr ' + r.attempts +
+                (r.answered < r.total ? ' · odpowiedzi: ' + r.answered + ' z ' + r.total : '');
+            var text = wqShareText(w);
+            var encoded = encodeURIComponent(text);
+            var none = !r.answered;
+            var wa = box.querySelector('[data-wq-wa="' + flatIdx + '"]');
+            var mail = box.querySelector('[data-wq-mail="' + flatIdx + '"]');
+            var num = (HUB.teacherWhatsApp || '').replace(/[^0-9]/g, '');
+            if (wa) {
+                wa.classList.toggle('is-disabled', none);
+                wa.setAttribute('href', none ? '#' : 'https://wa.me/' + num + '?text=' + encoded);
+            }
+            if (mail) {
+                mail.classList.toggle('is-disabled', none);
+                mail.setAttribute('href', none ? '#' : 'mailto:?subject=' +
+                    encodeURIComponent((HUB.student || '') + ' - ' + (w.title || 'Teksty')) + '&body=' + encoded);
+            }
+            wqStatus(flatIdx, none ? 'Odpowiedz na przynajmniej jedno pytanie, żeby było co wysłać.' : '', false);
+        }
+        function wqStatus(flatIdx, msg, warn) {
+            var s = document.querySelector('[data-wq-status="' + flatIdx + '"]');
+            if (!s) return;
+            s.textContent = msg || '';
+            s.classList.toggle('is-warn', !!warn);
+        }
+        function wqCopy(flatIdx, text) {
+            var fb = document.querySelector('[data-wq-fallback="' + flatIdx + '"]');
+            function done() {
+                if (fb) fb.classList.add('hidden');
+                wqStatus(flatIdx, 'Skopiowane. Wklej na WhatsAppie albo gdzie chcesz.', false);
+            }
+            function manual() {
+                if (!fb) return;
+                fb.classList.remove('hidden');
+                fb.value = text;
+                fb.focus();
+                fb.select();
+                wqStatus(flatIdx, 'Zaznacz tekst poniżej i skopiuj ręcznie.', true);
+            }
+            function legacy() {
+                var ok = false;
+                try {
+                    var ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.setAttribute('readonly', '');
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    ok = document.execCommand('copy');
+                    document.body.removeChild(ta);
+                } catch (e) { ok = false; }
+                if (ok) done(); else manual();
+            }
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+                navigator.clipboard.writeText(text).then(done).catch(legacy);
+            } else legacy();
+        }
+        function writingQuestionsHtml(w, flatIdx) {
+            var qs = w.questions || [];
+            if (!qs.length) return '';
+            var graded = wqGraded(w).length > 0;
+            var html = '<div class="hub-wq">' + qs.map(function (q, qi) {
+                var opts = (q.options || []).map(function (opt, oi) {
+                    return '<button type="button" class="hub-ex-opt" data-wq="' + flatIdx + '" data-wq-q="' + qi + '" data-wq-opt="' + oi + '">' +
+                        escapeHtml(String.fromCharCode(65 + oi) + '. ' + opt) + '</button>';
+                }).join('');
+                return '<div class="hub-wq-item" style="margin:14px 0 0">' +
+                    '<p style="margin:0 0 6px;font-weight:700">' + (qi + 1) + '. ' + escapeHtml(q.q) + '</p>' +
+                    (opts ? '<div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px">' + opts + '</div>' : '') +
+                    '</div>';
+            }).join('') + '</div>';
+            if (!graded) return html;
+            return html +
+                '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:16px 0 0">' +
+                '<span class="hub-ex-score" style="white-space:normal" data-wq-score="' + flatIdx + '"></span>' +
+                '<button type="button" class="hub-ex-btn" data-wq-reset="' + flatIdx + '">&#8635; Resetuj</button>' +
+                '</div>' +
+                '<div class="hub-share">' +
+                '<div class="hub-share-actions">' +
+                (typeof navigator.share === 'function'
+                    ? '<button type="button" class="hub-cta hub-cta-alt" data-wq-native="' + flatIdx + '">&#128228; Udost&#281;pnij</button>' : '') +
+                '<a class="hub-cta hub-cta-wa" data-wq-wa="' + flatIdx + '" href="#" target="_blank" rel="noopener">&#128172; Wy&#347;lij na WhatsApp</a>' +
+                '<button type="button" class="hub-cta hub-cta-alt" data-wq-copy="' + flatIdx + '">&#128203; Kopiuj tekst</button>' +
+                '<a class="hub-cta hub-cta-alt" data-wq-mail="' + flatIdx + '" href="#">&#9993;&#65039; Wy&#347;lij mailem</a>' +
+                '</div>' +
+                '<p class="hub-share-status" data-wq-status="' + flatIdx + '"></p>' +
+                '<textarea class="hub-share-fallback hidden" data-wq-fallback="' + flatIdx + '" readonly></textarea>' +
+                '</div>';
+        }
+
         function renderWriting() {
             var box = el('hub-writing-list');
             if (!box) return;
@@ -5951,12 +6200,52 @@ video {
                         (w.title ? '<p class="hub-pron-word">' + escapeHtml(w.title) + '</p>' : '') +
                         player +
                         '<p class="hub-msg-body">' + escapeAndLinkify(w.text || '') + '</p>' +
+                        writingQuestionsHtml(w, flatIdx) +
                         '</div></div>';
                 }).join('');
                 return '<details class="hub-lesson-group"' + (isLast ? ' open' : '') + '>' + head + body + '</details>';
             }).join('');
+            WRITING.forEach(function (w, wi) { if (wqGraded(w).length) wqApply(w, wi); });
 
             box.addEventListener('click', function (e) {
+                var wqBtn = e.target.closest ? e.target.closest('[data-wq]') : null;
+                if (wqBtn) {
+                    var wIdx = parseInt(wqBtn.getAttribute('data-wq'), 10);
+                    var wItem = WRITING[wIdx];
+                    var wqi = parseInt(wqBtn.getAttribute('data-wq-q'), 10);
+                    if (!wItem || !wItem.questions[wqi]) return;
+                    var wst = wqSt(wItem);
+                    if (wst.picks[wqi] !== undefined) return;   // pytanie juz zablokowane
+                    wst.picks[wqi] = parseInt(wqBtn.getAttribute('data-wq-opt'), 10);
+                    wqSave();
+                    wqApply(wItem, wIdx);
+                    return;
+                }
+                var wqAct = e.target.closest ? e.target.closest('[data-wq-reset],[data-wq-copy],[data-wq-native]') : null;
+                if (wqAct) {
+                    wqAct.blur();
+                    var aIdx = parseInt(wqAct.getAttribute('data-wq-reset') || wqAct.getAttribute('data-wq-copy') || wqAct.getAttribute('data-wq-native'), 10);
+                    var aItem = WRITING[aIdx];
+                    if (!aItem) return;
+                    if (wqAct.hasAttribute('data-wq-reset')) {
+                        var rst = wqSt(aItem);
+                        if (Object.keys(rst.picks).length) rst.attempts++;
+                        rst.picks = {};
+                        wqSave();
+                        wqApply(aItem, aIdx);
+                        return;
+                    }
+                    if (!wqResult(aItem).answered) { wqStatus(aIdx, 'Odpowiedz na przynajmniej jedno pytanie, żeby było co wysłać.', true); return; }
+                    if (wqAct.hasAttribute('data-wq-copy')) { wqCopy(aIdx, wqShareText(aItem)); return; }
+                    try {
+                        navigator.share({ text: wqShareText(aItem) }).catch(function () {
+                            wqStatus(aIdx, 'Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj tekst.', false);
+                        });
+                    } catch (err) {
+                        wqStatus(aIdx, 'Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj tekst.', false);
+                    }
+                    return;
+                }
                 var playPauseBtn = e.target.closest ? e.target.closest('[data-hub-writing-playpause]') : null;
                 var stopBtn = e.target.closest ? e.target.closest('[data-hub-writing-stop]') : null;
                 var rateBtn = e.target.closest ? e.target.closest('[data-hub-writing-rate]') : null;
