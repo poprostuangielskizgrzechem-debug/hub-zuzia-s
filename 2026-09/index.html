@@ -2542,6 +2542,7 @@ video {
                     <div id="hub-writing-list"></div>
 
                     <div class="hub-footer">
+                        <button type="button" class="hub-link-btn hidden" id="hub-writing-reset-all">&#8635; Resetuj wszystkie</button>
                         <button type="button" class="hub-link-btn" data-hub-nav="home">&larr; Powr&oacute;t</button>
                     </div>
 
@@ -2635,6 +2636,7 @@ video {
                     </div>
 
                     <div class="hub-footer">
+                        <button type="button" class="hub-link-btn hidden" id="hub-ex-reset-all">&#8635; Resetuj wszystkie</button>
                         <button type="button" class="hub-link-btn" data-hub-nav="home">&larr; Powr&oacute;t</button>
                     </div>
 
@@ -5886,16 +5888,35 @@ video {
                     exSt(exIdx).checked = true;
                 } else {
                     exIdx = +t.getAttribute('data-ex-reset');
-                    st = exSt(exIdx);
-                    var any = st.checked || Object.keys(st.v).some(function (k) { return String(st.v[k] || '').trim(); });
-                    if (any) st.attempts = (st.attempts || 1) + 1;
-                    st.v = {};
-                    st.checked = false;
+                    resetEx(exIdx);
                 }
                 exSave();
                 applyEx(exIdx);
                 refreshExShare();
             });
+
+            // Kolejna proba = tylko gdy cos bylo zaznaczone/wpisane. Selfcheck (wlasne
+            // tlumaczenia ucznia) nie jest punktowany i "Resetuj wszystkie" go nie rusza.
+            function resetEx(exIdx) {
+                var st = exSt(exIdx);
+                var any = st.checked || Object.keys(st.v).some(function (k) { return String(st.v[k] || '').trim(); });
+                if (any) st.attempts = (st.attempts || 1) + 1;
+                st.v = {};
+                st.checked = false;
+            }
+            var resetAll = el('hub-ex-reset-all');
+            var graded = [];
+            EXERCISES.forEach(function (ex, i) { if (ex.layout !== 'selfcheck') graded.push(i); });
+            if (resetAll && graded.length) {
+                resetAll.classList.remove('hidden');
+                resetAll.addEventListener('click', function () {
+                    resetAll.blur();
+                    if (!window.confirm('Wyczyścić odpowiedzi we wszystkich ćwiczeniach? Każde zrobione ćwiczenie zacznie kolejną próbę.')) return;
+                    graded.forEach(function (i) { resetEx(i); applyEx(i); });
+                    exSave();
+                    refreshExShare();
+                });
+            }
 
             wireExShare();
             refreshExShare();
@@ -6044,6 +6065,11 @@ video {
             return wqState[k];
         }
         function wqSave() { safeSet(WQ_KEY, JSON.stringify(wqState)); }
+        function wqReset(w) {
+            var st = wqSt(w);
+            if (Object.keys(st.picks).length) st.attempts++;
+            st.picks = {};
+        }
         function wqGraded(w) {
             return (w.questions || []).filter(function (q) { return q.options && q.options.length; });
         }
@@ -6217,6 +6243,20 @@ video {
                 return '<details class="hub-lesson-group"' + (isLast ? ' open' : '') + '>' + head + body + '</details>';
             }).join('');
             WRITING.forEach(function (w, wi) { if (wqGraded(w).length) wqApply(w, wi); });
+            var wResetAll = el('hub-writing-reset-all');
+            if (wResetAll && WRITING.some(function (w) { return wqGraded(w).length; })) {
+                wResetAll.classList.remove('hidden');
+                wResetAll.addEventListener('click', function () {
+                    wResetAll.blur();
+                    if (!window.confirm('Wyczyścić odpowiedzi na pytania pod wszystkimi tekstami? Każdy zrobiony tekst zacznie kolejną próbę.')) return;
+                    WRITING.forEach(function (w, wi) {
+                        if (!wqGraded(w).length) return;
+                        wqReset(w);
+                        wqApply(w, wi);
+                    });
+                    wqSave();
+                });
+            }
 
             box.addEventListener('click', function (e) {
                 var wqBtn = e.target.closest ? e.target.closest('[data-wq]') : null;
@@ -6239,9 +6279,7 @@ video {
                     var aItem = WRITING[aIdx];
                     if (!aItem) return;
                     if (wqAct.hasAttribute('data-wq-reset')) {
-                        var rst = wqSt(aItem);
-                        if (Object.keys(rst.picks).length) rst.attempts++;
-                        rst.picks = {};
+                        wqReset(aItem);
                         wqSave();
                         wqApply(aItem, aIdx);
                         return;
