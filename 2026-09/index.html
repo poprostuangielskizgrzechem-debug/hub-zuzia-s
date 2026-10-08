@@ -2553,6 +2553,8 @@ video {
         <!-- === HUB MODULE - START (exercises view) === -->
         <style>
             /* Karty cwiczen - wzor: osobne pliki z testami (future-forms.html) */
+            .hub-ex-lesson { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--hub-muted, #6b7280); margin: 22px 4px 8px; padding-bottom: 6px; border-bottom: 1px solid var(--hub-line); }
+            .hub-ex-lesson:first-child { margin-top: 0; }
             .hub-ex-card { background: #fff; border: 1px solid var(--hub-line); border-radius: 16px; padding: 18px 20px 16px;
                 margin: 0 0 18px; box-shadow: 0 6px 20px rgba(22,24,29,.05); }
             .hub-ex-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; list-style: none; }
@@ -2572,6 +2574,16 @@ video {
             .hub-ex-input { border: 1.5px solid #d6d9df; border-radius: 8px; background: #fff; color: var(--hub-ink); font: inherit;
                 padding: 2px 8px; margin: 0 3px; outline: none; max-width: 100%; box-sizing: border-box; }
             .hub-ex-item .hub-ex-input { max-width: 12em; }
+            .hub-ex-tf { display: flex; gap: 6px; line-height: 1.5; }
+            .hub-ex-tf-body { flex: 1; min-width: 0; }
+            .hub-ex-tf-src { margin-bottom: 6px; }
+            .hub-ex-item .hub-ex-tf-input { max-width: none; width: 100%; box-sizing: border-box; }
+            .hub-ex-tf-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+            .hub-ex-tf-actions .hub-ex-btn:disabled { opacity: .45; cursor: default; }
+            .hub-ex-tf-status { font-size: 14px; color: #6b7280; }
+            .hub-ex-tf-status.is-ok { color: #15803d; font-weight: 600; }
+            .hub-ex-tf-status.is-bad { color: #b91c1c; font-weight: 600; }
+            .hub-ex-tf-key { color: #15803d; font-weight: 600; margin-top: 4px; }
             .hub-ex-input:focus { border-color: #1e5aae; }
             .hub-ex-input.is-ok { border-color: #1f9254; background: #eafaf0; color: #15803d; }
             .hub-ex-input.is-bad { border-color: #ee4352; background: #fdecec; color: #b91c1c; }
@@ -2609,6 +2621,43 @@ video {
             .hub-ex-model summary { cursor: pointer; font-size: 14px; font-weight: 600; color: #2563eb; }
             .hub-ex-model div { margin-top: 6px; padding: 8px 12px; border-left: 3px solid #16a34a; background: #f0fdf4; color: #15803d; border-radius: 0 8px 8px 0; }
             .hub-ex-saved { font-size: 12.5px; color: var(--hub-muted); margin: 0 0 14px; }
+            /* layout "sort": bank slowek + kolumny, przeciaganie (Pointer Events) albo klik-klik */
+            .hub-sort-bank { display: flex; flex-wrap: wrap; gap: 6px; min-height: 44px; padding: 10px; margin: 0 0 12px;
+                border: 1.5px dashed #cbd5e1; border-radius: 12px; background: #f8fafc; }
+            .hub-sort-bank:empty::after { content: 'Wszystkie s\0142\00F3wka s\0105 w kolumnach.'; color: var(--hub-muted); font-size: 13.5px; align-self: center; }
+            .hub-sort-cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0 0 12px; }
+            .hub-sort-col { border: 1.5px solid var(--hub-line); border-radius: 12px; background: #fff; min-height: 120px; padding: 8px;
+                display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: border-color .12s, background .12s; }
+            .hub-sort-col.is-over { border-color: #1e5aae; background: #eff6ff; }
+            .hub-sort-col h4 { margin: 0 0 4px; font-size: 13px; font-weight: 800; color: #1e5aae; text-transform: uppercase; letter-spacing: .03em; }
+            .hub-sort-chip { display: inline-block; font: inherit; font-size: 14.5px; font-weight: 600; line-height: 1.3; padding: 6px 11px;
+                border: 1.5px solid #d6d9df; border-radius: 8px; background: #fff; color: var(--hub-ink); cursor: grab;
+                touch-action: none; user-select: none; -webkit-user-select: none; text-align: left; }
+            .hub-sort-chip.is-sel { border-color: #2563eb; background: #eff6ff; box-shadow: 0 0 0 2px #bfdbfe; }
+            .hub-sort-chip.is-drag { position: fixed; z-index: 1000; pointer-events: none; box-shadow: 0 8px 20px rgba(22,24,29,.2); cursor: grabbing; }
+            .hub-sort-chip.is-ghost { opacity: .35; }
+            .hub-drag-bank:empty::after { content: 'Wszystkie zwroty s\0105  w lukach.'; }
+            .hub-drag-text { line-height: 2.3; font-size: 15.5px; margin: 0 0 12px; }
+            .hub-drag-line { margin: 0 0 6px; }
+            .hub-drag-slot { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px; min-width: 120px; min-height: 36px; vertical-align: middle;
+                padding: 2px 6px; margin: 0 2px; border: 1.5px dashed #94a3b8; border-radius: 10px; background: #fff; }
+            .hub-drag-slot.is-over { border-color: #1e5aae; border-style: solid; background: #eff6ff; }
+            .hub-drag-slot .hub-sort-chip { margin: 0; }
+            .hub-sort-chip.is-ok { border-color: #16a34a; background: #f0fdf4; color: #15803d; cursor: default; }
+            .hub-sort-chip.is-bad { border-color: #dc2626; background: #fef2f2; color: #b91c1c; cursor: default; }
+            .hub-sort-chip .hub-ex-key { display: block; margin: 2px 0 0; font-size: 12px; }
+            .hub-sort-chip:disabled { opacity: 1; }
+            @media (max-width: 640px) {
+                .hub-sort-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+                .hub-sort-bank { gap: 5px; padding: 8px; }
+                .hub-sort-chip { font-size: 13.5px; padding: 4px 8px; }
+                .hub-sort-col { min-height: 96px; }
+            }
+            /* layout "build": wolne listy rozwijane w zdaniach (bez oceny) */
+            .hub-ex-pick { font: inherit; font-size: 14.5px; padding: 4px 6px; margin: 2px 3px; border: 1.5px solid #c7d2fe; border-radius: 8px;
+                background: #f5f7ff; color: var(--hub-ink); max-width: 100%; }
+            .hub-ex-pick.is-empty { color: var(--hub-muted); font-style: italic; }
+            .hub-ex-pick:focus { outline: none; border-color: #1e5aae; }
         </style>
         <section id="hub-exercises-view" class="hidden no-print flex-grow flex items-start justify-center relative z-20">
             <div class="hub-shell">
@@ -2960,7 +3009,7 @@ video {
         "teacherWhatsApp": "",
         "storageKey": "hub_zuzia-s_2026-09",
         "studentKey": "hub_zuzia-s",
-        "stamp": "aktualizacja po lekcji 1, 1.10.2026",
+        "stamp": "aktualizacja po lekcji 1, 8.10.2026",
         "lastLessonPhrase": "lekcji 1",
         "lessons": [
                 {
@@ -5631,6 +5680,12 @@ video {
             return String(v || '').toLowerCase().replace(/[‘’`]/g, "'").replace(/\s+/g, ' ').trim();
         }
         function exAccepted(a) { return Array.isArray(a) ? a : [a]; }
+        // layout "transform": cale zdanie, wiec kropka/wykrzyknik na koncu nie decyduje.
+        function exMatch(ex, a, v) {
+            var f = ex && ex.layout === 'transform'
+                ? function (x) { return exNorm(x).replace(/\s*[.!?]+$/, ''); } : exNorm;
+            return !!String(v || '').trim() && exAccepted(a).some(function (x) { return f(x) === f(v); });
+        }
         function exLoad() {
             try { var o = JSON.parse(safeGet(EX_KEY) || '{}'); return (o && typeof o === 'object') ? o : {}; }
             catch (e) { return {}; }
@@ -5641,6 +5696,8 @@ video {
             if (!exState[k] || typeof exState[k] !== 'object') exState[k] = { v: {}, checked: false, peeked: false };
             if (!exState[k].v) exState[k].v = {};
             if (!exState[k].attempts) exState[k].attempts = 1;
+            if (!exState[k].ic) exState[k].ic = {};   // transform: zdania sprawdzone
+            if (!exState[k].ia) exState[k].ia = {};   // transform: proby per zdanie
             return exState[k];
         }
         function exSave() { safeSet(EX_KEY, JSON.stringify(exState)); }
@@ -5671,17 +5728,87 @@ video {
                     total++;
                     var val = st.v[itIdx + '-' + gap] || '';
                     if (String(val).trim()) filled++;
-                    var good = String(val).trim() && exAccepted(a).some(function (x) { return exNorm(x) === exNorm(val); });
+                    var good = exMatch(ex, a, val) && (ex.layout !== 'transform' || st.ic[itIdx]);
                     if (good) ok++;
                     else wrong.push({
-                        num: ex.layout === 'text' ? n
-                            : ex.layout === 'table' ? (itIdx + 1) + ', ' + exGapColumn(ex, itIdx, gap)
+                        num: ex.layout === 'sort' ? it.text
+                            : (ex.layout === 'text' || ex.layout === 'drag') ? n
+                            : (ex.layout === 'table' || ex.layout === 'wordform') ? (itIdx + 1) + ', ' + exGapColumn(ex, itIdx, gap)
                             : (itIdx + 1),
                         val: String(val).trim()
                     });
                 });
             });
             return { total: total, ok: ok, filled: filled, wrong: wrong };
+        }
+        // layout "build": wybory z list rozwijanych. Lista z sync ma jeden wspolny
+        // klucz w stanie, pozostale po jednym na kazde wystapienie w zdaniu.
+        function exPickKey(ex, itIdx, n, key) {
+            return (ex.lists && ex.lists[key] && ex.lists[key].sync) ? 'p-' + key : 'p-' + itIdx + '-' + n;
+        }
+        function exHasPicks(exIdx) {
+            var st = exSt(exIdx);
+            return Object.keys(st.v).some(function (k) { return k.indexOf('p-') === 0 && st.v[k]; });
+        }
+        function exStarted(exIdx) { return exResult(exIdx).filled > 0 || exHasPicks(exIdx); }
+        // Tekst ucznia zlozony z wyborow i poprawnych form (zablokowana luka i tak
+        // pokazuje poprawna odpowiedz). Niewybrane miejsca jako "...".
+        function exBuildText(exIdx) {
+            var ex = EXERCISES[exIdx], st = exSt(exIdx);
+            return ex.items.map(function (it, itIdx) {
+                var n = 0, gap = 0;
+                return it.text.replace(/\{([^}]*)\}|\[gap\]/g, function (m, key) {
+                    if (key !== undefined) return st.v[exPickKey(ex, itIdx, n++, key)] || '...';
+                    var v = st.v[itIdx + '-' + (gap)], a = it.answers[gap++];
+                    return String(v || '').trim() ? exAccepted(a)[0] : '...';
+                });
+            }).join(' ');
+        }
+        // layout "drag": bank = poprawne odpowiedzi wszystkich luk (kazda raz), w
+        // kolejnosci luk; w stanie st.v["<it>-<luka>"] = zwrot wstawiony do luki.
+        function dragPhrases(ex) {
+            var out = [];
+            ex.items.forEach(function (it) { (it.answers || []).forEach(function (a) { out.push(String(exAccepted(a)[0])); }); });
+            return out;
+        }
+        // layout "sort": losowa kolejnosc slowek w banku, trzymana w stanie, zeby
+        // po odswiezeniu strony nic nie przeskakiwalo.
+        function sortOrder(exIdx) {
+            var ex = EXERCISES[exIdx], st = exSt(exIdx);
+            var cnt = ex.layout === 'drag' ? dragPhrases(ex).length : ex.items.length;
+            if (!Array.isArray(st.order) || st.order.length !== cnt) {
+                st.order = [];
+                for (var oi = 0; oi < cnt; oi++) st.order.push(oi);
+                for (var i = st.order.length - 1; i > 0; i--) {
+                    var j = Math.floor(Math.random() * (i + 1));
+                    var t = st.order[i]; st.order[i] = st.order[j]; st.order[j] = t;
+                }
+                exSave();
+            }
+            return st.order;
+        }
+        // layout "wordform": w kazdym wierszu jedna losowo podana forma, reszta
+        // to luki, null = forma nie istnieje ("—"). Wylosowane kolumny siedza
+        // w stanie (st.pick), zeby po odswiezeniu strony tabela sie nie zmieniala.
+        function wfPrepare(exIdx, fresh) {
+            var ex = EXERCISES[exIdx], st = exSt(exIdx);
+            if (fresh || !Array.isArray(st.pick) || st.pick.length !== ex.rows.length) {
+                st.pick = ex.rows.map(function (r) {
+                    var ok = [];
+                    r.forms.forEach(function (f, c) { if (f) ok.push(c); });
+                    return ok[Math.floor(Math.random() * ok.length)];
+                });
+            }
+            ex.items = ex.rows.map(function (r, ri) {
+                var answers = [];
+                var text = r.forms.map(function (f, c) {
+                    if (!f) return '—';
+                    if (c === st.pick[ri]) return f[0];
+                    answers.push(f);
+                    return '[gap]';
+                }).join('|');
+                return { text: text, answers: answers };
+            });
         }
         function renderExercises() {
             var box = el('hub-exercises-list');
@@ -5690,7 +5817,9 @@ video {
                 box.innerHTML = '<p class="hub-empty">Na razie brak &#263;wicze&#324;.</p>';
                 return;
             }
-            box.innerHTML = EXERCISES.map(function (ex, exIdx) {
+            EXERCISES.forEach(function (ex, exIdx) { if (ex.layout === 'wordform') wfPrepare(exIdx, false); });
+            var exMultiLesson = EXERCISES.some(function (e) { return e.lessonLabel !== EXERCISES[0].lessonLabel; });
+            function exCardsHtml(openIdx) { return EXERCISES.map(function (ex, exIdx) {
                 var gapNo = 0;
                 // Szerokosc pola wg najdluzszej odpowiedzi w calym cwiczeniu (nie w luce),
                 // zeby dlugosc pola nie podpowiadala odpowiedzi. Stale 11 znakow ucinalo
@@ -5715,11 +5844,21 @@ video {
                 }
                 function itemHtml(it, itIdx) {
                     var parts = it.text.split('[gap]');
+                    var pickN = 0;
                     return parts.map(function (p, i) {
                         // Nawias zaraz po luce to podpowiedz ("(rain)", "(✗ will rain)") -
                         // wyszarzona, zeby nie mieszala sie z trescia zdania.
                         var txt = escapeHtml(p);
                         if (i > 0) txt = txt.replace(/^(\s*)(\([^)]*\))/, '$1<span class="hub-ex-hint">$2</span>');
+                        // layout "build": {klucz} = wolna lista rozwijana, bez oceny.
+                        if (ex.layout === 'build') txt = txt.replace(/\{([^}]*)\}/g, function (m, key) {
+                            var l = ex.lists[key];
+                            var pk = exPickKey(ex, itIdx, pickN++, key);
+                            return '<select class="hub-ex-pick is-empty" data-pick-ex="' + exIdx + '" data-pick="' + escapeHtml(pk) + '" aria-label="' + escapeHtml(l.label || key) + '">' +
+                                '<option value="">' + escapeHtml('wybierz: ' + (l.label || key)) + '</option>' +
+                                l.options.map(function (o) { return '<option value="' + escapeHtml(o) + '">' + escapeHtml(o) + '</option>'; }).join('') +
+                                '</select>';
+                        });
                         return txt + (i < parts.length - 1 ? gapHtml(it, itIdx, i) : '');
                     }).join('');
                 }
@@ -5733,9 +5872,30 @@ video {
                             '<input type="text" class="hub-ex-selfinput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Twoja wersja..." data-self-ex="' + exIdx + '" data-it="' + itIdx + '">' +
                             '<details class="hub-ex-model"><summary>Poka&#380; przyk&#322;adow&#261; odpowied&#378;</summary><div>' + escapeHtml(it.answer) + '</div></details></div>';
                     }).join('');
+                } else if (ex.layout === 'sort') {
+                    // Zawartosc banku i kolumn wypelnia sortRender() ze stanu.
+                    body = '<div class="hub-sort-bank" data-sort-ex="' + exIdx + '" data-sort-col=""></div>' +
+                        '<div class="hub-sort-cols">' + ex.columns.map(function (c) {
+                            return '<div class="hub-sort-col" data-sort-ex="' + exIdx + '" data-sort-col="' + escapeHtml(c) + '"><h4>' + escapeHtml(c) + '</h4></div>';
+                        }).join('') + '</div>';
+                } else if (ex.layout === 'drag') {
+                    // Bank zwrotow + linie tekstu z lukami-celami. Chipy wstawia sortRender().
+                    var dGap = 0;
+                    body = '<div class="hub-sort-bank hub-drag-bank" data-sort-ex="' + exIdx + '" data-sort-col=""></div>' +
+                        '<div class="hub-drag-text">' + ex.items.map(function (it, itIdx) {
+                            var parts = it.text.split('[gap]');
+                            var line = parts.map(function (p, i) {
+                                var txt = escapeHtml(p);
+                                if (i === 0) txt = txt.replace(/^([^:]{1,30}:)/, '<b>$1</b>');
+                                return txt + (i < parts.length - 1
+                                    ? '<span class="hub-drag-slot" data-sort-ex="' + exIdx + '" data-sort-col="' + itIdx + '-' + i + '"><span class="hub-ex-gapnum">(' + (++dGap) + ')</span></span>'
+                                    : '');
+                            }).join('');
+                            return '<div class="hub-drag-line">' + line + '</div>';
+                        }).join('') + '</div>';
                 } else if (ex.layout === 'text') {
                     body = '<p class="hub-ex-text">' + ex.items.map(itemHtml).join(' ') + '</p>';
-                } else if (ex.layout === 'table') {
+                } else if (ex.layout === 'table' || ex.layout === 'wordform') {
                     var withSvg = exCellOffset(ex) === 1;
                     body = '<div class="hub-ex-table-wrap"><table class="hub-ex-table"><thead><tr><th></th>' +
                         ex.columns.map(function (c) { return '<th>' + escapeHtml(c) + '</th>'; }).join('') +
@@ -5754,6 +5914,17 @@ video {
                                 cells + '</tr>';
                         }).join('') +
                         '</tbody></table></div>';
+                } else if (ex.layout === 'transform') {
+                    body = ex.items.map(function (it, itIdx) {
+                        return '<div class="hub-ex-item hub-ex-tf"><span class="hub-ex-num">' + (itIdx + 1) + '.</span>' +
+                            '<div class="hub-ex-tf-body"><div class="hub-ex-tf-src">' + escapeHtml(it.text) + '</div>' +
+                            '<input type="text" class="hub-ex-input hub-ex-tf-input" autocomplete="off" autocapitalize="off" spellcheck="false" data-ex="' + exIdx + '" data-it="' + itIdx + '" data-gap="0">' +
+                            '<div class="hub-ex-tf-actions">' +
+                            '<button type="button" class="hub-ex-btn hub-ex-btn-main" data-tf-check="' + exIdx + '" data-it="' + itIdx + '">Sprawd&#378;</button>' +
+                            '<button type="button" class="hub-ex-btn" data-tf-fix="' + exIdx + '" data-it="' + itIdx + '">&#9998; Popraw</button>' +
+                            '<button type="button" class="hub-ex-btn" data-tf-reset="' + exIdx + '" data-it="' + itIdx + '">&#8635; Resetuj</button>' +
+                            '<span class="hub-ex-tf-status" data-tf-status="' + exIdx + '-' + itIdx + '"></span></div></div></div>';
+                    }).join('');
                 } else {
                     body = ex.items.map(function (it, itIdx) {
                         return '<div class="hub-ex-item"><span class="hub-ex-num">' + (itIdx + 1) + '.</span>' + itemHtml(it, itIdx) + '</div>';
@@ -5764,18 +5935,26 @@ video {
                     : '';
                 // Rozwiniete tylko pierwsze cwiczenie - cala lista naraz przytlacza.
                 var gapTotal = ex.items.reduce(function (s, it) { return s + (it.answers || []).length; }, 0);
-                return '<details class="hub-lesson-group hub-ex-card"' + (exIdx === 0 ? ' open' : '') + '>' +
+                // Podzial na lekcje (2026-10-07): naglowek przed pierwszym cwiczeniem
+                // kazdej lekcji, tylko gdy cwiczenia pochodza z wiecej niz jednej lekcji.
+                var sep = (exMultiLesson && (exIdx === 0 || EXERCISES[exIdx - 1].lessonLabel !== ex.lessonLabel))
+                    ? '<h3 class="hub-ex-lesson">' + escapeHtml(ex.lessonLabel || '') +
+                      (ex.dateLabel ? ' &middot; ' + escapeHtml(ex.dateLabel) : '') + '</h3>'
+                    : '';
+                return sep + '<details class="hub-lesson-group hub-ex-card"' + (exIdx === openIdx ? ' open' : '') + '>' +
                     '<summary class="hub-ex-head"><span class="hub-ex-title">' + escapeHtml(ex.title || '') + '</span>' +
                     (isSelf ? '' : '<span class="hub-ex-score" data-ex-score="' + exIdx + '" data-ex-total="' + gapTotal + '">&ndash; / ' + gapTotal + '</span>') +
                     '</summary>' +
                     (ex.instructions ? '<p class="hub-ex-instr">' + escapeHtml(ex.instructions) + '</p>' : '') +
                     wordBox + body +
-                    (isSelf ? '' :
+                    (isSelf || ex.layout === 'transform' ? '' :
                     '<div class="hub-ex-actions">' +
                     '<button type="button" class="hub-ex-btn hub-ex-btn-main" data-ex-check="' + exIdx + '">Sprawd&#378;</button>' +
                     '<button type="button" class="hub-ex-btn" data-ex-reset="' + exIdx + '">&#8635; Resetuj</button>' +
+                    (ex.layout === 'wordform' ? '<button type="button" class="hub-ex-btn" data-ex-reroll="' + exIdx + '">&#127922; Losuj ponownie</button>' : '') +
                     '</div>') + '</details>';
-            }).join('');
+            }).join(''); }
+            box.innerHTML = exCardsHtml(0);
 
             // Zasada blokady (2026-10-01, ta sama co w pytaniach pod tekstem):
             // luka do klikniecia blokuje sie po pierwszym kliknieciu, luka do wpisania
@@ -5790,10 +5969,11 @@ video {
                 return EXERCISES[+g.getAttribute('data-ex')].items[+g.getAttribute('data-it')].answers[+g.getAttribute('data-gap')];
             }
             function okValue(g, v) {
-                return !!String(v || '').trim() && exAccepted(answerOf(g)).some(function (x) { return exNorm(x) === exNorm(v); });
+                return exMatch(EXERCISES[+g.getAttribute('data-ex')], answerOf(g), v);
             }
             function isLocked(g, st) {
                 if (st.checked) return true;
+                if (EXERCISES[+g.getAttribute('data-ex')].layout === 'transform') return !!st.ic[g.getAttribute('data-it')];
                 if (g.tagName === 'INPUT') return false;
                 var v = st.v[keyOf(g)];
                 return v !== undefined && v !== '';
@@ -5809,7 +5989,124 @@ video {
                     });
                 }
             }
+            // layout "sort": slowka ukladane od nowa ze stanu (st.v["<it>-0"] = kolumna,
+            // brak wartosci = bank). Przed "Sprawdz" mozna je dowolnie przenosic.
+            var sortSel = null; // {ex, it} - slowko wybrane w trybie "kliknij, potem kliknij kolumne"
+            function sortRender(exIdx) {
+                if (EXERCISES[exIdx].layout === 'drag') return dragRender(exIdx);
+                var ex = EXERCISES[exIdx], st = exSt(exIdx);
+                var conts = {};
+                Array.prototype.forEach.call(box.querySelectorAll('[data-sort-ex="' + exIdx + '"]'), function (c) {
+                    Array.prototype.forEach.call(c.querySelectorAll('.hub-sort-chip'), function (ch) { c.removeChild(ch); });
+                    conts[c.getAttribute('data-sort-col')] = c;
+                });
+                sortOrder(exIdx).forEach(function (itIdx) {
+                    var it = ex.items[itIdx];
+                    var v = st.v[itIdx + '-0'] || '';
+                    var target = conts[v] || conts[''];
+                    if (!target) return;
+                    var b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'hub-sort-chip';
+                    b.setAttribute('data-sort-chip', exIdx);
+                    b.setAttribute('data-it', itIdx);
+                    b.textContent = it.text;
+                    if (st.checked) {
+                        b.disabled = true;
+                        var good = v && exAccepted(it.answers[0]).some(function (x) { return exNorm(x) === exNorm(v); });
+                        b.classList.add(good ? 'is-ok' : 'is-bad');
+                        if (!good) {
+                            var k = document.createElement('span');
+                            k.className = 'hub-ex-key';
+                            k.textContent = '→ ' + exAccepted(it.answers[0])[0];
+                            b.appendChild(k);
+                        }
+                    } else if (sortSel && sortSel.ex === exIdx && sortSel.it === itIdx) {
+                        b.classList.add('is-sel');
+                    }
+                    target.appendChild(b);
+                });
+            }
+            // layout "drag": chip = indeks zwrotu w dragPhrases(), cel = luka "<it>-<luka>"
+            // albo bank (""). Zwrot siedzi w co najwyzej jednej luce.
+            function dragRender(exIdx) {
+                var ex = EXERCISES[exIdx], st = exSt(exIdx), ph = dragPhrases(ex);
+                var conts = {};
+                Array.prototype.forEach.call(box.querySelectorAll('[data-sort-ex="' + exIdx + '"]'), function (c) {
+                    Array.prototype.forEach.call(c.querySelectorAll('.hub-sort-chip, .hub-ex-key'), function (ch) { c.removeChild(ch); });
+                    conts[c.getAttribute('data-sort-col')] = c;
+                });
+                var where = {};
+                Object.keys(conts).forEach(function (k) { if (k && st.v[k]) where[st.v[k]] = k; });
+                sortOrder(exIdx).forEach(function (p) {
+                    var slotKey = where[ph[p]] || '';
+                    var b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'hub-sort-chip';
+                    b.setAttribute('data-sort-chip', exIdx);
+                    b.setAttribute('data-it', p);
+                    b.textContent = ph[p];
+                    if (st.checked) {
+                        b.disabled = true;
+                        if (slotKey) {
+                            var parts = slotKey.split('-');
+                            var good = exAccepted(ex.items[+parts[0]].answers[+parts[1]]).some(function (x) { return exNorm(x) === exNorm(ph[p]); });
+                            b.classList.add(good ? 'is-ok' : 'is-bad');
+                        }
+                    } else if (sortSel && sortSel.ex === exIdx && sortSel.it === p) {
+                        b.classList.add('is-sel');
+                    }
+                    conts[slotKey].appendChild(b);
+                });
+                if (st.checked) Object.keys(conts).forEach(function (k) {
+                    if (!k) return;
+                    var parts = k.split('-');
+                    var a = String(exAccepted(ex.items[+parts[0]].answers[+parts[1]])[0]);
+                    if (exNorm(st.v[k] || '') === exNorm(a)) return;
+                    var key = document.createElement('span');
+                    key.className = 'hub-ex-key';
+                    key.textContent = '→ ' + a;
+                    conts[k].appendChild(key);
+                });
+            }
+            function sortMove(exIdx, itIdx, col) {
+                var st = exSt(exIdx);
+                if (st.checked) return;
+                if (EXERCISES[exIdx].layout === 'drag') {
+                    var phrase = dragPhrases(EXERCISES[exIdx])[itIdx];
+                    Object.keys(st.v).forEach(function (k) { if (st.v[k] === phrase) delete st.v[k]; });
+                    if (col) st.v[col] = phrase;   // zwrot, ktory zajmowal luke, wraca do banku
+                    sortSel = null;
+                    exSave();
+                    applyEx(exIdx);
+                    refreshExShare();
+                    return;
+                }
+                if (col) st.v[itIdx + '-0'] = col; else delete st.v[itIdx + '-0'];
+                sortSel = null;
+                exSave();
+                applyEx(exIdx);
+                refreshExShare();
+            }
             function applyEx(exIdx) {
+                if (EXERCISES[exIdx].layout === 'sort' || EXERCISES[exIdx].layout === 'drag') {
+                    var sst = exSt(exIdx);
+                    sortRender(exIdx);
+                    var sr = exResult(exIdx);
+                    var ss = box.querySelector('[data-ex-score="' + exIdx + '"]');
+                    if (ss) ss.textContent = (sst.checked ? sr.ok : '–') + ' / ' + ss.getAttribute('data-ex-total') +
+                        (sst.attempts > 1 ? ' · próba ' + sst.attempts : '');
+                    var schk = box.querySelector('[data-ex-check="' + exIdx + '"]');
+                    if (schk) { schk.disabled = !!sst.checked; schk.style.opacity = sst.checked ? '.5' : ''; }
+                    return;
+                }
+                if (EXERCISES[exIdx].layout === 'build') {
+                    var bst = exSt(exIdx);
+                    Array.prototype.forEach.call(box.querySelectorAll('[data-pick-ex="' + exIdx + '"]'), function (sel) {
+                        sel.value = bst.v[sel.getAttribute('data-pick')] || '';
+                        sel.classList.toggle('is-empty', !sel.value);
+                    });
+                }
                 var st = exSt(exIdx), gs = gapsOf(exIdx), ok = 0, locked = 0;
                 gs.forEach(function (g) {
                     clearMarks(g);
@@ -5822,10 +6119,14 @@ video {
                         if (!lock) return;
                         var good = okValue(g, v);
                         g.classList.add(good ? 'is-ok' : 'is-bad');
-                        if (!good) {
+                        // wordform: przy kilku dopuszczalnych formach pokaz wszystkie,
+                        // takze gdy uczen wpisal jedna z nich poprawnie.
+                        var acc = exAccepted(answerOf(g));
+                        var showAll = EXERCISES[+g.getAttribute('data-ex')].layout === 'wordform' && acc.length > 1;
+                        if ((!good || showAll) && EXERCISES[+g.getAttribute('data-ex')].layout !== 'transform') {
                             var k = document.createElement('span');
                             k.className = 'hub-ex-key';
-                            k.textContent = '(' + exAccepted(answerOf(g))[0] + ')';
+                            k.textContent = '(' + (showAll ? acc.join(' / ') : acc[0]) + ')';
                             g.parentNode.insertBefore(k, g.nextSibling);
                         }
                     } else {
@@ -5837,6 +6138,26 @@ video {
                             if (okValue(g, opt)) b.classList.add('is-ok');
                             else if (opt === v) b.classList.add('is-bad');
                         });
+                    }
+                });
+                if (EXERCISES[exIdx].layout === 'transform') EXERCISES[exIdx].items.forEach(function (it, itIdx) {
+                    var done = !!st.ic[itIdx], good = done && exMatch(EXERCISES[exIdx], it.answers[0], st.v[itIdx + '-0']);
+                    var tries = st.ia[itIdx] || 1;
+                    var q = function (a) { return box.querySelector('[' + a + '="' + exIdx + '"][data-it="' + itIdx + '"]'); };
+                    var c = q('data-tf-check'), f = q('data-tf-fix');
+                    if (c) c.disabled = done;
+                    if (f) f.disabled = !done || good;
+                    var sEl = box.querySelector('[data-tf-status="' + exIdx + '-' + itIdx + '"]');
+                    if (sEl) {
+                        sEl.textContent = (done ? (good ? '✓ Dobrze' : '✗ Jeszcze nie') : '') + (tries > 1 ? (done ? ' · ' : '') + 'próba ' + tries : '');
+                        sEl.className = 'hub-ex-tf-status' + (done ? (good ? ' is-ok' : ' is-bad') : '');
+                        // Po trzeciej nieudanej probie pokaz poprawna odpowiedz.
+                        if (done && !good && tries >= 3) {
+                            var key = document.createElement('div');
+                            key.className = 'hub-ex-tf-key';
+                            key.textContent = 'Poprawnie: ' + exAccepted(it.answers[0])[0];
+                            sEl.appendChild(key);
+                        }
                     }
                 });
                 var s = box.querySelector('[data-ex-score="' + exIdx + '"]');
@@ -5860,13 +6181,99 @@ video {
                 }
                 if (e.target && e.target.classList && e.target.classList.contains('hub-ex-input')) {
                     var g = e.target, st = exSt(+g.getAttribute('data-ex'));
-                    if (st.checked) return;
+                    if (st.checked || g.readOnly) return;
                     st.v[keyOf(g)] = g.value;
                     exSave();
                     refreshExShare();
                 }
             });
+            // layout "build": wybor z listy rozwijanej, bez oceny i bez blokady.
+            box.addEventListener('change', function (e) {
+                var sel = e.target;
+                if (!sel || !sel.classList || !sel.classList.contains('hub-ex-pick')) return;
+                var pEx = +sel.getAttribute('data-pick-ex');
+                var pSt = exSt(pEx);
+                if (sel.value) pSt.v[sel.getAttribute('data-pick')] = sel.value;
+                else delete pSt.v[sel.getAttribute('data-pick')];
+                exSave();
+                applyEx(pEx);   // lista z sync: pozostale wystapienia dostaja ten sam wybor
+                refreshExShare();
+            });
+
+            // layout "sort": przeciaganie przez Pointer Events (palec i mysz; natywne
+            // HTML5 drag and drop nie dziala na Androidzie). Bez ruchu = zwykle
+            // klikniecie, ktore zaznacza slowko do trybu "kliknij kolumne".
+            var drag = null;   // {chip, ex, it, x0, y0, clone, over}
+            var dragEndedAt = 0;
+            function sortTargetAt(x, y, exIdx) {
+                var t = document.elementFromPoint(x, y);
+                var c = t && t.closest ? t.closest('[data-sort-col]') : null;
+                return (c && +c.getAttribute('data-sort-ex') === exIdx) ? c : null;
+            }
+            box.addEventListener('pointerdown', function (e) {
+                var chip = e.target.closest ? e.target.closest('.hub-sort-chip') : null;
+                if (!chip || chip.disabled || (e.pointerType === 'mouse' && e.button !== 0)) return;
+                drag = { chip: chip, ex: +chip.getAttribute('data-sort-chip'), it: +chip.getAttribute('data-it'),
+                         x0: e.clientX, y0: e.clientY, clone: null, over: null };
+                try { chip.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+            });
+            box.addEventListener('pointermove', function (e) {
+                if (!drag) return;
+                if (!drag.clone) {
+                    if (Math.abs(e.clientX - drag.x0) + Math.abs(e.clientY - drag.y0) < 8) return;
+                    var r = drag.chip.getBoundingClientRect();
+                    drag.dx = drag.x0 - r.left; drag.dy = drag.y0 - r.top;
+                    drag.clone = drag.chip.cloneNode(true);
+                    drag.clone.classList.remove('is-sel');
+                    drag.clone.classList.add('is-drag');
+                    drag.clone.style.width = r.width + 'px';
+                    document.body.appendChild(drag.clone);
+                    drag.chip.classList.add('is-ghost');
+                }
+                e.preventDefault();
+                drag.clone.style.left = (e.clientX - drag.dx) + 'px';
+                drag.clone.style.top = (e.clientY - drag.dy) + 'px';
+                var over = sortTargetAt(e.clientX, e.clientY, drag.ex);
+                if (over !== drag.over) {
+                    if (drag.over) drag.over.classList.remove('is-over');
+                    if (over) over.classList.add('is-over');
+                    drag.over = over;
+                }
+                // Kolumny bywaja ponizej ekranu telefonu - przewijanie przy krawedzi.
+                if (e.clientY > window.innerHeight - 60) window.scrollBy(0, 12);
+                else if (e.clientY < 60) window.scrollBy(0, -12);
+            });
+            function endDrag(e, cancel) {
+                if (!drag) return;
+                var d = drag;
+                drag = null;
+                if (!d.clone) return;   // bez ruchu: obsluzy to zdarzenie click
+                d.clone.parentNode.removeChild(d.clone);
+                d.chip.classList.remove('is-ghost');
+                if (d.over) d.over.classList.remove('is-over');
+                dragEndedAt = Date.now();
+                var target = cancel ? null : sortTargetAt(e.clientX, e.clientY, d.ex);
+                if (target) sortMove(d.ex, d.it, target.getAttribute('data-sort-col'));
+            }
+            box.addEventListener('pointerup', function (e) { endDrag(e, false); });
+            box.addEventListener('pointercancel', function (e) { endDrag(e, true); });
+
             box.addEventListener('click', function (e) {
+                var chipEl = e.target.closest ? e.target.closest('.hub-sort-chip') : null;
+                var colEl = e.target.closest ? e.target.closest('[data-sort-col]') : null;
+                if (chipEl || colEl) {
+                    if (Date.now() - dragEndedAt < 400) return;   // klik po upuszczeniu
+                    if (chipEl) {
+                        if (chipEl.disabled) return;
+                        var cEx = +chipEl.getAttribute('data-sort-chip'), cIt = +chipEl.getAttribute('data-it');
+                        sortSel = (sortSel && sortSel.ex === cEx && sortSel.it === cIt) ? null : { ex: cEx, it: cIt };
+                        EXERCISES.forEach(function (ex, i) { if (ex.layout === 'sort' || ex.layout === 'drag') sortRender(i); });
+                        return;
+                    }
+                    var colEx = +colEl.getAttribute('data-sort-ex');
+                    if (sortSel && sortSel.ex === colEx) sortMove(colEx, sortSel.it, colEl.getAttribute('data-sort-col'));
+                    return;
+                }
                 var opt = e.target.closest ? e.target.closest('.hub-ex-opt') : null;
                 if (opt) {
                     var grp = opt.parentNode;
@@ -5877,6 +6284,42 @@ video {
                     exSave();
                     applyEx(gEx);
                     refreshExShare();
+                    return;
+                }
+                var rr = e.target.closest ? e.target.closest('[data-ex-reroll]') : null;
+                if (rr) {
+                    var rIdx = +rr.getAttribute('data-ex-reroll');
+                    resetEx(rIdx);
+                    wfPrepare(rIdx, true);
+                    exSave();
+                    box.innerHTML = exCardsHtml(rIdx);
+                    EXERCISES.forEach(function (ex, i) { if (ex.layout !== 'selfcheck') applyEx(i); });
+                    refreshExShare();
+                    return;
+                }
+                // transform: Sprawdz/Popraw/Resetuj per zdanie. Popraw odblokowuje wpis
+                // i liczy sie jako kolejna proba; Resetuj czysci pole (po sprawdzeniu
+                // tez kolejna proba, inaczej Resetuj obchodzilby licznik).
+                var tf = e.target.closest ? e.target.closest('[data-tf-check],[data-tf-fix],[data-tf-reset]') : null;
+                if (tf) {
+                    tf.blur();
+                    var tEx = +(tf.getAttribute('data-tf-check') || tf.getAttribute('data-tf-fix') || tf.getAttribute('data-tf-reset'));
+                    var tIt = tf.getAttribute('data-it'), tSt = exSt(tEx);
+                    if (tf.hasAttribute('data-tf-check')) {
+                        if (!String(tSt.v[tIt + '-0'] || '').trim()) return;
+                        tSt.ic[tIt] = true;
+                    } else {
+                        if (tSt.ic[tIt]) tSt.ia[tIt] = (tSt.ia[tIt] || 1) + 1;
+                        tSt.ic[tIt] = false;
+                        if (tf.hasAttribute('data-tf-reset')) delete tSt.v[tIt + '-0'];
+                    }
+                    exSave();
+                    applyEx(tEx);
+                    refreshExShare();
+                    if (tf.hasAttribute('data-tf-fix')) {
+                        var inp = box.querySelector('.hub-ex-input[data-ex="' + tEx + '"][data-it="' + tIt + '"]');
+                        if (inp) inp.focus();
+                    }
                     return;
                 }
                 var t = e.target.closest ? e.target.closest('[data-ex-check],[data-ex-reset]') : null;
@@ -5899,10 +6342,19 @@ video {
             // tlumaczenia ucznia) nie jest punktowany i "Resetuj wszystkie" go nie rusza.
             function resetEx(exIdx) {
                 var st = exSt(exIdx);
-                var any = st.checked || Object.keys(st.v).some(function (k) { return String(st.v[k] || '').trim(); });
+                // Wybory z list rozwijanych (layout "build", klucze "p-...") to tresc
+                // ucznia, nie odpowiedzi do oceny - zostaja po resecie i nie licza sie do proby.
+                var keep = {};
+                Object.keys(st.v).forEach(function (k) { if (k.indexOf('p-') === 0) keep[k] = st.v[k]; });
+                var any = st.checked || Object.keys(st.v).some(function (k) { return k.indexOf('p-') !== 0 && String(st.v[k] || '').trim(); });
                 if (any) st.attempts = (st.attempts || 1) + 1;
-                st.v = {};
+                if (EXERCISES[exIdx].layout === 'transform') {
+                    Object.keys(st.ic).forEach(function (i) { if (st.ic[i]) st.ia[i] = (st.ia[i] || 1) + 1; });
+                    st.ic = {};
+                }
+                st.v = keep;
                 st.checked = false;
+                if (EXERCISES[exIdx].layout === 'sort' || EXERCISES[exIdx].layout === 'drag') { delete st.order; sortSel = null; }
             }
             var resetAll = el('hub-ex-reset-all');
             var graded = [];
@@ -5929,8 +6381,22 @@ video {
             var lines = [(HUB.student || 'Uczeń') + ' - ' + (HUB.monthLabel || '') + ', ćwiczenia', ''];
             EXERCISES.forEach(function (ex, exIdx) {
                 var r = exResult(exIdx);
-                if (!r.filled) return;
+                if (!exStarted(exIdx)) return;
                 var st = exSt(exIdx);
+                if (ex.layout === 'transform') {
+                    var nChk = Object.keys(st.ic).filter(function (i) { return st.ic[i]; }).length;
+                    lines.push((ex.title || ('Ćwiczenie ' + (exIdx + 1))) + ': ' + r.ok + '/' + r.total + ' pkt' +
+                        (nChk < r.total ? ' (sprawdzone: ' + nChk + ' z ' + r.total + ')' : ''));
+                    var multi = [], bad = [];
+                    ex.items.forEach(function (it, i) {
+                        if ((st.ia[i] || 1) > 1) multi.push((i + 1) + ': ' + st.ia[i]);
+                        if (st.ic[i] && !exMatch(ex, it.answers[0], st.v[i + '-0'])) bad.push('(' + (i + 1) + ') ' + String(st.v[i + '-0'] || '').trim());
+                    });
+                    lines.push(multi.length ? 'Próby (zdanie: liczba): ' + multi.join(', ') : 'Wszystko za pierwszym podejściem.');
+                    if (bad.length) lines.push('Błędy: ' + bad.join(', '));
+                    lines.push('');
+                    return;
+                }
                 var head = (ex.title || ('Ćwiczenie ' + (exIdx + 1))) + ': ' + r.ok + '/' + r.total + ' pkt, próba nr ' + st.attempts;
                 if (!st.checked && r.filled < r.total) head += ' (niedokończone: ' + r.filled + ' z ' + r.total + ')';
                 if (st.peeked) head += ' (podejrzane odpowiedzi)';
@@ -5942,13 +6408,14 @@ video {
                         return '(' + w.num + ') ' + (w.val || '-');
                     }).join(', '));
                 }
+                if (ex.layout === 'build' && exHasPicks(exIdx)) lines.push('Mój opis: ' + exBuildText(exIdx));
                 lines.push('');
             });
             return lines.join('\n').trim();
         }
         function exStartedCount() {
             var n = 0;
-            EXERCISES.forEach(function (ex, exIdx) { if (exResult(exIdx).filled) n++; });
+            EXERCISES.forEach(function (ex, exIdx) { if (exStarted(exIdx)) n++; });
             return n;
         }
         function setExStatus(msg, warn) {
