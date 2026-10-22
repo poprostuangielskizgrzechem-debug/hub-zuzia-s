@@ -5954,7 +5954,7 @@ video {
                     (ex.layout === 'wordform' ? '<button type="button" class="hub-ex-btn" data-ex-reroll="' + exIdx + '">&#127922; Losuj ponownie</button>' : '') +
                     '</div>') + '</details>';
             }).join(''); }
-            box.innerHTML = exCardsHtml(0);
+            box.innerHTML = exCardsHtml(-1);
 
             // Zasada blokady (2026-10-01, ta sama co w pytaniach pod tekstem):
             // luka do klikniecia blokuje sie po pierwszym kliknieciu, luka do wpisania
