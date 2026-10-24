@@ -2221,9 +2221,11 @@ video {
             <button type="button" class="hub-nav-btn" data-hub-nav="grammar">&#128218; Gramatyka</button>
             <button type="button" class="hub-nav-btn" data-hub-nav="media">&#127909; Artyku&#322;y/Wideo</button>
             <button type="button" class="hub-nav-btn" data-hub-nav="verbs">&#128260; Czasowniki</button>
+            <button type="button" class="hub-nav-btn hidden" id="hub-nav-pastverbs" data-hub-nav="pastverbs">&#9203; Czasowniki Past Simple</button>
             <button type="button" class="hub-nav-btn" data-hub-nav="pronunciation">&#128266; Wymowa</button>
             <button type="button" class="hub-nav-btn" data-hub-nav="writing">&#128214; Teksty</button>
             <button type="button" class="hub-nav-btn" data-hub-nav="exercises">&#128203; &Cacute;wiczenia</button>
+            <button type="button" class="hub-nav-btn" data-hub-nav="games">&#127918; Gry</button>
             <button type="button" class="hub-nav-btn" data-hub-nav="sentences">&#9997;&#65039; Zdania</button>
         </nav>
         <!-- === HUB MODULE - END (nav) === -->
@@ -2566,6 +2568,8 @@ video {
             .hub-ex-instr { color: var(--hub-muted); font-size: 14px; line-height: 1.5; margin: 10px 0 12px; }
             .hub-ex-item { padding: 11px 0; border-top: 1px solid var(--hub-line); line-height: 1.9; font-size: 15.5px; }
             .hub-ex-item:first-of-type { border-top: none; }
+            /* pre-line: znak nowej linii w pozycji lamie linie (np. dialog A:/B: w jednym punkcie) */
+            .hub-ex-item { white-space: pre-line; }
             /* pre-line: "\n" w tekscie pozycji lamie linie (np. punkty polecenia w wypracowaniu) */
             .hub-ex-text { margin: 0 0 12px; line-height: 2.3; font-size: 15.5px; white-space: pre-line; }
             .hub-ex-num { font-weight: 700; color: var(--hub-muted); margin-right: 6px; }
@@ -2659,6 +2663,12 @@ video {
             /* layout "build": wolne listy rozwijane w zdaniach (bez oceny) */
             .hub-ex-pick { font: inherit; font-size: 14.5px; padding: 4px 6px; margin: 2px 3px; border: 1.5px solid #c7d2fe; border-radius: 8px;
                 background: #f5f7ff; color: var(--hub-ink); max-width: 100%; }
+            .hub-ex-passage { white-space: pre-line; line-height: 1.6; font-size: 15px; border: 1px solid var(--hub-line); border-radius: 10px;
+                padding: 12px 16px; margin: 0 0 14px; background: #fbfbfc; }
+            .hub-ex-group { font-family: 'Plus Jakarta Sans', Arial, sans-serif; font-size: 16px; font-weight: 800; color: #1e5aae; margin: 4px 4px 10px; }
+            textarea.hub-ex-selfinput { min-height: 220px; resize: vertical; line-height: 1.5; }
+            .hub-ex-lshare { margin: 0 0 26px; }
+            .hub-ex-lshare-title { font-size: 13px; font-weight: 700; color: var(--hub-muted); text-align: center; margin: 0 0 10px; }
             .hub-ex-pick.is-empty { color: var(--hub-muted); font-style: italic; }
             .hub-ex-pick:focus { outline: none; border-color: #1e5aae; }
         </style>
@@ -2676,17 +2686,6 @@ video {
 
                     <div id="hub-exercises-list"></div>
 
-                    <div class="hub-share hidden" id="hub-ex-share-panel">
-                        <div class="hub-share-actions">
-                            <button type="button" class="hub-cta hub-cta-alt hidden" id="hub-ex-share-native">&#128228; Udost&#281;pnij</button>
-                            <a class="hub-cta hub-cta-wa" id="hub-ex-share-wa" href="#" target="_blank" rel="noopener">&#128172; Wy&#347;lij na WhatsApp</a>
-                            <button type="button" class="hub-cta hub-cta-alt" id="hub-ex-share-copy">&#128203; Kopiuj tekst</button>
-                            <a class="hub-cta hub-cta-alt" id="hub-ex-share-mail" href="#">&#9993;&#65039; Wy&#347;lij mailem</a>
-                        </div>
-                        <p class="hub-share-status" id="hub-ex-share-status"></p>
-                        <textarea class="hub-share-fallback hidden" id="hub-ex-share-fallback" readonly></textarea>
-                    </div>
-
                     <div class="hub-footer">
                         <button type="button" class="hub-link-btn hidden" id="hub-ex-reset-all">&#8635; Resetuj wszystkie</button>
                         <button type="button" class="hub-link-btn" data-hub-nav="home">&larr; Powr&oacute;t</button>
@@ -2696,6 +2695,33 @@ video {
             </div>
         </section>
         <!-- === HUB MODULE - END (exercises view) === -->
+        <!-- === HUB MODULE - START (games view) === -->
+        <section id="hub-games-view" class="hidden no-print flex-grow flex items-start justify-center relative z-20">
+            <div class="hub-shell">
+                <div class="hub-topbar"></div>
+                <div class="hub-inner">
+
+                    <div class="hub-head">
+                        <h2 class="hub-title">Gry</h2>
+                        <p class="hub-tagline">Gry z angielskim do zagrania na telefonie albo komputerze.</p>
+                    </div>
+
+                    <div id="hub-games-list"></div>
+
+                    <div class="hub-footer">
+                        <button type="button" class="hub-link-btn" data-hub-nav="home">&larr; Powr&oacute;t</button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <div id="hub-game-overlay" class="no-print" style="position:fixed; inset:0; z-index:9999; background:#fff; display:none; flex-direction:column;">
+            <div style="display:flex; justify-content:flex-end; padding:6px 10px; border-bottom:1px solid #ddd; background:#f7f7f7;">
+                <button type="button" class="hub-link-btn" id="hub-game-close">&#10005; Zamknij gr&#281;</button>
+            </div>
+            <iframe id="hub-game-frame" title="Gra" style="flex:1; width:100%; border:0;"></iframe>
+        </div>
+        <!-- === HUB MODULE - END (games view) === -->
         <!-- === HUB MODULE - START (sentences view) === -->
         <section id="hub-sentences-view" class="hidden no-print flex-grow flex items-start justify-center relative z-20">
             <div class="hub-shell">
@@ -2748,12 +2774,13 @@ video {
                 <div class="hub-inner">
 
                     <div class="hub-head">
-                        <h2 class="hub-title">Czasowniki nieregularne</h2>
-                        <p class="hub-tagline">Masz polskie znaczenie. Uzupe&#322;nij trzy formy, potem sprawd&#378; si&#281;.</p>
+                        <h2 class="hub-title" id="hub-verbs-title">Czasowniki nieregularne</h2>
+                        <p class="hub-tagline" id="hub-verbs-tagline">Masz polskie znaczenie. Uzupe&#322;nij trzy formy, potem sprawd&#378; si&#281;.</p>
                     </div>
 
                     <div id="hub-verbs-setup">
-                        <div class="hub-verbs-legend">
+                        <div id="hub-verbs-tier-block">
+<div class="hub-verbs-legend">
                             <p class="hub-verbs-legend-title">Co oznaczaj&#261; gwiazdki</p>
                             <ul class="hub-verbs-legend-list">
                                 <li><span class="hub-verbs-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> najcz&#281;&#347;ciej u&#380;ywane, poziom podstawowy</li>
@@ -2771,6 +2798,7 @@ video {
                             <label class="hub-chip"><input type="checkbox" name="verb-tier" value="3" checked><span>&#9733;&#9733;&#9733;&#9734;&#9734;</span></label>
                             <label class="hub-chip"><input type="checkbox" name="verb-tier" value="2" checked><span>&#9733;&#9733;&#9734;&#9734;&#9734;</span></label>
                             <label class="hub-chip"><input type="checkbox" name="verb-tier" value="1" checked><span>&#9733;&#9734;&#9734;&#9734;&#9734;</span></label>
+                        </div>
                         </div>
 
                         <p class="hub-section-title">Ile czasownik&oacute;w na rund&#281;</p>
@@ -3001,6 +3029,62 @@ video {
                                     "firstLetterHint": "h"
                         }
             ],
+            "Lekcja 4 (23.10)": [
+                        {
+                                    "word": "mystery",
+                                    "translation": "tajemnica",
+                                    "definition": "Something strange that nobody can explain.",
+                                    "pos": "n",
+                                    "sentenceWithGap": "Nobody knows where the old key is. It's a [gap].",
+                                    "firstLetterHint": "m"
+                        },
+                        {
+                                    "word": "pumpkin",
+                                    "translation": "dynia",
+                                    "definition": "A big round orange vegetable. At Halloween people cut faces in it.",
+                                    "pos": "n",
+                                    "sentenceWithGap": "At Halloween we cut a scary face in a big orange [gap].",
+                                    "firstLetterHint": "p"
+                        },
+                        {
+                                    "word": "remote control",
+                                    "translation": "pilot (do telewizora)",
+                                    "definition": "A small thing you use to change TV channels from your sofa.",
+                                    "pos": "n",
+                                    "sentenceWithGap": "I want to change the TV channel. Where's the [gap]?",
+                                    "firstLetterHint": "r"
+                        },
+                        {
+                                    "word": "chess",
+                                    "translation": "szachy",
+                                    "definition": "A game for two players with a king and a queen on a black and white board.",
+                                    "pos": "n",
+                                    "sentenceWithGap": "My grandad and I play [gap]. He always wins with his queen.",
+                                    "firstLetterHint": "c"
+                        },
+                        {
+                                    "word": "bear",
+                                    "translation": "niedźwiedź",
+                                    "definition": "A big, strong wild animal with thick fur.",
+                                    "pos": "n",
+                                    "sentenceWithGap": "A brown [gap] lives in the forest and loves honey.",
+                                    "firstLetterHint": "b"
+                        },
+                        {
+                                    "word": "last Friday",
+                                    "translation": "w zeszły piątek",
+                                    "definition": "The Friday of last week.",
+                                    "pos": "phr"
+                        },
+                        {
+                                    "word": "two days ago",
+                                    "translation": "dwa dni temu",
+                                    "definition": "Two days before today.",
+                                    "pos": "phr",
+                                    "sentenceWithGap": "Today is Friday. I was at the cinema on Wednesday, [gap].",
+                                    "firstLetterHint": "t"
+                        }
+            ],
             "Powtórka: Wrzesień 2026": [
                         {
                                     "word": "always",
@@ -3174,8 +3258,8 @@ video {
         "teacherWhatsApp": "",
         "storageKey": "hub_zuzia-s_2026-10",
         "studentKey": "hub_zuzia-s",
-        "stamp": "aktualizacja po lekcji 3, 17.10.2026",
-        "lastLessonPhrase": "lekcji 3",
+        "stamp": "aktualizacja po lekcji 4, 24.10.2026",
+        "lastLessonPhrase": "lekcji 4",
         "lessons": [
                 {
                         "label": "Lekcja 1",
@@ -3200,6 +3284,14 @@ video {
                         "vocabCount": 9,
                         "extraVocabCount": 0,
                         "topic": "Ćwiczenia z was/were i dokończenie zadań z zakładki Ćwiczenia z poprzedniej lekcji"
+                },
+                {
+                        "label": "Lekcja 4",
+                        "dateLabel": "23.10.2026",
+                        "categoryKey": "Lekcja 4 (23.10)",
+                        "vocabCount": 7,
+                        "extraVocabCount": 0,
+                        "topic": "Past Simple: omówienie czasowników nieregularnych oraz przysłówki"
                 }
         ],
         "grammar": [
@@ -3393,6 +3485,47 @@ video {
                                         "quizzes": []
                                 }
                         ]
+                },
+                {
+                        "lessonLabel": "Lekcja 4",
+                        "dateLabel": "23.10.2026",
+                        "topic": "Past Simple: czasowniki nieregularne",
+                        "mistake": "",
+                        "correction": "",
+                        "items": [],
+                        "explanation": "Czasowniki nieregularne mają własną drugą formę (go → went, buy → bought). Listę do nauki masz w zakładce „Czasowniki Past Simple”.",
+                        "sections": [],
+                        "links": []
+                },
+                {
+                        "lessonLabel": "Lekcja 4",
+                        "dateLabel": "23.10.2026",
+                        "topic": "Przysłówki",
+                        "mistake": "",
+                        "correction": "",
+                        "items": [],
+                        "explanation": "Przysłówek mówi, jak coś robisz: quick → quickly, careful → carefully. Uwaga: good → well, a fast, hard, late i early wyglądają tak samo jak przymiotnik. (hardly to coś innego, „prawie wcale”.)",
+                        "sections": [],
+                        "links": []
+                },
+                {
+                        "lessonLabel": "Lekcja 4",
+                        "dateLabel": "23.10.2026",
+                        "topic": "",
+                        "mistake": "",
+                        "correction": "",
+                        "items": [],
+                        "explanation": "",
+                        "sections": [],
+                        "links": [
+                                {
+                                        "label": "Przysłówki | ROCK YOUR ENGLISH #249",
+                                        "url": "https://www.youtube.com/watch?v=qp7RCIeJdWo",
+                                        "type": "youtube",
+                                        "questions": [],
+                                        "quizzes": []
+                                }
+                        ]
                 }
         ],
         "homework": [],
@@ -3451,11 +3584,18 @@ video {
                         "word": "our",
                         "translation": "nasz",
                         "note": ""
+                },
+                {
+                        "lessonLabel": "Lekcja 4",
+                        "word": "bear",
+                        "translation": "niedźwiedź",
+                        "note": ""
                 }
         ],
         "writingSpeaking": [],
         "exercises": [
                 {
+                        "multiline": false,
                         "lessonLabel": "Lekcja 1",
                         "dateLabel": "2.10.2026",
                         "title": "1. Wybierz poprawną formę",
@@ -3709,6 +3849,7 @@ video {
                         ]
                 },
                 {
+                        "multiline": false,
                         "lessonLabel": "Lekcja 1",
                         "dateLabel": "2.10.2026",
                         "title": "2. Uzupełnij zdania",
@@ -3868,6 +4009,7 @@ video {
                         ]
                 },
                 {
+                        "multiline": false,
                         "lessonLabel": "Lekcja 1",
                         "dateLabel": "2.10.2026",
                         "title": "3. Znajdź i popraw błędy",
@@ -3995,6 +4137,7 @@ video {
                         ]
                 },
                 {
+                        "multiline": false,
                         "lessonLabel": "Lekcja 1",
                         "dateLabel": "2.10.2026",
                         "title": "4. Przetłumacz na angielski",
@@ -4088,6 +4231,7 @@ video {
                         ]
                 },
                 {
+                        "multiline": false,
                         "lessonLabel": "Lekcja 2",
                         "dateLabel": "9.10.2026",
                         "title": "1. Wybierz was albo were",
@@ -4221,6 +4365,7 @@ video {
                         ]
                 },
                 {
+                        "multiline": false,
                         "lessonLabel": "Lekcja 2",
                         "dateLabel": "9.10.2026",
                         "title": "2. Ułóż zdania twierdzące",
@@ -4315,6 +4460,7 @@ video {
                         ]
                 },
                 {
+                        "multiline": false,
                         "lessonLabel": "Lekcja 2",
                         "dateLabel": "9.10.2026",
                         "title": "3. Zamień na przeczenia",
@@ -4418,6 +4564,7 @@ video {
                         ]
                 },
                 {
+                        "multiline": false,
                         "lessonLabel": "Lekcja 2",
                         "dateLabel": "9.10.2026",
                         "title": "4. Ułóż pytania",
@@ -4511,6 +4658,7 @@ video {
                         ]
                 },
                 {
+                        "multiline": false,
                         "lessonLabel": "Lekcja 2",
                         "dateLabel": "9.10.2026",
                         "title": "5. Krótkie odpowiedzi",
@@ -4614,6 +4762,7 @@ video {
                         ]
                 },
                 {
+                        "multiline": false,
                         "lessonLabel": "Lekcja 2",
                         "dateLabel": "9.10.2026",
                         "title": "6. Przetłumacz na angielski",
@@ -4705,8 +4854,727 @@ video {
                                         "answer": "Alice wasn't hungry."
                                 }
                         ]
+                },
+                {
+                        "multiline": false,
+                        "lessonLabel": "Lekcja 4",
+                        "dateLabel": "23.10.2026",
+                        "title": "1. Present Simple czy Past Simple? Wybierz",
+                        "instructions": "Kliknij poprawną formę. Patrz na określenia czasu (every Sunday, yesterday, last year...).",
+                        "layout": "list",
+                        "columns": [],
+                        "wordBox": [],
+                        "letters": false,
+                        "strict": false,
+                        "items": [
+                                {
+                                        "text": "I [gap] chess with my grandad every Sunday.",
+                                        "answers": [
+                                                "play"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "play",
+                                                        "played"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "We [gap] to Spain on holiday last year.",
+                                        "answers": [
+                                                "flew"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "fly",
+                                                        "flew"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "My brother [gap] his smartphone yesterday.",
+                                        "answers": [
+                                                "broke"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "breaks",
+                                                        "broke"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "She usually [gap] to school at 8 o'clock.",
+                                        "answers": [
+                                                "goes"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "goes",
+                                                        "went"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "[gap] you [gap] a pumpkin last Friday?",
+                                        "answers": [
+                                                "Did",
+                                                "buy"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "Do",
+                                                        "Did"
+                                                ],
+                                                [
+                                                        "buy",
+                                                        "bought"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "My mum never [gap] coffee.",
+                                        "answers": [
+                                                "drinks"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "drinks",
+                                                        "drank"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "I [gap] my homework two days ago.",
+                                        "answers": [
+                                                "did"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "do",
+                                                        "did"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "They [gap] a video call last night.",
+                                        "answers": [
+                                                "didn't have"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "don't have",
+                                                        "didn't have"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "[gap] your dad [gap] to work every day?",
+                                        "answers": [
+                                                "Does",
+                                                "drive"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "Does",
+                                                        "Did"
+                                                ],
+                                                [
+                                                        "drive",
+                                                        "drives"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "We [gap] the remote control yesterday. It was under the sofa!",
+                                        "answers": [
+                                                "found"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "find",
+                                                        "found"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "Tom [gap] his passport at home last week.",
+                                        "answers": [
+                                                "left"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "leaves",
+                                                        "left"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "Our English lesson [gap] at 4 o'clock on Fridays.",
+                                        "answers": [
+                                                "begins"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "begins",
+                                                        "began"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "I [gap] a bear in the forest last summer!",
+                                        "answers": [
+                                                "heard"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "hear",
+                                                        "heard"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "My cat [gap] a mouse yesterday.",
+                                        "answers": [
+                                                "caught"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "catches",
+                                                        "caught"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "My dad [gap] meat. He's a vegetarian.",
+                                        "answers": [
+                                                "doesn't eat"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "doesn't eat",
+                                                        "didn't eat"
+                                                ]
+                                        ]
+                                }
+                        ]
+                },
+                {
+                        "multiline": false,
+                        "lessonLabel": "Lekcja 4",
+                        "dateLabel": "23.10.2026",
+                        "title": "2. Wpisz czasownik w Past Simple",
+                        "instructions": "Wpisz czasownik z nawiasu w czasie Past Simple. W przeczeniach użyj didn't, w pytaniach did.",
+                        "layout": "list",
+                        "columns": [],
+                        "wordBox": [],
+                        "letters": false,
+                        "strict": true,
+                        "items": [
+                                {
+                                        "text": "Yesterday I [gap] (watch) a film about bears.",
+                                        "answers": [
+                                                "watched"
+                                        ]
+                                },
+                                {
+                                        "text": "We [gap] (play) chess last Thursday.",
+                                        "answers": [
+                                                "played"
+                                        ]
+                                },
+                                {
+                                        "text": "My sister [gap] (text) me two days ago.",
+                                        "answers": [
+                                                "texted"
+                                        ]
+                                },
+                                {
+                                        "text": "Last year we [gap] (visit) a small village in the mountains.",
+                                        "answers": [
+                                                "visited"
+                                        ]
+                                },
+                                {
+                                        "text": "They [gap] (arrive) at the station at 10 o'clock.",
+                                        "answers": [
+                                                "arrived"
+                                        ]
+                                },
+                                {
+                                        "text": "I [gap] (not / like) the film. It was boring.",
+                                        "answers": [
+                                                [
+                                                        "didn't like",
+                                                        "did not like"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "She [gap] (not / go) to school last Friday. She was ill.",
+                                        "answers": [
+                                                [
+                                                        "didn't go",
+                                                        "did not go"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "He wasn't hungry, so he [gap] (not / eat) his breakfast.",
+                                        "answers": [
+                                                [
+                                                        "didn't eat",
+                                                        "did not eat"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "[gap] you [gap] (buy) a new laptop last month?",
+                                        "answers": [
+                                                "Did",
+                                                "buy"
+                                        ]
+                                },
+                                {
+                                        "text": "Where [gap] they [gap] (go) on holiday last year?",
+                                        "answers": [
+                                                "did",
+                                                "go"
+                                        ]
+                                },
+                                {
+                                        "text": "[gap] she [gap] (stay) at home yesterday?",
+                                        "answers": [
+                                                "Did",
+                                                "stay"
+                                        ]
+                                },
+                                {
+                                        "text": "What [gap] you [gap] (do) last weekend?",
+                                        "answers": [
+                                                "did",
+                                                "do"
+                                        ]
+                                },
+                                {
+                                        "text": "Our plane [gap] (land) in London at 6 pm.",
+                                        "answers": [
+                                                "landed"
+                                        ]
+                                },
+                                {
+                                        "text": "I [gap] (forget) my passport!",
+                                        "answers": [
+                                                "forgot"
+                                        ]
+                                },
+                                {
+                                        "text": "We [gap] (bring) sandwiches for the journey.",
+                                        "answers": [
+                                                "brought"
+                                        ]
+                                }
+                        ]
+                },
+                {
+                        "multiline": false,
+                        "lessonLabel": "Lekcja 4",
+                        "dateLabel": "23.10.2026",
+                        "title": "3. Wpisz czasownik w Present Simple",
+                        "instructions": "Wpisz czasownik z nawiasu w czasie Present Simple. Pamiętaj o -s / -es przy he, she, it.",
+                        "layout": "list",
+                        "columns": [],
+                        "wordBox": [],
+                        "letters": false,
+                        "strict": true,
+                        "items": [
+                                {
+                                        "text": "My brother [gap] (play) chess every Saturday.",
+                                        "answers": [
+                                                "plays"
+                                        ]
+                                },
+                                {
+                                        "text": "I usually [gap] (go) to school by bus.",
+                                        "answers": [
+                                                "go"
+                                        ]
+                                },
+                                {
+                                        "text": "She [gap] (watch) TV in the evening.",
+                                        "answers": [
+                                                "watches"
+                                        ]
+                                },
+                                {
+                                        "text": "We [gap] (not / have) a dog.",
+                                        "answers": [
+                                                [
+                                                        "don't have",
+                                                        "do not have"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "My dad [gap] (not / drink) coffee.",
+                                        "answers": [
+                                                [
+                                                        "doesn't drink",
+                                                        "does not drink"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "[gap] you [gap] (like) pumpkins?",
+                                        "answers": [
+                                                "Do",
+                                                "like"
+                                        ]
+                                },
+                                {
+                                        "text": "[gap] your sister [gap] (text) her friends every day?",
+                                        "answers": [
+                                                "Does",
+                                                "text"
+                                        ]
+                                },
+                                {
+                                        "text": "What time [gap] the lesson [gap] (begin)?",
+                                        "answers": [
+                                                "does",
+                                                "begin"
+                                        ]
+                                },
+                                {
+                                        "text": "Bears [gap] (eat) fish and honey.",
+                                        "answers": [
+                                                "eat"
+                                        ]
+                                },
+                                {
+                                        "text": "He [gap] (fly) to London twice a year.",
+                                        "answers": [
+                                                "flies"
+                                        ]
+                                }
+                        ]
+                },
+                {
+                        "multiline": false,
+                        "lessonLabel": "Lekcja 4",
+                        "dateLabel": "23.10.2026",
+                        "title": "4. Present czy Past? Patrz na określenia czasu",
+                        "instructions": "Wpisz czasownik z nawiasu w Present Simple albo Past Simple. Zdania idą parami, porównaj je.",
+                        "layout": "list",
+                        "columns": [],
+                        "wordBox": [],
+                        "letters": false,
+                        "strict": true,
+                        "items": [
+                                {
+                                        "text": "Yesterday my dad [gap] (drive) me to school.",
+                                        "answers": [
+                                                "drove"
+                                        ]
+                                },
+                                {
+                                        "text": "My dad usually [gap] (drive) me to school.",
+                                        "answers": [
+                                                "drives"
+                                        ]
+                                },
+                                {
+                                        "text": "We always [gap] (leave) home at 7:30.",
+                                        "answers": [
+                                                "leave"
+                                        ]
+                                },
+                                {
+                                        "text": "We [gap] (leave) home late last Thursday.",
+                                        "answers": [
+                                                "left"
+                                        ]
+                                },
+                                {
+                                        "text": "[gap] you [gap] (feel) tired yesterday?",
+                                        "answers": [
+                                                "Did",
+                                                "feel"
+                                        ]
+                                },
+                                {
+                                        "text": "[gap] you often [gap] (feel) sleepy in the morning?",
+                                        "answers": [
+                                                "Do",
+                                                "feel"
+                                        ]
+                                },
+                                {
+                                        "text": "My friends [gap] (not / come) to my party last year.",
+                                        "answers": [
+                                                [
+                                                        "didn't come",
+                                                        "did not come"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "My friends [gap] (not / come) to school on Saturdays.",
+                                        "answers": [
+                                                [
+                                                        "don't come",
+                                                        "do not come"
+                                                ]
+                                        ]
+                                }
+                        ]
+                },
+                {
+                        "multiline": false,
+                        "lessonLabel": "Lekcja 4",
+                        "dateLabel": "23.10.2026",
+                        "title": "5. Przymiotnik czy przysłówek? Wybierz",
+                        "instructions": "Przymiotnik opisuje osobę albo rzecz (a careful driver), przysłówek mówi, jak coś robisz (drives carefully). Kliknij poprawne słowo.",
+                        "layout": "list",
+                        "columns": [],
+                        "wordBox": [],
+                        "letters": false,
+                        "strict": false,
+                        "items": [
+                                {
+                                        "text": "She is a [gap] driver.",
+                                        "answers": [
+                                                "careful"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "careful",
+                                                        "carefully"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "She drives [gap].",
+                                        "answers": [
+                                                "carefully"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "careful",
+                                                        "carefully"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "Tom is a [gap] runner.",
+                                        "answers": [
+                                                "fast"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "fast",
+                                                        "fastly"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "Tom runs very [gap].",
+                                        "answers": [
+                                                "fast"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "fast",
+                                                        "fastly"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "My sister works [gap].",
+                                        "answers": [
+                                                "hard"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "hard",
+                                                        "hardly"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "This exercise is [gap].",
+                                        "answers": [
+                                                "hard"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "hard",
+                                                        "hardly"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "You speak English very [gap]!",
+                                        "answers": [
+                                                "well"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "good",
+                                                        "well"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "You're a [gap] student.",
+                                        "answers": [
+                                                "good"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "good",
+                                                        "well"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "We arrived [gap] and missed the train.",
+                                        "answers": [
+                                                "late"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "late",
+                                                        "lately"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "Please speak [gap]. The baby is sleeping.",
+                                        "answers": [
+                                                "quietly"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "quiet",
+                                                        "quietly"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "The bear walked [gap] towards the river.",
+                                        "answers": [
+                                                "slowly"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "slow",
+                                                        "slowly"
+                                                ]
+                                        ]
+                                },
+                                {
+                                        "text": "The children played [gap] in the garden.",
+                                        "answers": [
+                                                "happily"
+                                        ],
+                                        "choices": [
+                                                [
+                                                        "happy",
+                                                        "happily"
+                                                ]
+                                        ]
+                                }
+                        ]
+                },
+                {
+                        "multiline": false,
+                        "lessonLabel": "Lekcja 4",
+                        "dateLabel": "23.10.2026",
+                        "title": "6. Utwórz przysłówek",
+                        "instructions": "Zamień przymiotnik z nawiasu na przysłówek. Uważaj, niektóre się nie zmieniają!",
+                        "layout": "list",
+                        "columns": [],
+                        "wordBox": [],
+                        "letters": false,
+                        "strict": true,
+                        "items": [
+                                {
+                                        "text": "She finished her homework [gap]. (quick)",
+                                        "answers": [
+                                                "quickly"
+                                        ]
+                                },
+                                {
+                                        "text": "He played chess [gap] yesterday. (bad)",
+                                        "answers": [
+                                                "badly"
+                                        ]
+                                },
+                                {
+                                        "text": "I found the answer [gap]. (easy)",
+                                        "answers": [
+                                                "easily"
+                                        ]
+                                },
+                                {
+                                        "text": "She sings [gap]. (beautiful)",
+                                        "answers": [
+                                                "beautifully"
+                                        ]
+                                },
+                                {
+                                        "text": "My brother swims very [gap]. (good)",
+                                        "answers": [
+                                                "well"
+                                        ]
+                                },
+                                {
+                                        "text": "The train went very [gap]. (fast)",
+                                        "answers": [
+                                                "fast"
+                                        ]
+                                },
+                                {
+                                        "text": "We studied [gap] for the test. (hard)",
+                                        "answers": [
+                                                "hard"
+                                        ]
+                                },
+                                {
+                                        "text": "I got up [gap] on Monday. (early)",
+                                        "answers": [
+                                                "early"
+                                        ]
+                                },
+                                {
+                                        "text": "The bus arrived [gap]. (late)",
+                                        "answers": [
+                                                "late"
+                                        ]
+                                },
+                                {
+                                        "text": "He answered [gap]. (polite)",
+                                        "answers": [
+                                                "politely"
+                                        ]
+                                },
+                                {
+                                        "text": "She answered [gap] and the teacher was angry. (rude)",
+                                        "answers": [
+                                                "rudely"
+                                        ]
+                                },
+                                {
+                                        "text": "Drive [gap]! (careful)",
+                                        "answers": [
+                                                "carefully"
+                                        ]
+                                }
+                        ]
                 }
         ],
+        "games": [],
         "distractors": [
                 {
                         "word": "tomorrow",
@@ -4731,11 +5599,6 @@ video {
                 {
                         "word": "last week",
                         "translation": "w zeszłym tygodniu",
-                        "pos": "phr"
-                },
-                {
-                        "word": "two days ago",
-                        "translation": "dwa dni temu",
                         "pos": "phr"
                 },
                 {
@@ -4857,9 +5720,255 @@ video {
                         "word": "year",
                         "translation": "rok",
                         "pos": "n"
+                },
+                {
+                        "word": "candle",
+                        "translation": "świeczka",
+                        "pos": "n"
+                },
+                {
+                        "word": "cupboard",
+                        "translation": "szafka",
+                        "pos": "n"
                 }
         ],
-        "priorityVerbs": [],
+        "priorityVerbs": [
+                "be",
+                "become",
+                "begin",
+                "break",
+                "bring",
+                "build",
+                "buy",
+                "catch",
+                "choose",
+                "come",
+                "do",
+                "drink",
+                "drive",
+                "eat",
+                "fall",
+                "feed",
+                "feel",
+                "find",
+                "fly",
+                "forget",
+                "get",
+                "give",
+                "go",
+                "have",
+                "hear",
+                "hit",
+                "know",
+                "leave"
+        ],
+        "pastSimpleVerbs": [
+                {
+                        "pl": "być",
+                        "base": "be",
+                        "past": [
+                                "was",
+                                "were"
+                        ]
+                },
+                {
+                        "pl": "stawać się",
+                        "base": "become",
+                        "past": [
+                                "became"
+                        ]
+                },
+                {
+                        "pl": "zaczynać",
+                        "base": "begin",
+                        "past": [
+                                "began"
+                        ]
+                },
+                {
+                        "pl": "łamać / psuć",
+                        "base": "break",
+                        "past": [
+                                "broke"
+                        ]
+                },
+                {
+                        "pl": "przynosić",
+                        "base": "bring",
+                        "past": [
+                                "brought"
+                        ]
+                },
+                {
+                        "pl": "budować",
+                        "base": "build",
+                        "past": [
+                                "built"
+                        ]
+                },
+                {
+                        "pl": "kupować",
+                        "base": "buy",
+                        "past": [
+                                "bought"
+                        ]
+                },
+                {
+                        "pl": "łapać",
+                        "base": "catch",
+                        "past": [
+                                "caught"
+                        ]
+                },
+                {
+                        "pl": "wybierać",
+                        "base": "choose",
+                        "past": [
+                                "chose"
+                        ]
+                },
+                {
+                        "pl": "przychodzić",
+                        "base": "come",
+                        "past": [
+                                "came"
+                        ]
+                },
+                {
+                        "pl": "robić",
+                        "base": "do",
+                        "past": [
+                                "did"
+                        ]
+                },
+                {
+                        "pl": "pić",
+                        "base": "drink",
+                        "past": [
+                                "drank"
+                        ]
+                },
+                {
+                        "pl": "prowadzić (pojazd)",
+                        "base": "drive",
+                        "past": [
+                                "drove"
+                        ]
+                },
+                {
+                        "pl": "jeść",
+                        "base": "eat",
+                        "past": [
+                                "ate"
+                        ]
+                },
+                {
+                        "pl": "spadać",
+                        "base": "fall",
+                        "past": [
+                                "fell"
+                        ]
+                },
+                {
+                        "pl": "karmić",
+                        "base": "feed",
+                        "past": [
+                                "fed"
+                        ]
+                },
+                {
+                        "pl": "czuć",
+                        "base": "feel",
+                        "past": [
+                                "felt"
+                        ]
+                },
+                {
+                        "pl": "znaleźć",
+                        "base": "find",
+                        "past": [
+                                "found"
+                        ]
+                },
+                {
+                        "pl": "latać",
+                        "base": "fly",
+                        "past": [
+                                "flew"
+                        ]
+                },
+                {
+                        "pl": "zapominać",
+                        "base": "forget",
+                        "past": [
+                                "forgot"
+                        ]
+                },
+                {
+                        "pl": "dostawać / docierać",
+                        "base": "get",
+                        "past": [
+                                "got"
+                        ]
+                },
+                {
+                        "pl": "dawać",
+                        "base": "give",
+                        "past": [
+                                "gave"
+                        ]
+                },
+                {
+                        "pl": "iść / jechać",
+                        "base": "go",
+                        "past": [
+                                "went"
+                        ]
+                },
+                {
+                        "pl": "mieć",
+                        "base": "have",
+                        "past": [
+                                "had"
+                        ]
+                },
+                {
+                        "pl": "słyszeć",
+                        "base": "hear",
+                        "past": [
+                                "heard"
+                        ]
+                },
+                {
+                        "pl": "uderzać",
+                        "base": "hit",
+                        "past": [
+                                "hit"
+                        ]
+                },
+                {
+                        "pl": "wiedzieć / znać",
+                        "base": "know",
+                        "past": [
+                                "knew"
+                        ]
+                },
+                {
+                        "pl": "uczyć się",
+                        "base": "learn",
+                        "past": [
+                                "learnt",
+                                "learned"
+                        ]
+                },
+                {
+                        "pl": "zostawiać / wychodzić",
+                        "base": "leave",
+                        "past": [
+                                "left"
+                        ]
+                }
+        ],
         "verbRoundSize": 6,
         "sentencePool": [
                 {
@@ -4987,6 +6096,48 @@ video {
                         "lessons": [
                                 "Lekcja 3"
                         ]
+                },
+                {
+                        "word": "mystery",
+                        "lessons": [
+                                "Lekcja 4"
+                        ]
+                },
+                {
+                        "word": "pumpkin",
+                        "lessons": [
+                                "Lekcja 4"
+                        ]
+                },
+                {
+                        "word": "remote control",
+                        "lessons": [
+                                "Lekcja 4"
+                        ]
+                },
+                {
+                        "word": "chess",
+                        "lessons": [
+                                "Lekcja 4"
+                        ]
+                },
+                {
+                        "word": "bear",
+                        "lessons": [
+                                "Lekcja 4"
+                        ]
+                },
+                {
+                        "word": "last Friday",
+                        "lessons": [
+                                "Lekcja 4"
+                        ]
+                },
+                {
+                        "word": "two days ago",
+                        "lessons": [
+                                "Lekcja 4"
+                        ]
                 }
         ],
         "sentenceCount": 5,
@@ -5005,6 +6156,11 @@ video {
                         "lessonLabel": "Lekcja 3",
                         "dateLabel": "16.10.2026",
                         "text": "W zakładce „Gramatyka” zrób sobie Wordwall. Masz tam też piosenkę ;-). Oprócz tego, jak zwykle, ćwicz słówka z naszych lekcji i z podręcznika. Korzystaj z fiszek i testów."
+                },
+                {
+                        "lessonLabel": "Lekcja 4",
+                        "dateLabel": "23.10.2026",
+                        "text": "Ćwicz czasowniki w zakładce Czasowniki Past Simple, obejrzyj filmik w zakładce Gramatyka i zrób zadania w zakładce Ćwiczenia. Ćwicz też słówka z podręcznika, korzystając z Fiszek i Testów."
                 }
         ]
 };
@@ -6443,6 +7599,7 @@ video {
         var PRONUNCIATION = HUB.pronunciation || [];
         var WRITING = HUB.writingSpeaking || [];
         var EXERCISES = HUB.exercises || [];
+        var GAMES = HUB.games || [];
         // Tryb pliku. "month" to hub miesieczny ucznia (slownictwo z jego lekcji,
         // gramatyka, wymowa, zdania, czasowniki). "unit" to strona jednego dzialu
         // z podrecznika: te same fiszki i ten sam test, tylko karmione slownictwem
@@ -6455,6 +7612,11 @@ video {
         /* VERB_BANK_END */
         var VERB_ROUND_SIZE = 3;
         var PRIORITY_VERBS = (HUB.priorityVerbs || []).map(function (s) { return String(s).trim().toLowerCase(); });
+        // Zakladka "Czasowniki Past Simple" (2026-10-24, na razie tylko Zuzia S.): ten sam widok
+        // co czasowniki nieregularne, ale pula = pastSimpleVerbs z hub_input.json, bez gwiazdek,
+        // uczen wpisuje tylko bezokolicznik i druga forme. Osobny klucz postepu.
+        var PS_VERBS = HUB.pastSimpleVerbs || [];
+        var verbMode = 'irregular';
         var SENT_POOL = HUB.sentencePool || [];      // [{word, lessons:[lessonLabel,...]}]
         var SENT_COUNT_BASE = HUB.sentenceCount || 5;
         var SENT_COUNT = Math.min(SENT_COUNT_BASE, SENT_POOL.length);
@@ -6624,14 +7786,16 @@ video {
             grammar:       'hub-grammar-view',
             media:         'hub-media-view',
             verbs:         'hub-verbs-view',
+            pastverbs:     'hub-verbs-view',
             pronunciation: 'hub-pronunciation-view',
             writing:       'hub-writing-view',
             exercises:     'hub-exercises-view',
-            sentences:     'hub-sentences-view'
+            sentences:     'hub-sentences-view',
+            games:         'hub-games-view'
         };
         var ALL_VIEW_IDS = [
             'hub-home-view', 'flashcards-view', 'config-view',
-            'hub-grammar-view', 'hub-media-view', 'hub-pronunciation-view', 'hub-writing-view', 'hub-exercises-view', 'hub-sentences-view', 'hub-verbs-view',
+            'hub-grammar-view', 'hub-media-view', 'hub-pronunciation-view', 'hub-writing-view', 'hub-exercises-view', 'hub-sentences-view', 'hub-verbs-view', 'hub-games-view',
             'path-selection-view', 'student-start-view', 'quiz-view'
         ];
 
@@ -6664,7 +7828,7 @@ video {
             });
 
             if (name === 'flashcards') resetFlashcardsToSetup();
-            if (name === 'verbs') resetVerbsToSetup();
+            if (name === 'verbs' || name === 'pastverbs') { setVerbMode(name === 'pastverbs' ? 'past' : 'irregular'); resetVerbsToSetup(); }
             window.scrollTo(0, 0);
         }
 
@@ -6738,9 +7902,11 @@ video {
                 { key: 'grammar',       icon: '📚', label: 'Gramatyka', sub: count(GRAMMAR_TOPICS, 'zagadnienie', 'zagadnienia', 'zagadnień') + ' z lekcji', count: GRAMMAR.length + HOMEWORK.length },
                 { key: 'media',         icon: '🎬', label: 'Artykuły/Wideo', sub: count(MEDIA.length, 'materiał', 'materiały', 'materiałów') + ' do obejrzenia/przeczytania', count: MEDIA.length },
                 { key: 'verbs',         icon: '🔄', label: 'Czasowniki nieregularne', sub: VERB_ROUND_SIZE + ' na rundę z ' + VERB_BANK.length + ' w banku', count: VERB_BANK.length },
+                { key: 'pastverbs',     icon: '⏳', label: 'Czasowniki Past Simple', sub: count(PS_VERBS.length, 'czasownik', 'czasowniki', 'czasowników') + ' z lekcji, dwie formy', count: PS_VERBS.length },
                 { key: 'pronunciation', icon: '🔊', label: 'Wymowa',    sub: count(PRONUNCIATION.length, 'słówko', 'słówka', 'słówek') + ' do posłuchania', count: PRONUNCIATION.length },
                 { key: 'writing',       icon: '📖', label: 'Teksty', sub: count(WRITING.length, 'tekst', 'teksty', 'tekstów') + ' do przeczytania/napisania', count: WRITING.length },
                 { key: 'exercises',     icon: '📋', label: 'Ćwiczenia', sub: count(EXERCISES.length, 'ćwiczenie', 'ćwiczenia', 'ćwiczeń') + ' z lukami', count: EXERCISES.length },
+                { key: 'games',         icon: '🎮', label: 'Gry', sub: count(GAMES.length, 'gra', 'gry', 'gier') + ' do zagrania', count: GAMES.length },
                 { key: 'sentences',     icon: '✍️', label: 'Ułóż zdania', sub: count(SENT_COUNT, 'słówko', 'słówka', 'słówek') + ' z puli ' + SENT_POOL.length + ', losowo', count: SENT_POOL.length }
             ];
             // Kafelek czasownikow inaczej wyszedlby na stronie Unitu aktywny, bo
@@ -6748,6 +7914,7 @@ video {
             if (IS_UNIT) {
                 tiles = tiles.filter(function (t) { return t.key === 'flashcards' || t.key === 'test'; });
             }
+            if (!PS_VERBS.length) tiles = tiles.filter(function (t) { return t.key !== 'pastverbs'; });
 
             box.innerHTML = tiles.map(function (t) {
                 var dis = t.count > 0 ? '' : ' disabled';
@@ -7508,8 +8675,9 @@ video {
                     // Do samosprawdzenia: wlasna odpowiedz (zapis lokalny, bez oceny)
                     // i przykladowa odpowiedz pod rozwijanym paskiem.
                     body = ex.items.map(function (it, itIdx) {
-                        return '<div class="hub-ex-self"><div class="hub-ex-self-q"><span class="hub-ex-num">' + (itIdx + 1) + '.</span>' + escapeHtml(it.text) + '</div>' +
-                            '<input type="text" class="hub-ex-selfinput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Twoja wersja..." data-self-ex="' + exIdx + '" data-it="' + itIdx + '">' +
+                        var selfAttrs = ' class="hub-ex-selfinput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Twoja wersja..." data-self-ex="' + exIdx + '" data-it="' + itIdx + '"';
+                        return '<div class="hub-ex-self"><div class="hub-ex-self-q">' + (ex.items.length > 1 ? '<span class="hub-ex-num">' + (itIdx + 1) + '.</span>' : '') + escapeHtml(it.text) + '</div>' +
+                            (ex.multiline ? '<textarea' + selfAttrs + '></textarea>' : '<input type="text"' + selfAttrs + '>') +
                             '<details class="hub-ex-model"><summary>Poka&#380; przyk&#322;adow&#261; odpowied&#378;</summary><div>' + escapeHtml(it.answer) + '</div></details></div>';
                     }).join('');
                 } else if (ex.layout === 'sort') {
@@ -7581,11 +8749,16 @@ video {
                     ? '<h3 class="hub-ex-lesson">' + escapeHtml(ex.lessonLabel || '') +
                       (ex.dateLabel ? ' &middot; ' + escapeHtml(ex.dateLabel) : '') + '</h3>'
                     : '';
+                if (ex.group && (exIdx === 0 || EXERCISES[exIdx - 1].group !== ex.group || sep)) sep += '<h4 class="hub-ex-group">' + escapeHtml(ex.group) + '</h4>';
+                // Wysylka wynikow pod kazda lekcja osobno (2026-10-24), nie jedna na caly okres.
+                var lastOfLesson = exIdx === EXERCISES.length - 1 || EXERCISES[exIdx + 1].lessonLabel !== ex.lessonLabel;
+                var tail = lastOfLesson ? exSharePanelHtml(ex.lessonLabel || '') : '';
                 return sep + '<details class="hub-lesson-group hub-ex-card"' + (exIdx === openIdx ? ' open' : '') + '>' +
                     '<summary class="hub-ex-head"><span class="hub-ex-title">' + escapeHtml(ex.title || '') + '</span>' +
                     (isSelf ? '' : '<span class="hub-ex-score" data-ex-score="' + exIdx + '" data-ex-total="' + gapTotal + '">&ndash; / ' + gapTotal + '</span>') +
                     '</summary>' +
                     (ex.instructions ? '<p class="hub-ex-instr">' + escapeHtml(ex.instructions) + '</p>' : '') +
+                    (ex.passage ? '<div class="hub-ex-passage">' + escapeHtml(ex.passage).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>') + '</div>' : '') +
                     (ex.figure ? '<div class="hub-ex-figure">' + ex.figure + '</div>' : '') +
                     wordBox + body +
                     (isSelf || ex.layout === 'transform' ? '' :
@@ -7593,7 +8766,7 @@ video {
                     (exAllChoice(ex) ? '' : '<button type="button" class="hub-ex-btn hub-ex-btn-main" data-ex-check="' + exIdx + '">Sprawd&#378;</button>') +
                     '<button type="button" class="hub-ex-btn" data-ex-reset="' + exIdx + '">&#8635; Resetuj</button>' +
                     (ex.layout === 'wordform' ? '<button type="button" class="hub-ex-btn" data-ex-reroll="' + exIdx + '">&#127922; Losuj ponownie</button>' : '') +
-                    '</div>') + '</details>';
+                    '</div>') + '</details>' + tail;
             }).join(''); }
             box.innerHTML = exCardsHtml(-1);
 
@@ -7819,6 +8992,7 @@ video {
                 if (e.target && e.target.classList && e.target.classList.contains('hub-ex-selfinput')) {
                     exSt(+e.target.getAttribute('data-self-ex')).v['s' + e.target.getAttribute('data-it')] = e.target.value;
                     exSave();
+                    refreshExShare();
                     return;
                 }
                 if (e.target && e.target.classList && e.target.classList.contains('hub-ex-input')) {
@@ -8016,12 +9190,25 @@ video {
             refreshExShare();
         }
 
-        // Wiadomosc z wynikami: wynik kazdego zaczetego cwiczenia i lista zlych
-        // albo pustych luk z tym, co uczen wpisal. Poprawnych odpowiedzi w niej
-        // nie ma - nauczyciel je zna, a wiadomosc zostaje krotka.
-        function buildExShareText() {
-            var lines = [(HUB.student || 'Uczeń') + ' - ' + (HUB.monthLabel || '') + ', ćwiczenia', ''];
+        // Wiadomosc z wynikami jednej lekcji: wynik kazdego zaczetego cwiczenia
+        // i lista zlych albo pustych luk z tym, co uczen wpisal. Poprawnych odpowiedzi
+        // w niej nie ma - nauczyciel je zna, a wiadomosc zostaje krotka.
+        // Od 2026-10-24 panel wysylki stoi pod kazda lekcja i wysyla tylko jej cwiczenia.
+        function exLessonDate(lbl) {
+            for (var i = 0; i < EXERCISES.length; i++) if ((EXERCISES[i].lessonLabel || '') === lbl) return EXERCISES[i].dateLabel || '';
+            return '';
+        }
+        function buildExShareText(lbl) {
+            var d = exLessonDate(lbl);
+            var lines = [(HUB.student || 'Uczeń') + ' - ' + (lbl || HUB.monthLabel || '') + (d ? ' (' + d + ')' : '') + ', ćwiczenia', ''];
             EXERCISES.forEach(function (ex, exIdx) {
+                if ((ex.lessonLabel || '') !== lbl) return;
+                if (ex.layout === 'selfcheck') {
+                    var sst = exSt(exIdx), own = [];
+                    ex.items.forEach(function (it, i) { var t = String(sst.v['s' + i] || '').trim(); if (t) own.push((ex.items.length > 1 ? (i + 1) + '. ' : '') + t); });
+                    if (own.length) { lines.push((ex.title || ('Ćwiczenie ' + (exIdx + 1))) + ':'); lines.push(own.join('\n')); lines.push(''); }
+                    return;
+                }
                 var r = exResult(exIdx);
                 if (!exStarted(exIdx)) return;
                 var st = exSt(exIdx);
@@ -8055,80 +9242,94 @@ video {
             });
             return lines.join('\n').trim();
         }
-        function exStartedCount() {
+        function exStartedCount(lbl) {
             var n = 0;
-            EXERCISES.forEach(function (ex, exIdx) { if (exStarted(exIdx)) n++; });
+            EXERCISES.forEach(function (ex, exIdx) {
+                if ((ex.lessonLabel || '') !== lbl) return;
+                if (ex.layout === 'selfcheck') { var st = exSt(exIdx); if (ex.items.some(function (it, i) { return String(st.v['s' + i] || '').trim(); })) n++; return; }
+                if (exStarted(exIdx)) n++;
+            });
             return n;
         }
-        function setExStatus(msg, warn) {
-            var st = el('hub-ex-share-status');
+        function exSharePanelHtml(lbl) {
+            var k = escapeHtml(lbl);
+            return '<div class="hub-share hub-ex-lshare" data-exs="' + k + '">' +
+                '<p class="hub-ex-lshare-title">Wy&#347;lij wyniki: ' + k + '</p>' +
+                '<div class="hub-share-actions">' +
+                (typeof navigator.share === 'function' ? '<button type="button" class="hub-cta hub-cta-alt" data-exs-native="' + k + '">&#128228; Udost&#281;pnij</button>' : '') +
+                '<a class="hub-cta hub-cta-wa" data-exs-wa="' + k + '" href="#" target="_blank" rel="noopener">&#128172; Wy&#347;lij na WhatsApp</a>' +
+                '<button type="button" class="hub-cta hub-cta-alt" data-exs-copy="' + k + '">&#128203; Kopiuj tekst</button>' +
+                '<a class="hub-cta hub-cta-alt" data-exs-mail="' + k + '" href="#">&#9993;&#65039; Wy&#347;lij mailem</a>' +
+                '</div><p class="hub-share-status" data-exs-status="' + k + '"></p>' +
+                '<textarea class="hub-share-fallback hidden" data-exs-fallback="' + k + '" readonly></textarea></div>';
+        }
+        function exPanelPart(panel, attr) { return panel.querySelector('[' + attr + ']'); }
+        function setExStatus(panel, msg, warn) {
+            var st = exPanelPart(panel, 'data-exs-status');
             if (!st) return;
             st.textContent = msg || '';
             st.classList.toggle('is-warn', !!warn);
         }
         function refreshExShare() {
-            var panel = el('hub-ex-share-panel');
-            var wa = el('hub-ex-share-wa');
-            var mail = el('hub-ex-share-mail');
-            if (!panel || !wa) return;
-            panel.classList.toggle('hidden', !EXERCISES.length);
-            var n = exStartedCount();
-            if (!n) {
-                wa.classList.add('is-disabled');
-                wa.setAttribute('href', '#');
-                if (mail) { mail.classList.add('is-disabled'); mail.setAttribute('href', '#'); }
-                setExStatus('Zrób przynajmniej jedno ćwiczenie, żeby było co wysłać.', false);
-                return;
-            }
-            if (mail) {
+            var box = el('hub-exercises-list');
+            if (!box) return;
+            Array.prototype.forEach.call(box.querySelectorAll('[data-exs]'), function (panel) {
+                var lbl = panel.getAttribute('data-exs');
+                var wa = exPanelPart(panel, 'data-exs-wa'), mail = exPanelPart(panel, 'data-exs-mail');
+                var n = exStartedCount(lbl);
+                if (!n) {
+                    wa.classList.add('is-disabled'); wa.setAttribute('href', '#');
+                    mail.classList.add('is-disabled'); mail.setAttribute('href', '#');
+                    setExStatus(panel, 'Zrób przynajmniej jedno ćwiczenie z tej lekcji, żeby było co wysłać.', false);
+                    return;
+                }
+                var text = buildExShareText(lbl);
                 mail.classList.remove('is-disabled');
                 mail.setAttribute('href', 'mailto:?subject=' +
-                    encodeURIComponent((HUB.student || '') + ' - ćwiczenia ' + (HUB.monthLabel || '')) +
-                    '&body=' + encodeURIComponent(buildExShareText()));
-            }
-            var num = (HUB.teacherWhatsApp || '').replace(/[^0-9]/g, '');
-            wa.classList.remove('is-disabled');
-            wa.setAttribute('href', 'https://wa.me/' + num + '?text=' + encodeURIComponent(buildExShareText()));
-            var graded = EXERCISES.filter(function (ex) { return ex.layout !== 'selfcheck'; }).length;
-            setExStatus('Gotowe do wysłania: ' + count(n, 'ćwiczenie', 'ćwiczenia', 'ćwiczeń') + ' z ' + graded + '.', false);
+                    encodeURIComponent((HUB.student || '') + ' - ćwiczenia, ' + lbl) + '&body=' + encodeURIComponent(text));
+                var num = (HUB.teacherWhatsApp || '').replace(/[^0-9]/g, '');
+                wa.classList.remove('is-disabled');
+                wa.setAttribute('href', 'https://wa.me/' + num + '?text=' + encodeURIComponent(text));
+                var total = EXERCISES.filter(function (ex) { return (ex.lessonLabel || '') === lbl; }).length;
+                setExStatus(panel, 'Gotowe do wysłania: ' + count(n, 'ćwiczenie', 'ćwiczenia', 'ćwiczeń') + ' z ' + total + '.', false);
+            });
         }
         var exShareWired = false;
         function wireExShare() {
             if (exShareWired) return;
+            var box = el('hub-exercises-list');
+            if (!box) return;
             exShareWired = true;
-            var nativeBtn = el('hub-ex-share-native');
-            if (nativeBtn && typeof navigator.share === 'function') {
-                nativeBtn.classList.remove('hidden');
-                nativeBtn.addEventListener('click', function () {
-                    nativeBtn.blur();
-                    if (!exStartedCount()) { setExStatus('Zrób przynajmniej jedno ćwiczenie, żeby było co wysłać.', true); return; }
+            box.addEventListener('click', function (e) {
+                var t = e.target.closest ? e.target.closest('[data-exs-native], [data-exs-copy], [data-exs-wa], [data-exs-mail]') : null;
+                if (!t) return;
+                var panel = t.closest('[data-exs]');
+                var lbl = panel.getAttribute('data-exs');
+                if (!exStartedCount(lbl)) { e.preventDefault(); setExStatus(panel, 'Zrób przynajmniej jedno ćwiczenie z tej lekcji, żeby było co wysłać.', true); return; }
+                if (t.hasAttribute('data-exs-wa') || t.hasAttribute('data-exs-mail')) return;
+                t.blur();
+                var text = buildExShareText(lbl);
+                if (t.hasAttribute('data-exs-native')) {
                     try {
-                        navigator.share({ text: buildExShareText() }).catch(function () {
-                            setExStatus('Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj tekst.', false);
+                        navigator.share({ text: text }).catch(function () {
+                            setExStatus(panel, 'Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj tekst.', false);
                         });
-                    } catch (e) {
-                        setExStatus('Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj tekst.', false);
+                    } catch (err) {
+                        setExStatus(panel, 'Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj tekst.', false);
                     }
-                });
-            }
-            var copyBtn = el('hub-ex-share-copy');
-            if (!copyBtn) return;
-            copyBtn.addEventListener('click', function () {
-                copyBtn.blur();
-                if (!exStartedCount()) { setExStatus('Zrób przynajmniej jedno ćwiczenie, żeby było co wysłać.', true); return; }
-                var text = buildExShareText();
-                var fallback = el('hub-ex-share-fallback');
+                    return;
+                }
+                var fallback = exPanelPart(panel, 'data-exs-fallback');
                 function done() {
-                    if (fallback) fallback.classList.add('hidden');
-                    setExStatus('Skopiowane. Wklej na WhatsAppie albo gdzie chcesz.', false);
+                    fallback.classList.add('hidden');
+                    setExStatus(panel, 'Skopiowane. Wklej na WhatsAppie albo gdzie chcesz.', false);
                 }
                 function manual() {
-                    if (!fallback) return;
                     fallback.classList.remove('hidden');
                     fallback.value = text;
                     fallback.focus();
                     fallback.select();
-                    setExStatus('Zaznacz tekst poniżej i skopiuj ręcznie.', true);
+                    setExStatus(panel, 'Zaznacz tekst poniżej i skopiuj ręcznie.', true);
                 }
                 function legacy() {
                     var ok = false;
@@ -8144,7 +9345,7 @@ video {
                         tmp.setSelectionRange(0, text.length);
                         ok = document.execCommand('copy');
                         document.body.removeChild(tmp);
-                    } catch (e) { ok = false; }
+                    } catch (err) { ok = false; }
                     if (ok) done(); else manual();
                 }
                 if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
@@ -8783,6 +9984,25 @@ video {
         // Czasowniki nieregularne
         // ==========================================
         var VERB_KEY = STUDENT_KEY + '_czasowniki';
+
+        /** Przelacza widok czasownikow miedzy bankiem nieregularnych a lista Past Simple. */
+        function setVerbMode(mode) {
+            if (mode === verbMode) return;
+            verbMode = mode;
+            var ps = mode === 'past';
+            VERB_KEY = STUDENT_KEY + (ps ? '_czasowniki_ps' : '_czasowniki');
+            VERB_COLS = ps ? VERB_COLS_ALL.slice(0, 2) : VERB_COLS_ALL;
+            loadVerbProgress();
+            var t = el('hub-verbs-title'), tg = el('hub-verbs-tagline'), tb = el('hub-verbs-tier-block');
+            if (t) t.textContent = ps ? 'Czasowniki Past Simple' : 'Czasowniki nieregularne';
+            if (tg) tg.textContent = ps ? 'Masz polskie znaczenie. Wpisz bezokolicznik i drugą formę, potem sprawdź się.' : 'Masz polskie znaczenie. Uzupełnij trzy formy, potem sprawdź się.';
+            if (tb) tb.classList.toggle('hidden', ps);
+        }
+        /** Pula aktualnego trybu przed odjeciem "umiem". */
+        function verbPool() {
+            if (verbMode === 'past') return PS_VERBS;
+            return VERB_BANK.filter(function (v) { return verbSelectedTiers.indexOf(v.stars) !== -1; });
+        }
         var verbProgress = {};      // { base: 'umiem' | 'do powtorki' } - TRWALE, nie per rundy
         var verbSelectedTiers = [1, 2, 3, 4, 5];   // zakres gwiazdek wybrany na ekranie startowym
         var verbRoundAll = [];      // caly wylosowany zestaw rundy
@@ -8834,8 +10054,8 @@ video {
          * z notatek biezacej lekcji), potem "do powtorki", na koncu reszta losowo.
          */
         function drawVerbRound() {
-            var pula = VERB_BANK.filter(function (v) {
-                return verbSelectedTiers.indexOf(v.stars) !== -1 && verbProgress[v.base] !== 'umiem';
+            var pula = verbPool().filter(function (v) {
+                return verbProgress[v.base] !== 'umiem';
             });
             var priorytet = pula.filter(function (v) { return PRIORITY_VERBS.indexOf(v.base.toLowerCase()) !== -1; });
             var doPowtorki = pula.filter(function (v) {
@@ -8864,7 +10084,7 @@ video {
 
         /** "Zaczynamy" na ekranie startowym: zapamietaj wybrany zakres i wystartuj sesje. */
         function startVerbSession() {
-            var tiers = selectedTierValues();
+            var tiers = verbMode === 'past' ? verbSelectedTiers : selectedTierValues();
             if (!tiers) { window.alert('Zaznacz przynajmniej jeden zakres gwiazdek.'); return; }
             verbSelectedTiers = tiers;
             var sizeSelect = el('hub-verbs-round-size');
@@ -8898,7 +10118,7 @@ video {
         /** Wszystkie czasowniki z wybranego zakresu sa juz "umiem" - zamiast pustej
          *  tabeli pokazujemy stan koncowy, w duchu tego, jak fiszki koncza talie. */
         function renderVerbsExhausted() {
-            var wRange = VERB_BANK.filter(function (v) { return verbSelectedTiers.indexOf(v.stars) !== -1; }).length;
+            var wRange = verbPool().length;
             el('hub-verbs-table').innerHTML = '';
             var intro = el('hub-verbs-intro');
             if (intro) intro.textContent = '';
@@ -8913,7 +10133,7 @@ video {
                 '<p class="hub-verbs-label">Brawo</p>' +
                 '<p class="hub-verbs-score">🎉</p>' +
                 '<p class="hub-verbs-sub">Opanowane wszystkie ' + count(wRange, 'czasownik', 'czasowniki', 'czasowników') + ' w tym zakresie.<br>' +
-                'Zresetuj postęp albo wybierz inny zakres gwiazdek.</p>' +
+                (verbMode === 'past' ? 'Zresetuj postęp, żeby ćwiczyć od nowa.</p>' : 'Zresetuj postęp albo wybierz inny zakres gwiazdek.</p>') +
                 '<div class="hub-verbs-again"><button type="button" class="hub-cta hub-cta-alt" id="hub-verbs-change-range">&larr; Zmień zakres</button></div>';
             var zmien = el('hub-verbs-change-range');
             if (zmien) zmien.addEventListener('click', function () { zmien.blur(); resetVerbsToSetup(); });
@@ -8926,18 +10146,20 @@ video {
                 return 'Poprawiasz ' + count(verbActive.length, 'czasownik', 'czasowniki', 'czasowników') +
                        ' z ' + verbRoundAll.length + ' w tej rundzie.';
             }
-            var wRange = VERB_BANK.filter(function (v) { return verbSelectedTiers.indexOf(v.stars) !== -1; }).length;
+            var wRange = verbPool().length;
+            if (verbMode === 'past') return count(verbRoundAll.length, 'czasownik', 'czasowniki', 'czasowników') + ' z Twojej listy (' + wRange + ').';
             var ilePriorytet = verbRoundAll.filter(function (v) { return PRIORITY_VERBS.indexOf(v.base.toLowerCase()) !== -1; }).length;
             var txt = count(verbRoundAll.length, 'czasownik', 'czasowniki', 'czasowników') + ' z wybranego zakresu (' + wRange + ')';
             if (ilePriorytet) txt += ', w tym ' + ilePriorytet + ' z ostatnich lekcji';
             return txt + '.';
         }
 
-        var VERB_COLS = [
+        var VERB_COLS_ALL = [
             { key: 'base', label: 'bezokolicznik' },
             { key: 'past', label: 'druga forma' },
             { key: 'participle', label: 'trzecia forma' }
         ];
+        var VERB_COLS = VERB_COLS_ALL;
 
         function renderVerbs() {
             var box = el('hub-verbs-table');
@@ -9044,7 +10266,7 @@ video {
             var prob = verbHistory.reduce(function (s, r) { return s + r.total; }, 0);
             var pct = prob ? Math.round((dobrze / prob) * 100) : 0;
             var lines = [
-                (HUB.student || 'Uczeń') + ' - ' + (HUB.monthLabel || '') + ', czasowniki nieregularne',
+                (HUB.student || 'Uczeń') + ' - ' + (HUB.monthLabel || '') + ', ' + (verbMode === 'past' ? 'czasowniki Past Simple' : 'czasowniki nieregularne'),
                 '',
                 'Runda: ' + count(verbRoundAll.length, 'czasownik', 'czasowniki', 'czasowników'),
                 'Wynik: ' + dobrze + '/' + prob + ' (' + pct + '% celności)',
@@ -9204,7 +10426,7 @@ video {
         function rerollVerbSet() {
             var setup = el('hub-verbs-setup');
             if (setup && !setup.classList.contains('hidden')) {
-                var tiers = selectedTierValues();
+                var tiers = verbMode === 'past' ? verbSelectedTiers : selectedTierValues();
                 if (!tiers) { window.alert('Zaznacz przynajmniej jeden zakres gwiazdek.'); return; }
                 verbSelectedTiers = tiers;
                 var sizeSelect = el('hub-verbs-round-size');
@@ -9688,6 +10910,53 @@ video {
         }
 
         // ==========================================
+        // Gry: osadzony HTML otwierany w pelnoekranowej ramce
+        // ==========================================
+        var gameUrl = null;
+        function renderGames() {
+            var box = el('hub-games-list');
+            if (!box) return;
+            if (!GAMES.length) {
+                box.innerHTML = '<p class="hub-tagline">Na razie nie ma tu gier.</p>';
+            } else {
+                box.innerHTML = '<div class="hub-links">' + GAMES.map(function (g, i) {
+                    return '<button type="button" class="hub-link-tile" data-hub-game="' + i + '" style="cursor:pointer; text-align:left; width:100%">' +
+                        '<span>🎮 <strong>' + escapeHtml(g.title) + '</strong>' +
+                        (g.description ? '<br><span class="hub-tile-sub">' + escapeHtml(g.description) + '</span>' : '') +
+                        '</span></button>';
+                }).join('') + '</div>';
+            }
+            // Przycisk nawigacji znika, gdy nie ma gier - pusta zakladka nic nie daje.
+            var navBtn = document.querySelector('.hub-nav-btn[data-hub-nav="games"]');
+            hideIf(!GAMES.length, navBtn);
+            box.addEventListener('click', function (e) {
+                var b = e.target.closest ? e.target.closest('[data-hub-game]') : null;
+                if (b) openGame(parseInt(b.getAttribute('data-hub-game'), 10));
+            });
+            var close = el('hub-game-close');
+            if (close) close.addEventListener('click', closeGame);
+        }
+        function openGame(i) {
+            var g = GAMES[i];
+            if (!g) return;
+            stopSpeaking();
+            var bin = atob(g.html64);
+            var bytes = new Uint8Array(bin.length);
+            for (var k = 0; k < bin.length; k++) bytes[k] = bin.charCodeAt(k);
+            if (gameUrl) URL.revokeObjectURL(gameUrl);
+            gameUrl = URL.createObjectURL(new Blob([bytes], { type: 'text/html;charset=utf-8' }));
+            el('hub-game-frame').src = gameUrl;
+            el('hub-game-overlay').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        function closeGame() {
+            el('hub-game-overlay').style.display = 'none';
+            el('hub-game-frame').src = 'about:blank';
+            if (gameUrl) { URL.revokeObjectURL(gameUrl); gameUrl = null; }
+            document.body.style.overflow = '';
+        }
+
+        // ==========================================
         // Start
         // ==========================================
         function hubInit() {
@@ -9705,6 +10974,7 @@ video {
                 renderPronunciation();
                 renderWriting();
                 renderExercises();
+                renderGames();
 
                 loadSentences();
                 renderSentLessonChips();
@@ -9715,6 +10985,7 @@ video {
 
                 loadVerbProgress();
                 wireVerbs();
+                if (PS_VERBS.length) { var psNav = el('hub-nav-pastverbs'); if (psNav) psNav.classList.remove('hidden'); }
             }
 
             renderLessonChips();
