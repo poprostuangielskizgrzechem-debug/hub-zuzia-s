@@ -2221,9 +2221,11 @@ video {
             <button type="button" class="hub-nav-btn" data-hub-nav="grammar">&#128218; Gramatyka</button>
             <button type="button" class="hub-nav-btn" data-hub-nav="media">&#127909; Artyku&#322;y/Wideo</button>
             <button type="button" class="hub-nav-btn" data-hub-nav="verbs">&#128260; Czasowniki</button>
+            <button type="button" class="hub-nav-btn hidden" id="hub-nav-pastverbs" data-hub-nav="pastverbs">&#9203; Czasowniki Past Simple</button>
             <button type="button" class="hub-nav-btn" data-hub-nav="pronunciation">&#128266; Wymowa</button>
             <button type="button" class="hub-nav-btn" data-hub-nav="writing">&#128214; Teksty</button>
             <button type="button" class="hub-nav-btn" data-hub-nav="exercises">&#128203; &Cacute;wiczenia</button>
+            <button type="button" class="hub-nav-btn" data-hub-nav="games">&#127918; Gry</button>
             <button type="button" class="hub-nav-btn" data-hub-nav="sentences">&#9997;&#65039; Zdania</button>
         </nav>
         <!-- === HUB MODULE - END (nav) === -->
@@ -2563,9 +2565,11 @@ video {
             .hub-ex-title::before { content: '\25B8'; display: inline-block; margin-right: 8px; color: var(--hub-muted); transition: transform .15s; }
             .hub-ex-card[open] .hub-ex-title::before { transform: rotate(90deg); }
             .hub-ex-score { font-size: 13px; font-weight: 700; color: #1e5aae; background: #e9f0fa; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
-            .hub-ex-instr { color: var(--hub-muted); font-size: 14px; line-height: 1.5; margin: 10px 0 12px; }
+            .hub-ex-instr { color: var(--hub-muted); font-size: 14px; line-height: 1.5; margin: 10px 0 12px; white-space: pre-line; }
             .hub-ex-item { padding: 11px 0; border-top: 1px solid var(--hub-line); line-height: 1.9; font-size: 15.5px; }
             .hub-ex-item:first-of-type { border-top: none; }
+            /* pre-line: znak nowej linii w pozycji lamie linie (np. dialog A:/B: w jednym punkcie) */
+            .hub-ex-item { white-space: pre-line; }
             /* pre-line: "\n" w tekscie pozycji lamie linie (np. punkty polecenia w wypracowaniu) */
             .hub-ex-text { margin: 0 0 12px; line-height: 2.3; font-size: 15.5px; white-space: pre-line; }
             .hub-ex-num { font-weight: 700; color: var(--hub-muted); margin-right: 6px; }
@@ -2612,9 +2616,12 @@ video {
             .hub-ex-table .hub-ex-input { width: 100%; min-width: 90px; text-align: left; }
             .hub-ex-img { width: 1%; }
             .hub-ex-img svg { display: block; height: 40px; width: auto; max-width: 64px; box-shadow: 0 0 0 1px #cbd5e1; }
+            /* rysunek nad calym cwiczeniem (ex.svg), np. drzewo genealogiczne */
+            .hub-ex-figure { margin: 4px 0 14px; text-align: center; }
+            .hub-ex-figure svg { display: inline-block; width: 100%; max-width: 560px; height: auto; }
             .hub-ex-self { padding: 12px 0; border-top: 1px solid var(--hub-line); }
             .hub-ex-self:first-of-type { border-top: none; }
-            .hub-ex-self-q { margin: 0 0 6px; line-height: 1.5; }
+            .hub-ex-self-q { margin: 0 0 6px; line-height: 1.5; white-space: pre-line; }
             .hub-ex-selfinput { width: 100%; box-sizing: border-box; font: inherit; padding: 6px 10px; border: 1.5px solid #d6d9df; border-radius: 8px; outline: none; background: #fff; color: var(--hub-ink); }
             .hub-ex-selfinput:focus { border-color: #2563eb; }
             .hub-ex-model { margin-top: 6px; }
@@ -2656,6 +2663,12 @@ video {
             /* layout "build": wolne listy rozwijane w zdaniach (bez oceny) */
             .hub-ex-pick { font: inherit; font-size: 14.5px; padding: 4px 6px; margin: 2px 3px; border: 1.5px solid #c7d2fe; border-radius: 8px;
                 background: #f5f7ff; color: var(--hub-ink); max-width: 100%; }
+            .hub-ex-passage { white-space: pre-line; line-height: 1.6; font-size: 15px; border: 1px solid var(--hub-line); border-radius: 10px;
+                padding: 12px 16px; margin: 0 0 14px; background: #fbfbfc; }
+            .hub-ex-group { font-family: 'Plus Jakarta Sans', Arial, sans-serif; font-size: 16px; font-weight: 800; color: #1e5aae; margin: 4px 4px 10px; }
+            textarea.hub-ex-selfinput { min-height: 220px; resize: vertical; line-height: 1.5; }
+            .hub-ex-lshare { margin: 0 0 26px; }
+            .hub-ex-lshare-title { font-size: 13px; font-weight: 700; color: var(--hub-muted); text-align: center; margin: 0 0 10px; }
             .hub-ex-pick.is-empty { color: var(--hub-muted); font-style: italic; }
             .hub-ex-pick:focus { outline: none; border-color: #1e5aae; }
         </style>
@@ -2673,17 +2686,6 @@ video {
 
                     <div id="hub-exercises-list"></div>
 
-                    <div class="hub-share hidden" id="hub-ex-share-panel">
-                        <div class="hub-share-actions">
-                            <button type="button" class="hub-cta hub-cta-alt hidden" id="hub-ex-share-native">&#128228; Udost&#281;pnij</button>
-                            <a class="hub-cta hub-cta-wa" id="hub-ex-share-wa" href="#" target="_blank" rel="noopener">&#128172; Wy&#347;lij na WhatsApp</a>
-                            <button type="button" class="hub-cta hub-cta-alt" id="hub-ex-share-copy">&#128203; Kopiuj tekst</button>
-                            <a class="hub-cta hub-cta-alt" id="hub-ex-share-mail" href="#">&#9993;&#65039; Wy&#347;lij mailem</a>
-                        </div>
-                        <p class="hub-share-status" id="hub-ex-share-status"></p>
-                        <textarea class="hub-share-fallback hidden" id="hub-ex-share-fallback" readonly></textarea>
-                    </div>
-
                     <div class="hub-footer">
                         <button type="button" class="hub-link-btn hidden" id="hub-ex-reset-all">&#8635; Resetuj wszystkie</button>
                         <button type="button" class="hub-link-btn" data-hub-nav="home">&larr; Powr&oacute;t</button>
@@ -2693,6 +2695,33 @@ video {
             </div>
         </section>
         <!-- === HUB MODULE - END (exercises view) === -->
+        <!-- === HUB MODULE - START (games view) === -->
+        <section id="hub-games-view" class="hidden no-print flex-grow flex items-start justify-center relative z-20">
+            <div class="hub-shell">
+                <div class="hub-topbar"></div>
+                <div class="hub-inner">
+
+                    <div class="hub-head">
+                        <h2 class="hub-title">Gry</h2>
+                        <p class="hub-tagline">Gry z angielskim do zagrania na telefonie albo komputerze.</p>
+                    </div>
+
+                    <div id="hub-games-list"></div>
+
+                    <div class="hub-footer">
+                        <button type="button" class="hub-link-btn" data-hub-nav="home">&larr; Powr&oacute;t</button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <div id="hub-game-overlay" class="no-print" style="position:fixed; inset:0; z-index:9999; background:#fff; display:none; flex-direction:column;">
+            <div style="display:flex; justify-content:flex-end; padding:6px 10px; border-bottom:1px solid #ddd; background:#f7f7f7;">
+                <button type="button" class="hub-link-btn" id="hub-game-close">&#10005; Zamknij gr&#281;</button>
+            </div>
+            <iframe id="hub-game-frame" title="Gra" style="flex:1; width:100%; border:0;"></iframe>
+        </div>
+        <!-- === HUB MODULE - END (games view) === -->
         <!-- === HUB MODULE - START (sentences view) === -->
         <section id="hub-sentences-view" class="hidden no-print flex-grow flex items-start justify-center relative z-20">
             <div class="hub-shell">
@@ -2745,12 +2774,13 @@ video {
                 <div class="hub-inner">
 
                     <div class="hub-head">
-                        <h2 class="hub-title">Czasowniki nieregularne</h2>
-                        <p class="hub-tagline">Masz polskie znaczenie. Uzupe&#322;nij trzy formy, potem sprawd&#378; si&#281;.</p>
+                        <h2 class="hub-title" id="hub-verbs-title">Czasowniki nieregularne</h2>
+                        <p class="hub-tagline" id="hub-verbs-tagline">Masz polskie znaczenie. Uzupe&#322;nij trzy formy, potem sprawd&#378; si&#281;.</p>
                     </div>
 
                     <div id="hub-verbs-setup">
-                        <div class="hub-verbs-legend">
+                        <div id="hub-verbs-tier-block">
+<div class="hub-verbs-legend">
                             <p class="hub-verbs-legend-title">Co oznaczaj&#261; gwiazdki</p>
                             <ul class="hub-verbs-legend-list">
                                 <li><span class="hub-verbs-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> najcz&#281;&#347;ciej u&#380;ywane, poziom podstawowy</li>
@@ -2768,6 +2798,7 @@ video {
                             <label class="hub-chip"><input type="checkbox" name="verb-tier" value="3" checked><span>&#9733;&#9733;&#9733;&#9734;&#9734;</span></label>
                             <label class="hub-chip"><input type="checkbox" name="verb-tier" value="2" checked><span>&#9733;&#9733;&#9734;&#9734;&#9734;</span></label>
                             <label class="hub-chip"><input type="checkbox" name="verb-tier" value="1" checked><span>&#9733;&#9734;&#9734;&#9734;&#9734;</span></label>
+                        </div>
                         </div>
 
                         <p class="hub-section-title">Ile czasownik&oacute;w na rund&#281;</p>
@@ -3009,7 +3040,7 @@ video {
         "teacherWhatsApp": "",
         "storageKey": "hub_zuzia-s_2026-09",
         "studentKey": "hub_zuzia-s",
-        "stamp": "aktualizacja po lekcji 1, 8.10.2026",
+        "stamp": "aktualizacja po lekcji 1, 24.10.2026",
         "lastLessonPhrase": "lekcji 1",
         "lessons": [
                 {
@@ -3234,13 +3265,15 @@ video {
                                         "label": "Wszystko o Present Simple i Present Continuous | ROCK YOUR ENGLISH #205",
                                         "url": "https://www.youtube.com/watch?v=zCuY0zJqz0I",
                                         "type": "youtube",
-                                        "questions": []
+                                        "questions": [],
+                                        "quizzes": []
                                 },
                                 {
                                         "label": "094. Present Simple and Present Continuous – Check yourself | SzlifujAngielski.pl",
                                         "url": "https://szlifujangielski.pl/ucz-sie/cwiczenia/094-present-simple-and-present-continuous/",
                                         "type": "test",
-                                        "questions": []
+                                        "questions": [],
+                                        "quizzes": []
                                 }
                         ]
                 }
@@ -3250,6 +3283,7 @@ video {
         "pronunciation": [],
         "writingSpeaking": [],
         "exercises": [],
+        "games": [],
         "distractors": [
                 {
                         "word": "yesterday",
@@ -3308,6 +3342,7 @@ video {
                 }
         ],
         "priorityVerbs": [],
+        "pastSimpleVerbs": [],
         "verbRoundSize": 6,
         "sentencePool": [
                 {
@@ -4881,6 +4916,7 @@ video {
         var PRONUNCIATION = HUB.pronunciation || [];
         var WRITING = HUB.writingSpeaking || [];
         var EXERCISES = HUB.exercises || [];
+        var GAMES = HUB.games || [];
         // Tryb pliku. "month" to hub miesieczny ucznia (slownictwo z jego lekcji,
         // gramatyka, wymowa, zdania, czasowniki). "unit" to strona jednego dzialu
         // z podrecznika: te same fiszki i ten sam test, tylko karmione slownictwem
@@ -4893,6 +4929,11 @@ video {
         /* VERB_BANK_END */
         var VERB_ROUND_SIZE = 3;
         var PRIORITY_VERBS = (HUB.priorityVerbs || []).map(function (s) { return String(s).trim().toLowerCase(); });
+        // Zakladka "Czasowniki Past Simple" (2026-10-24, na razie tylko Zuzia S.): ten sam widok
+        // co czasowniki nieregularne, ale pula = pastSimpleVerbs z hub_input.json, bez gwiazdek,
+        // uczen wpisuje tylko bezokolicznik i druga forme. Osobny klucz postepu.
+        var PS_VERBS = HUB.pastSimpleVerbs || [];
+        var verbMode = 'irregular';
         var SENT_POOL = HUB.sentencePool || [];      // [{word, lessons:[lessonLabel,...]}]
         var SENT_COUNT_BASE = HUB.sentenceCount || 5;
         var SENT_COUNT = Math.min(SENT_COUNT_BASE, SENT_POOL.length);
@@ -5062,14 +5103,16 @@ video {
             grammar:       'hub-grammar-view',
             media:         'hub-media-view',
             verbs:         'hub-verbs-view',
+            pastverbs:     'hub-verbs-view',
             pronunciation: 'hub-pronunciation-view',
             writing:       'hub-writing-view',
             exercises:     'hub-exercises-view',
-            sentences:     'hub-sentences-view'
+            sentences:     'hub-sentences-view',
+            games:         'hub-games-view'
         };
         var ALL_VIEW_IDS = [
             'hub-home-view', 'flashcards-view', 'config-view',
-            'hub-grammar-view', 'hub-media-view', 'hub-pronunciation-view', 'hub-writing-view', 'hub-exercises-view', 'hub-sentences-view', 'hub-verbs-view',
+            'hub-grammar-view', 'hub-media-view', 'hub-pronunciation-view', 'hub-writing-view', 'hub-exercises-view', 'hub-sentences-view', 'hub-verbs-view', 'hub-games-view',
             'path-selection-view', 'student-start-view', 'quiz-view'
         ];
 
@@ -5102,7 +5145,7 @@ video {
             });
 
             if (name === 'flashcards') resetFlashcardsToSetup();
-            if (name === 'verbs') resetVerbsToSetup();
+            if (name === 'verbs' || name === 'pastverbs') { setVerbMode(name === 'pastverbs' ? 'past' : 'irregular'); resetVerbsToSetup(); }
             window.scrollTo(0, 0);
         }
 
@@ -5176,9 +5219,11 @@ video {
                 { key: 'grammar',       icon: '📚', label: 'Gramatyka', sub: count(GRAMMAR_TOPICS, 'zagadnienie', 'zagadnienia', 'zagadnień') + ' z lekcji', count: GRAMMAR.length + HOMEWORK.length },
                 { key: 'media',         icon: '🎬', label: 'Artykuły/Wideo', sub: count(MEDIA.length, 'materiał', 'materiały', 'materiałów') + ' do obejrzenia/przeczytania', count: MEDIA.length },
                 { key: 'verbs',         icon: '🔄', label: 'Czasowniki nieregularne', sub: VERB_ROUND_SIZE + ' na rundę z ' + VERB_BANK.length + ' w banku', count: VERB_BANK.length },
+                { key: 'pastverbs',     icon: '⏳', label: 'Czasowniki Past Simple', sub: count(PS_VERBS.length, 'czasownik', 'czasowniki', 'czasowników') + ' z lekcji, dwie formy', count: PS_VERBS.length },
                 { key: 'pronunciation', icon: '🔊', label: 'Wymowa',    sub: count(PRONUNCIATION.length, 'słówko', 'słówka', 'słówek') + ' do posłuchania', count: PRONUNCIATION.length },
                 { key: 'writing',       icon: '📖', label: 'Teksty', sub: count(WRITING.length, 'tekst', 'teksty', 'tekstów') + ' do przeczytania/napisania', count: WRITING.length },
                 { key: 'exercises',     icon: '📋', label: 'Ćwiczenia', sub: count(EXERCISES.length, 'ćwiczenie', 'ćwiczenia', 'ćwiczeń') + ' z lukami', count: EXERCISES.length },
+                { key: 'games',         icon: '🎮', label: 'Gry', sub: count(GAMES.length, 'gra', 'gry', 'gier') + ' do zagrania', count: GAMES.length },
                 { key: 'sentences',     icon: '✍️', label: 'Ułóż zdania', sub: count(SENT_COUNT, 'słówko', 'słówka', 'słówek') + ' z puli ' + SENT_POOL.length + ', losowo', count: SENT_POOL.length }
             ];
             // Kafelek czasownikow inaczej wyszedlby na stronie Unitu aktywny, bo
@@ -5186,6 +5231,7 @@ video {
             if (IS_UNIT) {
                 tiles = tiles.filter(function (t) { return t.key === 'flashcards' || t.key === 'test'; });
             }
+            if (!PS_VERBS.length) tiles = tiles.filter(function (t) { return t.key !== 'pastverbs'; });
 
             box.innerHTML = tiles.map(function (t) {
                 var dis = t.count > 0 ? '' : ' disabled';
@@ -5396,13 +5442,26 @@ video {
                 box.innerHTML = '<p class="hub-empty">Na razie bez artyku&#322;&oacute;w ani film&oacute;w. Poka&#380;&#261; si&#281; tu po kolejnej lekcji.</p>';
                 return;
             }
+            // Quizy pod artykulem (m.quizzes, 2026-10-14): ABCD albo Prawda/Falsz,
+            // ten sam mechanizm co pytania w Tekstach (wqHandleClick/wqApply).
+            var quizNo = 0;
             box.innerHTML = groups.map(function (grp, gi) {
                 var head = '<p class="hub-section-title' + (gi === 0 ? ' is-first' : '') + '">' +
                     escapeHtml(grp.label) + (grp.dateLabel ? ' &middot; ' + escapeHtml(grp.dateLabel) : '') + '</p>';
-                return head + renderLinks(grp.items.map(function (m) {
-                    return { label: m.label, url: m.url, type: m.type, questions: m.questions };
-                }));
-            }).join('');
+                return head + grp.items.map(function (m) {
+                    var tile = renderLinks([{ label: m.label, url: m.url, type: m.type, questions: m.questions }]);
+                    return tile + (m.quizzes || []).map(function (qz) {
+                        var key = 'm' + (quizNo++);
+                        var w = { wqKey: 'media|' + m.url + '|' + qz.title, title: qz.title, type: qz.type,
+                            article: m.label, section: 'Artykuły/Wideo', questions: qz.questions };
+                        return '<details class="hub-ex-card hub-media-quiz"' + (key === 'm0' ? ' open' : '') + '>' +
+                            '<summary class="hub-ex-head"><span class="hub-ex-title">' + escapeHtml(qz.title) + '</span></summary>' +
+                            writingQuestionsHtml(w, key, true) + '</details>';
+                    }).join('');
+                }).join('');
+            }).join('') + (quizNo ? wqSharePanelHtml('mall') : '');
+            Object.keys(WQ_REG).forEach(function (k) { if (k.charAt(0) === 'm') wqApply(WQ_REG[k], k); });
+            box.addEventListener('click', function (e) { wqHandleClick(e); });
         }
 
         // ==========================================
@@ -5681,10 +5740,65 @@ video {
         }
         function exAccepted(a) { return Array.isArray(a) ? a : [a]; }
         // layout "transform": cale zdanie, wiec kropka/wykrzyknik na koncu nie decyduje.
-        function exMatch(ex, a, v) {
+        // Tolerancja wpisywanych odpowiedzi (decyzja Grzecha 2026-10-17, wszyscy uczniowie):
+        // brak/nadmiar interpunkcji i apostrofow, wersja AmE/BrE oraz drobna literowka
+        // (1 znak w jednym slowie od 5 liter) licza sie jako poprawne. Literowka NIE
+        // obejmuje koncowek -s/-es/-d/-ed/-n, bo to blad gramatyczny. Synonimy dopisuje
+        // sie do answers w hub_input.json. Luki do klikniecia i cwiczenia z
+        // "strict": true (np. "popraw pisownie") porownuja sie dokladnie, jak dawniej.
+        var EX_US_UK = { gray: 'grey', program: 'programme', check: 'cheque', tire: 'tyre', pajamas: 'pyjamas',
+            mom: 'mum', math: 'maths', aluminum: 'aluminium', jewelry: 'jewellery', plow: 'plough', donut: 'doughnut',
+            catalog: 'catalogue', dialog: 'dialogue', analog: 'analogue', skeptical: 'sceptical', mustache: 'moustache',
+            gotten: 'got', fall: 'autumn', apartment: 'flat', vacation: 'holiday', cookie: 'biscuit', cookies: 'biscuits' };
+        function exLoose(x) {
+            return exNorm(x).replace(/can't/g, 'cannot').replace(/won't/g, 'will not').replace(/n't/g, ' not')
+                .replace(/'re /g, ' are ').replace(/'ve /g, ' have ').replace(/'m /g, ' am ').replace(/'ll /g, ' will ').replace(/'/g, '').replace(/[.,!?;:"()“”„–—-]+/g, ' ')
+                .replace(/\s+/g, ' ').trim().split(' ').map(function (w) {
+                    if (EX_US_UK[w]) return EX_US_UK[w];
+                    return w.replace(/^([a-z]*(col|fav|flav|hon|hum|lab|neighb|beh|harb|rum|vap|arm|rig|vig))or(s|ed|ing|ite|ites|ful|able|ly|hood)?$/, '$1our$3')
+                        .replace(/([a-z]{2})(i|y)z(e|es|ed|ing|ation|ations)$/, '$1$2s$3')
+                        .replace(/^(cent|theat|met|lit|fib|kilomet|centimet|millimet)er(s)?$/, '$1re$2')
+                        .replace(/([aeiou])l(ed|ing|er|ers)$/, '$1ll$2');
+                }).join(' ');
+        }
+        function exLev(a, b) {
+            if (Math.abs(a.length - b.length) > 1) return 2;
+            // Damerau: zamiana dwoch sasiednich liter (littel) to tez jedna literowka.
+            var pp = [], prev = [], cur, i, j;
+            for (j = 0; j <= b.length; j++) prev[j] = j;
+            for (i = 1; i <= a.length; i++) {
+                cur = [i];
+                for (j = 1; j <= b.length; j++) {
+                    cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+                    if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) cur[j] = Math.min(cur[j], pp[j - 2] + 1);
+                }
+                pp = prev; prev = cur;
+            }
+            return prev[b.length];
+        }
+        function exTypoOk(x, v) {
+            var xw = x.split(' '), vw = v.split(' '), diffs = 0;
+            if (xw.length !== vw.length) return false;
+            for (var i = 0; i < xw.length; i++) {
+                if (xw[i] === vw[i]) continue;
+                var p = xw[i], q = vw[i];
+                if (p.length < 5 || q.length < 5) return false;
+                var lo = p.length <= q.length ? p : q, hi = p.length <= q.length ? q : p;
+                if (hi.indexOf(lo) === 0 && /^(s|es|d|ed|n)$/.test(hi.slice(lo.length))) return false;
+                if (exLev(p, q) > 1) return false;
+                diffs++;
+            }
+            return diffs <= 1;
+        }
+        function exMatch(ex, a, v, choice) {
             var f = ex && ex.layout === 'transform'
                 ? function (x) { return exNorm(x).replace(/\s*[.!?]+$/, ''); } : exNorm;
-            return !!String(v || '').trim() && exAccepted(a).some(function (x) { return f(x) === f(v); });
+            if (!String(v || '').trim()) return false;
+            var acc = exAccepted(a);
+            if (acc.some(function (x) { return f(x) === f(v); })) return true;
+            if (choice || (ex && ex.strict)) return false;
+            var lv = exLoose(v);
+            return !!lv && acc.some(function (x) { var lx = exLoose(x); return lx === lv || exTypoOk(lx, lv); });
         }
         function exLoad() {
             try { var o = JSON.parse(safeGet(EX_KEY) || '{}'); return (o && typeof o === 'object') ? o : {}; }
@@ -5704,6 +5818,16 @@ video {
         function exIsChoice(ex, itIdx, gap) {
             var ch = ex.items[itIdx].choices;
             return !!(ch && ch[gap] && ch[gap].length);
+        }
+        // Same luki do klikniecia (2026-10-13): kazda blokuje sie i ocenia od razu
+        // po kliknieciu, wiec przycisk "Sprawdz" nic by nie dodal i go nie ma.
+        function exAllChoice(ex) {
+            if (['sort', 'drag', 'transform', 'wordform', 'selfcheck'].indexOf(ex.layout) !== -1) return false;
+            var n = 0;
+            var all = ex.items.every(function (it, itIdx) {
+                return (it.answers || []).every(function (a, gi) { n++; return exIsChoice(ex, itIdx, gi); });
+            });
+            return all && n > 0;
         }
         function exLetter(ex, i) { return ex.letters ? String.fromCharCode(65 + i) + ' ' : ''; }
         // layout "table": text pozycji to komorki rozdzielone "|"; przy svg
@@ -5728,7 +5852,7 @@ video {
                     total++;
                     var val = st.v[itIdx + '-' + gap] || '';
                     if (String(val).trim()) filled++;
-                    var good = exMatch(ex, a, val) && (ex.layout !== 'transform' || st.ic[itIdx]);
+                    var good = exMatch(ex, a, val, exIsChoice(ex, itIdx, gap)) && (ex.layout !== 'transform' || st.ic[itIdx]);
                     if (good) ok++;
                     else wrong.push({
                         num: ex.layout === 'sort' ? it.text
@@ -5868,8 +5992,9 @@ video {
                     // Do samosprawdzenia: wlasna odpowiedz (zapis lokalny, bez oceny)
                     // i przykladowa odpowiedz pod rozwijanym paskiem.
                     body = ex.items.map(function (it, itIdx) {
-                        return '<div class="hub-ex-self"><div class="hub-ex-self-q"><span class="hub-ex-num">' + (itIdx + 1) + '.</span>' + escapeHtml(it.text) + '</div>' +
-                            '<input type="text" class="hub-ex-selfinput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Twoja wersja..." data-self-ex="' + exIdx + '" data-it="' + itIdx + '">' +
+                        var selfAttrs = ' class="hub-ex-selfinput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Twoja wersja..." data-self-ex="' + exIdx + '" data-it="' + itIdx + '"';
+                        return '<div class="hub-ex-self"><div class="hub-ex-self-q">' + (ex.items.length > 1 ? '<span class="hub-ex-num">' + (itIdx + 1) + '.</span>' : '') + escapeHtml(it.text) + '</div>' +
+                            (ex.multiline ? '<textarea' + selfAttrs + '></textarea>' : '<input type="text"' + selfAttrs + '>') +
                             '<details class="hub-ex-model"><summary>Poka&#380; przyk&#322;adow&#261; odpowied&#378;</summary><div>' + escapeHtml(it.answer) + '</div></details></div>';
                     }).join('');
                 } else if (ex.layout === 'sort') {
@@ -5941,18 +6066,24 @@ video {
                     ? '<h3 class="hub-ex-lesson">' + escapeHtml(ex.lessonLabel || '') +
                       (ex.dateLabel ? ' &middot; ' + escapeHtml(ex.dateLabel) : '') + '</h3>'
                     : '';
+                if (ex.group && (exIdx === 0 || EXERCISES[exIdx - 1].group !== ex.group || sep)) sep += '<h4 class="hub-ex-group">' + escapeHtml(ex.group) + '</h4>';
+                // Wysylka wynikow pod kazda lekcja osobno (2026-10-24), nie jedna na caly okres.
+                var lastOfLesson = exIdx === EXERCISES.length - 1 || EXERCISES[exIdx + 1].lessonLabel !== ex.lessonLabel;
+                var tail = lastOfLesson ? exSharePanelHtml(ex.lessonLabel || '') : '';
                 return sep + '<details class="hub-lesson-group hub-ex-card"' + (exIdx === openIdx ? ' open' : '') + '>' +
                     '<summary class="hub-ex-head"><span class="hub-ex-title">' + escapeHtml(ex.title || '') + '</span>' +
                     (isSelf ? '' : '<span class="hub-ex-score" data-ex-score="' + exIdx + '" data-ex-total="' + gapTotal + '">&ndash; / ' + gapTotal + '</span>') +
                     '</summary>' +
                     (ex.instructions ? '<p class="hub-ex-instr">' + escapeHtml(ex.instructions) + '</p>' : '') +
+                    (ex.passage ? '<div class="hub-ex-passage">' + escapeHtml(ex.passage).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>') + '</div>' : '') +
+                    (ex.figure ? '<div class="hub-ex-figure">' + ex.figure + '</div>' : '') +
                     wordBox + body +
                     (isSelf || ex.layout === 'transform' ? '' :
                     '<div class="hub-ex-actions">' +
-                    '<button type="button" class="hub-ex-btn hub-ex-btn-main" data-ex-check="' + exIdx + '">Sprawd&#378;</button>' +
+                    (exAllChoice(ex) ? '' : '<button type="button" class="hub-ex-btn hub-ex-btn-main" data-ex-check="' + exIdx + '">Sprawd&#378;</button>') +
                     '<button type="button" class="hub-ex-btn" data-ex-reset="' + exIdx + '">&#8635; Resetuj</button>' +
                     (ex.layout === 'wordform' ? '<button type="button" class="hub-ex-btn" data-ex-reroll="' + exIdx + '">&#127922; Losuj ponownie</button>' : '') +
-                    '</div>') + '</details>';
+                    '</div>') + '</details>' + tail;
             }).join(''); }
             box.innerHTML = exCardsHtml(-1);
 
@@ -5969,7 +6100,8 @@ video {
                 return EXERCISES[+g.getAttribute('data-ex')].items[+g.getAttribute('data-it')].answers[+g.getAttribute('data-gap')];
             }
             function okValue(g, v) {
-                return exMatch(EXERCISES[+g.getAttribute('data-ex')], answerOf(g), v);
+                var ex = EXERCISES[+g.getAttribute('data-ex')];
+                return exMatch(ex, answerOf(g), v, exIsChoice(ex, +g.getAttribute('data-it'), +g.getAttribute('data-gap')));
             }
             function isLocked(g, st) {
                 if (st.checked) return true;
@@ -6177,6 +6309,7 @@ video {
                 if (e.target && e.target.classList && e.target.classList.contains('hub-ex-selfinput')) {
                     exSt(+e.target.getAttribute('data-self-ex')).v['s' + e.target.getAttribute('data-it')] = e.target.value;
                     exSave();
+                    refreshExShare();
                     return;
                 }
                 if (e.target && e.target.classList && e.target.classList.contains('hub-ex-input')) {
@@ -6374,12 +6507,25 @@ video {
             refreshExShare();
         }
 
-        // Wiadomosc z wynikami: wynik kazdego zaczetego cwiczenia i lista zlych
-        // albo pustych luk z tym, co uczen wpisal. Poprawnych odpowiedzi w niej
-        // nie ma - nauczyciel je zna, a wiadomosc zostaje krotka.
-        function buildExShareText() {
-            var lines = [(HUB.student || 'Uczeń') + ' - ' + (HUB.monthLabel || '') + ', ćwiczenia', ''];
+        // Wiadomosc z wynikami jednej lekcji: wynik kazdego zaczetego cwiczenia
+        // i lista zlych albo pustych luk z tym, co uczen wpisal. Poprawnych odpowiedzi
+        // w niej nie ma - nauczyciel je zna, a wiadomosc zostaje krotka.
+        // Od 2026-10-24 panel wysylki stoi pod kazda lekcja i wysyla tylko jej cwiczenia.
+        function exLessonDate(lbl) {
+            for (var i = 0; i < EXERCISES.length; i++) if ((EXERCISES[i].lessonLabel || '') === lbl) return EXERCISES[i].dateLabel || '';
+            return '';
+        }
+        function buildExShareText(lbl) {
+            var d = exLessonDate(lbl);
+            var lines = [(HUB.student || 'Uczeń') + ' - ' + (lbl || HUB.monthLabel || '') + (d ? ' (' + d + ')' : '') + ', ćwiczenia', ''];
             EXERCISES.forEach(function (ex, exIdx) {
+                if ((ex.lessonLabel || '') !== lbl) return;
+                if (ex.layout === 'selfcheck') {
+                    var sst = exSt(exIdx), own = [];
+                    ex.items.forEach(function (it, i) { var t = String(sst.v['s' + i] || '').trim(); if (t) own.push((ex.items.length > 1 ? (i + 1) + '. ' : '') + t); });
+                    if (own.length) { lines.push((ex.title || ('Ćwiczenie ' + (exIdx + 1))) + ':'); lines.push(own.join('\n')); lines.push(''); }
+                    return;
+                }
                 var r = exResult(exIdx);
                 if (!exStarted(exIdx)) return;
                 var st = exSt(exIdx);
@@ -6413,80 +6559,94 @@ video {
             });
             return lines.join('\n').trim();
         }
-        function exStartedCount() {
+        function exStartedCount(lbl) {
             var n = 0;
-            EXERCISES.forEach(function (ex, exIdx) { if (exStarted(exIdx)) n++; });
+            EXERCISES.forEach(function (ex, exIdx) {
+                if ((ex.lessonLabel || '') !== lbl) return;
+                if (ex.layout === 'selfcheck') { var st = exSt(exIdx); if (ex.items.some(function (it, i) { return String(st.v['s' + i] || '').trim(); })) n++; return; }
+                if (exStarted(exIdx)) n++;
+            });
             return n;
         }
-        function setExStatus(msg, warn) {
-            var st = el('hub-ex-share-status');
+        function exSharePanelHtml(lbl) {
+            var k = escapeHtml(lbl);
+            return '<div class="hub-share hub-ex-lshare" data-exs="' + k + '">' +
+                '<p class="hub-ex-lshare-title">Wy&#347;lij wyniki: ' + k + '</p>' +
+                '<div class="hub-share-actions">' +
+                (typeof navigator.share === 'function' ? '<button type="button" class="hub-cta hub-cta-alt" data-exs-native="' + k + '">&#128228; Udost&#281;pnij</button>' : '') +
+                '<a class="hub-cta hub-cta-wa" data-exs-wa="' + k + '" href="#" target="_blank" rel="noopener">&#128172; Wy&#347;lij na WhatsApp</a>' +
+                '<button type="button" class="hub-cta hub-cta-alt" data-exs-copy="' + k + '">&#128203; Kopiuj tekst</button>' +
+                '<a class="hub-cta hub-cta-alt" data-exs-mail="' + k + '" href="#">&#9993;&#65039; Wy&#347;lij mailem</a>' +
+                '</div><p class="hub-share-status" data-exs-status="' + k + '"></p>' +
+                '<textarea class="hub-share-fallback hidden" data-exs-fallback="' + k + '" readonly></textarea></div>';
+        }
+        function exPanelPart(panel, attr) { return panel.querySelector('[' + attr + ']'); }
+        function setExStatus(panel, msg, warn) {
+            var st = exPanelPart(panel, 'data-exs-status');
             if (!st) return;
             st.textContent = msg || '';
             st.classList.toggle('is-warn', !!warn);
         }
         function refreshExShare() {
-            var panel = el('hub-ex-share-panel');
-            var wa = el('hub-ex-share-wa');
-            var mail = el('hub-ex-share-mail');
-            if (!panel || !wa) return;
-            panel.classList.toggle('hidden', !EXERCISES.length);
-            var n = exStartedCount();
-            if (!n) {
-                wa.classList.add('is-disabled');
-                wa.setAttribute('href', '#');
-                if (mail) { mail.classList.add('is-disabled'); mail.setAttribute('href', '#'); }
-                setExStatus('Zrób przynajmniej jedno ćwiczenie, żeby było co wysłać.', false);
-                return;
-            }
-            if (mail) {
+            var box = el('hub-exercises-list');
+            if (!box) return;
+            Array.prototype.forEach.call(box.querySelectorAll('[data-exs]'), function (panel) {
+                var lbl = panel.getAttribute('data-exs');
+                var wa = exPanelPart(panel, 'data-exs-wa'), mail = exPanelPart(panel, 'data-exs-mail');
+                var n = exStartedCount(lbl);
+                if (!n) {
+                    wa.classList.add('is-disabled'); wa.setAttribute('href', '#');
+                    mail.classList.add('is-disabled'); mail.setAttribute('href', '#');
+                    setExStatus(panel, 'Zrób przynajmniej jedno ćwiczenie z tej lekcji, żeby było co wysłać.', false);
+                    return;
+                }
+                var text = buildExShareText(lbl);
                 mail.classList.remove('is-disabled');
                 mail.setAttribute('href', 'mailto:?subject=' +
-                    encodeURIComponent((HUB.student || '') + ' - ćwiczenia ' + (HUB.monthLabel || '')) +
-                    '&body=' + encodeURIComponent(buildExShareText()));
-            }
-            var num = (HUB.teacherWhatsApp || '').replace(/[^0-9]/g, '');
-            wa.classList.remove('is-disabled');
-            wa.setAttribute('href', 'https://wa.me/' + num + '?text=' + encodeURIComponent(buildExShareText()));
-            var graded = EXERCISES.filter(function (ex) { return ex.layout !== 'selfcheck'; }).length;
-            setExStatus('Gotowe do wysłania: ' + count(n, 'ćwiczenie', 'ćwiczenia', 'ćwiczeń') + ' z ' + graded + '.', false);
+                    encodeURIComponent((HUB.student || '') + ' - ćwiczenia, ' + lbl) + '&body=' + encodeURIComponent(text));
+                var num = (HUB.teacherWhatsApp || '').replace(/[^0-9]/g, '');
+                wa.classList.remove('is-disabled');
+                wa.setAttribute('href', 'https://wa.me/' + num + '?text=' + encodeURIComponent(text));
+                var total = EXERCISES.filter(function (ex) { return (ex.lessonLabel || '') === lbl; }).length;
+                setExStatus(panel, 'Gotowe do wysłania: ' + count(n, 'ćwiczenie', 'ćwiczenia', 'ćwiczeń') + ' z ' + total + '.', false);
+            });
         }
         var exShareWired = false;
         function wireExShare() {
             if (exShareWired) return;
+            var box = el('hub-exercises-list');
+            if (!box) return;
             exShareWired = true;
-            var nativeBtn = el('hub-ex-share-native');
-            if (nativeBtn && typeof navigator.share === 'function') {
-                nativeBtn.classList.remove('hidden');
-                nativeBtn.addEventListener('click', function () {
-                    nativeBtn.blur();
-                    if (!exStartedCount()) { setExStatus('Zrób przynajmniej jedno ćwiczenie, żeby było co wysłać.', true); return; }
+            box.addEventListener('click', function (e) {
+                var t = e.target.closest ? e.target.closest('[data-exs-native], [data-exs-copy], [data-exs-wa], [data-exs-mail]') : null;
+                if (!t) return;
+                var panel = t.closest('[data-exs]');
+                var lbl = panel.getAttribute('data-exs');
+                if (!exStartedCount(lbl)) { e.preventDefault(); setExStatus(panel, 'Zrób przynajmniej jedno ćwiczenie z tej lekcji, żeby było co wysłać.', true); return; }
+                if (t.hasAttribute('data-exs-wa') || t.hasAttribute('data-exs-mail')) return;
+                t.blur();
+                var text = buildExShareText(lbl);
+                if (t.hasAttribute('data-exs-native')) {
                     try {
-                        navigator.share({ text: buildExShareText() }).catch(function () {
-                            setExStatus('Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj tekst.', false);
+                        navigator.share({ text: text }).catch(function () {
+                            setExStatus(panel, 'Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj tekst.', false);
                         });
-                    } catch (e) {
-                        setExStatus('Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj tekst.', false);
+                    } catch (err) {
+                        setExStatus(panel, 'Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj tekst.', false);
                     }
-                });
-            }
-            var copyBtn = el('hub-ex-share-copy');
-            if (!copyBtn) return;
-            copyBtn.addEventListener('click', function () {
-                copyBtn.blur();
-                if (!exStartedCount()) { setExStatus('Zrób przynajmniej jedno ćwiczenie, żeby było co wysłać.', true); return; }
-                var text = buildExShareText();
-                var fallback = el('hub-ex-share-fallback');
+                    return;
+                }
+                var fallback = exPanelPart(panel, 'data-exs-fallback');
                 function done() {
-                    if (fallback) fallback.classList.add('hidden');
-                    setExStatus('Skopiowane. Wklej na WhatsAppie albo gdzie chcesz.', false);
+                    fallback.classList.add('hidden');
+                    setExStatus(panel, 'Skopiowane. Wklej na WhatsAppie albo gdzie chcesz.', false);
                 }
                 function manual() {
-                    if (!fallback) return;
                     fallback.classList.remove('hidden');
                     fallback.value = text;
                     fallback.focus();
                     fallback.select();
-                    setExStatus('Zaznacz tekst poniżej i skopiuj ręcznie.', true);
+                    setExStatus(panel, 'Zaznacz tekst poniżej i skopiuj ręcznie.', true);
                 }
                 function legacy() {
                     var ok = false;
@@ -6502,7 +6662,7 @@ video {
                         tmp.setSelectionRange(0, text.length);
                         ok = document.execCommand('copy');
                         document.body.removeChild(tmp);
-                    } catch (e) { ok = false; }
+                    } catch (err) { ok = false; }
                     if (ok) done(); else manual();
                 }
                 if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
@@ -6523,7 +6683,13 @@ video {
         var wqState = wqLoad();
         // Klucz po tytule i poczatku tekstu, nie po pozycji - nowy tekst dopisany
         // pozniej w miesiacu nie przesunie zapisanych odpowiedzi.
-        function wqId(w) { return (w.title || '') + '|' + String(w.text || '').slice(0, 40); }
+        function wqId(w) { return w.wqKey || ((w.title || '') + '|' + String(w.text || '').slice(0, 40)); }
+        // Rejestr punktowanych zestawow pytan po kluczu DOM: "w<i>" = tekst z zakladki
+        // Teksty, "m<i>" = quiz pod artykulem w Artykuly/Wideo (2026-10-14). Ten sam
+        // mechanizm blokady, prob, resetu i wysylki dla obu zakladek.
+        var WQ_REG = {};
+        // Etykieta odpowiedzi w wiadomosci: litera przy ABCD, slowo przy Prawda/Falsz.
+        function wqOptLabel(w, q, oi) { return w.type === 'tf' ? q.options[oi] : String.fromCharCode(65 + oi); }
         function wqSt(w) {
             var k = wqId(w);
             if (!wqState[k] || typeof wqState[k] !== 'object') wqState[k] = { picks: {}, attempts: 1 };
@@ -6548,16 +6714,16 @@ video {
                 if (p === undefined) return;
                 answered++;
                 if (q.options[p] === q.answer) ok++;
-                else wrong.push({ num: qi + 1, picked: String.fromCharCode(65 + p), key: String.fromCharCode(65 + q.options.indexOf(q.answer)) });
+                else wrong.push({ num: qi + 1, picked: wqOptLabel(w, q, p), key: wqOptLabel(w, q, q.options.indexOf(q.answer)) });
             });
             return { ok: ok, answered: answered, total: wqGraded(w).length, wrong: wrong, attempts: st.attempts };
         }
         function wqShareText(w) {
             var r = wqResult(w);
             var lines = [
-                (HUB.student || 'Uczeń') + ' - ' + (HUB.monthLabel || '') + ', Teksty',
+                (HUB.student || 'Uczeń') + ' - ' + (HUB.monthLabel || '') + ', ' + (w.section || 'Teksty'),
                 '',
-                (w.title || 'Tekst') + ': ' + r.ok + '/' + r.total + ' pkt',
+                (w.article ? w.article + '\n' : '') + (w.title || 'Tekst') + ': ' + r.ok + '/' + r.total + ' pkt',
                 'Próba nr ' + r.attempts
             ];
             if (r.answered < r.total) lines.push('Niedokończone: odpowiedzi na ' + r.answered + ' z ' + r.total + ' pytań');
@@ -6569,8 +6735,7 @@ video {
             return lines.join('\n');
         }
         function wqApply(w, flatIdx) {
-            var box = el('hub-writing-list');
-            if (!box) return;
+            var box = document;
             var st = wqSt(w);
             (w.questions || []).forEach(function (q, qi) {
                 var btns = box.querySelectorAll('[data-wq="' + flatIdx + '"][data-wq-q="' + qi + '"]');
@@ -6604,6 +6769,48 @@ video {
                     encodeURIComponent((HUB.student || '') + ' - ' + (w.title || 'Teksty')) + '&body=' + encoded);
             }
             wqStatus(flatIdx, none ? 'Odpowiedz na przynajmniej jedno pytanie, żeby było co wysłać.' : '', false);
+            if (String(flatIdx).charAt(0) === 'm') mediaShareRefresh();
+        }
+        // Artykuly/Wideo: jeden panel wysylki na dole zakladki (klucz "mall"),
+        // wiadomosc zbiera wszystkie quizy z co najmniej jedna odpowiedzia.
+        function mediaQuizKeys() {
+            return Object.keys(WQ_REG).filter(function (k) { return /^m\d+$/.test(k); })
+                .sort(function (a, b) { return parseInt(a.slice(1), 10) - parseInt(b.slice(1), 10); });
+        }
+        function mediaAnswered() {
+            return mediaQuizKeys().reduce(function (n, k) { return n + wqResult(WQ_REG[k]).answered; }, 0);
+        }
+        function mediaShareText() {
+            var lines = [(HUB.student || 'Uczeń') + ' - ' + (HUB.monthLabel || '') + ', Artykuły/Wideo'];
+            var lastArticle = null;
+            mediaQuizKeys().forEach(function (k) {
+                var w = WQ_REG[k], r = wqResult(w);
+                if (!r.answered) return;
+                if (w.article !== lastArticle) { lines.push('', w.article); lastArticle = w.article; }
+                lines.push(w.title + ': ' + r.ok + '/' + r.total + ' pkt, próba nr ' + r.attempts);
+                if (r.answered < r.total) lines.push('Niedokończone: odpowiedzi na ' + r.answered + ' z ' + r.total + ' pytań');
+                if (r.wrong.length) lines.push('Błędy: ' + r.wrong.map(function (x) {
+                    return x.num + ' (zaznaczone ' + x.picked + ', poprawna ' + x.key + ')';
+                }).join(', '));
+            });
+            return lines.join('\n');
+        }
+        function mediaShareRefresh() {
+            var none = !mediaAnswered();
+            var encoded = encodeURIComponent(mediaShareText());
+            var num = (HUB.teacherWhatsApp || '').replace(/[^0-9]/g, '');
+            var wa = document.querySelector('[data-wq-wa="mall"]');
+            var mail = document.querySelector('[data-wq-mail="mall"]');
+            if (wa) {
+                wa.classList.toggle('is-disabled', none);
+                wa.setAttribute('href', none ? '#' : 'https://wa.me/' + num + '?text=' + encoded);
+            }
+            if (mail) {
+                mail.classList.toggle('is-disabled', none);
+                mail.setAttribute('href', none ? '#' : 'mailto:?subject=' +
+                    encodeURIComponent((HUB.student || '') + ' - Artykuły/Wideo') + '&body=' + encoded);
+            }
+            wqStatus('mall', none ? 'Odpowiedz na przynajmniej jedno pytanie, żeby było co wysłać.' : '', false);
         }
         function wqStatus(flatIdx, msg, warn) {
             var s = document.querySelector('[data-wq-status="' + flatIdx + '"]');
@@ -6644,18 +6851,20 @@ video {
                 navigator.clipboard.writeText(text).then(done).catch(legacy);
             } else legacy();
         }
-        function writingQuestionsHtml(w, flatIdx) {
+        function writingQuestionsHtml(w, flatIdx, noShare) {
             var qs = w.questions || [];
             if (!qs.length) return '';
+            WQ_REG[flatIdx] = w;
             var graded = wqGraded(w).length > 0;
+            var isTf = w.type === 'tf';
             var html = '<div class="hub-wq">' + qs.map(function (q, qi) {
                 var opts = (q.options || []).map(function (opt, oi) {
                     return '<button type="button" class="hub-ex-opt" data-wq="' + flatIdx + '" data-wq-q="' + qi + '" data-wq-opt="' + oi + '">' +
-                        escapeHtml(String.fromCharCode(65 + oi) + '. ' + opt) + '</button>';
+                        escapeHtml(isTf ? opt : String.fromCharCode(65 + oi) + '. ' + opt) + '</button>';
                 }).join('');
                 return '<div class="hub-wq-item" style="margin:14px 0 0">' +
                     '<p style="margin:0 0 6px;font-weight:700">' + (qi + 1) + '. ' + escapeHtml(q.q) + '</p>' +
-                    (opts ? '<div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px">' + opts + '</div>' : '') +
+                    (opts ? '<div style="display:flex;flex-direction:' + (isTf ? 'row;flex-wrap:wrap' : 'column') + ';align-items:flex-start;gap:' + (isTf ? '8px' : '4px') + '">' + opts + '</div>' : '') +
                     '</div>';
             }).join('') + '</div>';
             if (!graded) return html;
@@ -6664,7 +6873,12 @@ video {
                 '<span class="hub-ex-score" style="white-space:normal" data-wq-score="' + flatIdx + '"></span>' +
                 '<button type="button" class="hub-ex-btn" data-wq-reset="' + flatIdx + '">&#8635; Resetuj</button>' +
                 '</div>' +
-                '<div class="hub-share">' +
+                (noShare ? '' : wqSharePanelHtml(flatIdx));
+        }
+        // Panel wysylki. W Artykulach/Wideo jest jeden, na samym dole zakladki
+        // (klucz "mall", wszystkie quizy w jednej wiadomosci), zamiast pod kazdym quizem.
+        function wqSharePanelHtml(flatIdx) {
+            return '<div class="hub-share">' +
                 '<div class="hub-share-actions">' +
                 (typeof navigator.share === 'function'
                     ? '<button type="button" class="hub-cta hub-cta-alt" data-wq-native="' + flatIdx + '">&#128228; Udost&#281;pnij</button>' : '') +
@@ -6675,6 +6889,48 @@ video {
                 '<p class="hub-share-status" data-wq-status="' + flatIdx + '"></p>' +
                 '<textarea class="hub-share-fallback hidden" data-wq-fallback="' + flatIdx + '" readonly></textarea>' +
                 '</div>';
+        }
+
+        // Klikniecia w pytania i przyciski pod nimi (Teksty i Artykuly/Wideo).
+        // Zwraca true, gdy klik nalezal do pytan.
+        function wqHandleClick(e) {
+            var wqBtn = e.target.closest ? e.target.closest('[data-wq]') : null;
+            if (wqBtn) {
+                var wKey = wqBtn.getAttribute('data-wq');
+                var wItem = WQ_REG[wKey];
+                var wqi = parseInt(wqBtn.getAttribute('data-wq-q'), 10);
+                if (!wItem || !wItem.questions[wqi]) return true;
+                var wst = wqSt(wItem);
+                if (wst.picks[wqi] !== undefined) return true;   // pytanie juz zablokowane
+                wst.picks[wqi] = parseInt(wqBtn.getAttribute('data-wq-opt'), 10);
+                wqSave();
+                wqApply(wItem, wKey);
+                return true;
+            }
+            var wqAct = e.target.closest ? e.target.closest('[data-wq-reset],[data-wq-copy],[data-wq-native]') : null;
+            if (!wqAct) return false;
+            wqAct.blur();
+            var aKey = wqAct.getAttribute('data-wq-reset') || wqAct.getAttribute('data-wq-copy') || wqAct.getAttribute('data-wq-native');
+            var aItem = WQ_REG[aKey];
+            if (!aItem && aKey !== 'mall') return true;
+            if (wqAct.hasAttribute('data-wq-reset')) {
+                wqReset(aItem);
+                wqSave();
+                wqApply(aItem, aKey);
+                return true;
+            }
+            var aAnswered = aKey === 'mall' ? mediaAnswered() : wqResult(aItem).answered;
+            var aText = aKey === 'mall' ? mediaShareText() : wqShareText(aItem);
+            if (!aAnswered) { wqStatus(aKey, 'Odpowiedz na przynajmniej jedno pytanie, żeby było co wysłać.', true); return true; }
+            if (wqAct.hasAttribute('data-wq-copy')) { wqCopy(aKey, aText); return true; }
+            try {
+                navigator.share({ text: aText }).catch(function () {
+                    wqStatus(aKey, 'Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj tekst.', false);
+                });
+            } catch (err) {
+                wqStatus(aKey, 'Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj tekst.', false);
+            }
+            return true;
         }
 
         function renderWriting() {
@@ -6704,12 +6960,12 @@ video {
                         (w.title ? '<p class="hub-pron-word">' + escapeHtml(w.title) + '</p>' : '') +
                         player +
                         '<p class="hub-msg-body">' + escapeAndLinkify(w.text || '') + '</p>' +
-                        writingQuestionsHtml(w, flatIdx) +
+                        writingQuestionsHtml(w, 'w' + flatIdx) +
                         '</div></div>';
                 }).join('');
                 return '<details class="hub-lesson-group"' + (isLast ? ' open' : '') + '>' + head + body + '</details>';
             }).join('');
-            WRITING.forEach(function (w, wi) { if (wqGraded(w).length) wqApply(w, wi); });
+            WRITING.forEach(function (w, wi) { if (wqGraded(w).length) wqApply(w, 'w' + wi); });
             var wResetAll = el('hub-writing-reset-all');
             if (wResetAll && WRITING.some(function (w) { return wqGraded(w).length; })) {
                 wResetAll.classList.remove('hidden');
@@ -6719,49 +6975,14 @@ video {
                     WRITING.forEach(function (w, wi) {
                         if (!wqGraded(w).length) return;
                         wqReset(w);
-                        wqApply(w, wi);
+                        wqApply(w, 'w' + wi);
                     });
                     wqSave();
                 });
             }
 
             box.addEventListener('click', function (e) {
-                var wqBtn = e.target.closest ? e.target.closest('[data-wq]') : null;
-                if (wqBtn) {
-                    var wIdx = parseInt(wqBtn.getAttribute('data-wq'), 10);
-                    var wItem = WRITING[wIdx];
-                    var wqi = parseInt(wqBtn.getAttribute('data-wq-q'), 10);
-                    if (!wItem || !wItem.questions[wqi]) return;
-                    var wst = wqSt(wItem);
-                    if (wst.picks[wqi] !== undefined) return;   // pytanie juz zablokowane
-                    wst.picks[wqi] = parseInt(wqBtn.getAttribute('data-wq-opt'), 10);
-                    wqSave();
-                    wqApply(wItem, wIdx);
-                    return;
-                }
-                var wqAct = e.target.closest ? e.target.closest('[data-wq-reset],[data-wq-copy],[data-wq-native]') : null;
-                if (wqAct) {
-                    wqAct.blur();
-                    var aIdx = parseInt(wqAct.getAttribute('data-wq-reset') || wqAct.getAttribute('data-wq-copy') || wqAct.getAttribute('data-wq-native'), 10);
-                    var aItem = WRITING[aIdx];
-                    if (!aItem) return;
-                    if (wqAct.hasAttribute('data-wq-reset')) {
-                        wqReset(aItem);
-                        wqSave();
-                        wqApply(aItem, aIdx);
-                        return;
-                    }
-                    if (!wqResult(aItem).answered) { wqStatus(aIdx, 'Odpowiedz na przynajmniej jedno pytanie, żeby było co wysłać.', true); return; }
-                    if (wqAct.hasAttribute('data-wq-copy')) { wqCopy(aIdx, wqShareText(aItem)); return; }
-                    try {
-                        navigator.share({ text: wqShareText(aItem) }).catch(function () {
-                            wqStatus(aIdx, 'Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj tekst.', false);
-                        });
-                    } catch (err) {
-                        wqStatus(aIdx, 'Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj tekst.', false);
-                    }
-                    return;
-                }
+                if (wqHandleClick(e)) return;
                 var playPauseBtn = e.target.closest ? e.target.closest('[data-hub-writing-playpause]') : null;
                 var stopBtn = e.target.closest ? e.target.closest('[data-hub-writing-stop]') : null;
                 var rateBtn = e.target.closest ? e.target.closest('[data-hub-writing-rate]') : null;
@@ -7080,6 +7301,25 @@ video {
         // Czasowniki nieregularne
         // ==========================================
         var VERB_KEY = STUDENT_KEY + '_czasowniki';
+
+        /** Przelacza widok czasownikow miedzy bankiem nieregularnych a lista Past Simple. */
+        function setVerbMode(mode) {
+            if (mode === verbMode) return;
+            verbMode = mode;
+            var ps = mode === 'past';
+            VERB_KEY = STUDENT_KEY + (ps ? '_czasowniki_ps' : '_czasowniki');
+            VERB_COLS = ps ? VERB_COLS_ALL.slice(0, 2) : VERB_COLS_ALL;
+            loadVerbProgress();
+            var t = el('hub-verbs-title'), tg = el('hub-verbs-tagline'), tb = el('hub-verbs-tier-block');
+            if (t) t.textContent = ps ? 'Czasowniki Past Simple' : 'Czasowniki nieregularne';
+            if (tg) tg.textContent = ps ? 'Masz polskie znaczenie. Wpisz bezokolicznik i drugą formę, potem sprawdź się.' : 'Masz polskie znaczenie. Uzupełnij trzy formy, potem sprawdź się.';
+            if (tb) tb.classList.toggle('hidden', ps);
+        }
+        /** Pula aktualnego trybu przed odjeciem "umiem". */
+        function verbPool() {
+            if (verbMode === 'past') return PS_VERBS;
+            return VERB_BANK.filter(function (v) { return verbSelectedTiers.indexOf(v.stars) !== -1; });
+        }
         var verbProgress = {};      // { base: 'umiem' | 'do powtorki' } - TRWALE, nie per rundy
         var verbSelectedTiers = [1, 2, 3, 4, 5];   // zakres gwiazdek wybrany na ekranie startowym
         var verbRoundAll = [];      // caly wylosowany zestaw rundy
@@ -7131,8 +7371,8 @@ video {
          * z notatek biezacej lekcji), potem "do powtorki", na koncu reszta losowo.
          */
         function drawVerbRound() {
-            var pula = VERB_BANK.filter(function (v) {
-                return verbSelectedTiers.indexOf(v.stars) !== -1 && verbProgress[v.base] !== 'umiem';
+            var pula = verbPool().filter(function (v) {
+                return verbProgress[v.base] !== 'umiem';
             });
             var priorytet = pula.filter(function (v) { return PRIORITY_VERBS.indexOf(v.base.toLowerCase()) !== -1; });
             var doPowtorki = pula.filter(function (v) {
@@ -7161,7 +7401,7 @@ video {
 
         /** "Zaczynamy" na ekranie startowym: zapamietaj wybrany zakres i wystartuj sesje. */
         function startVerbSession() {
-            var tiers = selectedTierValues();
+            var tiers = verbMode === 'past' ? verbSelectedTiers : selectedTierValues();
             if (!tiers) { window.alert('Zaznacz przynajmniej jeden zakres gwiazdek.'); return; }
             verbSelectedTiers = tiers;
             var sizeSelect = el('hub-verbs-round-size');
@@ -7195,7 +7435,7 @@ video {
         /** Wszystkie czasowniki z wybranego zakresu sa juz "umiem" - zamiast pustej
          *  tabeli pokazujemy stan koncowy, w duchu tego, jak fiszki koncza talie. */
         function renderVerbsExhausted() {
-            var wRange = VERB_BANK.filter(function (v) { return verbSelectedTiers.indexOf(v.stars) !== -1; }).length;
+            var wRange = verbPool().length;
             el('hub-verbs-table').innerHTML = '';
             var intro = el('hub-verbs-intro');
             if (intro) intro.textContent = '';
@@ -7210,7 +7450,7 @@ video {
                 '<p class="hub-verbs-label">Brawo</p>' +
                 '<p class="hub-verbs-score">🎉</p>' +
                 '<p class="hub-verbs-sub">Opanowane wszystkie ' + count(wRange, 'czasownik', 'czasowniki', 'czasowników') + ' w tym zakresie.<br>' +
-                'Zresetuj postęp albo wybierz inny zakres gwiazdek.</p>' +
+                (verbMode === 'past' ? 'Zresetuj postęp, żeby ćwiczyć od nowa.</p>' : 'Zresetuj postęp albo wybierz inny zakres gwiazdek.</p>') +
                 '<div class="hub-verbs-again"><button type="button" class="hub-cta hub-cta-alt" id="hub-verbs-change-range">&larr; Zmień zakres</button></div>';
             var zmien = el('hub-verbs-change-range');
             if (zmien) zmien.addEventListener('click', function () { zmien.blur(); resetVerbsToSetup(); });
@@ -7223,18 +7463,20 @@ video {
                 return 'Poprawiasz ' + count(verbActive.length, 'czasownik', 'czasowniki', 'czasowników') +
                        ' z ' + verbRoundAll.length + ' w tej rundzie.';
             }
-            var wRange = VERB_BANK.filter(function (v) { return verbSelectedTiers.indexOf(v.stars) !== -1; }).length;
+            var wRange = verbPool().length;
+            if (verbMode === 'past') return count(verbRoundAll.length, 'czasownik', 'czasowniki', 'czasowników') + ' z Twojej listy (' + wRange + ').';
             var ilePriorytet = verbRoundAll.filter(function (v) { return PRIORITY_VERBS.indexOf(v.base.toLowerCase()) !== -1; }).length;
             var txt = count(verbRoundAll.length, 'czasownik', 'czasowniki', 'czasowników') + ' z wybranego zakresu (' + wRange + ')';
             if (ilePriorytet) txt += ', w tym ' + ilePriorytet + ' z ostatnich lekcji';
             return txt + '.';
         }
 
-        var VERB_COLS = [
+        var VERB_COLS_ALL = [
             { key: 'base', label: 'bezokolicznik' },
             { key: 'past', label: 'druga forma' },
             { key: 'participle', label: 'trzecia forma' }
         ];
+        var VERB_COLS = VERB_COLS_ALL;
 
         function renderVerbs() {
             var box = el('hub-verbs-table');
@@ -7341,7 +7583,7 @@ video {
             var prob = verbHistory.reduce(function (s, r) { return s + r.total; }, 0);
             var pct = prob ? Math.round((dobrze / prob) * 100) : 0;
             var lines = [
-                (HUB.student || 'Uczeń') + ' - ' + (HUB.monthLabel || '') + ', czasowniki nieregularne',
+                (HUB.student || 'Uczeń') + ' - ' + (HUB.monthLabel || '') + ', ' + (verbMode === 'past' ? 'czasowniki Past Simple' : 'czasowniki nieregularne'),
                 '',
                 'Runda: ' + count(verbRoundAll.length, 'czasownik', 'czasowniki', 'czasowników'),
                 'Wynik: ' + dobrze + '/' + prob + ' (' + pct + '% celności)',
@@ -7501,7 +7743,7 @@ video {
         function rerollVerbSet() {
             var setup = el('hub-verbs-setup');
             if (setup && !setup.classList.contains('hidden')) {
-                var tiers = selectedTierValues();
+                var tiers = verbMode === 'past' ? verbSelectedTiers : selectedTierValues();
                 if (!tiers) { window.alert('Zaznacz przynajmniej jeden zakres gwiazdek.'); return; }
                 verbSelectedTiers = tiers;
                 var sizeSelect = el('hub-verbs-round-size');
@@ -7985,6 +8227,53 @@ video {
         }
 
         // ==========================================
+        // Gry: osadzony HTML otwierany w pelnoekranowej ramce
+        // ==========================================
+        var gameUrl = null;
+        function renderGames() {
+            var box = el('hub-games-list');
+            if (!box) return;
+            if (!GAMES.length) {
+                box.innerHTML = '<p class="hub-tagline">Na razie nie ma tu gier.</p>';
+            } else {
+                box.innerHTML = '<div class="hub-links">' + GAMES.map(function (g, i) {
+                    return '<button type="button" class="hub-link-tile" data-hub-game="' + i + '" style="cursor:pointer; text-align:left; width:100%">' +
+                        '<span>🎮 <strong>' + escapeHtml(g.title) + '</strong>' +
+                        (g.description ? '<br><span class="hub-tile-sub">' + escapeHtml(g.description) + '</span>' : '') +
+                        '</span></button>';
+                }).join('') + '</div>';
+            }
+            // Przycisk nawigacji znika, gdy nie ma gier - pusta zakladka nic nie daje.
+            var navBtn = document.querySelector('.hub-nav-btn[data-hub-nav="games"]');
+            hideIf(!GAMES.length, navBtn);
+            box.addEventListener('click', function (e) {
+                var b = e.target.closest ? e.target.closest('[data-hub-game]') : null;
+                if (b) openGame(parseInt(b.getAttribute('data-hub-game'), 10));
+            });
+            var close = el('hub-game-close');
+            if (close) close.addEventListener('click', closeGame);
+        }
+        function openGame(i) {
+            var g = GAMES[i];
+            if (!g) return;
+            stopSpeaking();
+            var bin = atob(g.html64);
+            var bytes = new Uint8Array(bin.length);
+            for (var k = 0; k < bin.length; k++) bytes[k] = bin.charCodeAt(k);
+            if (gameUrl) URL.revokeObjectURL(gameUrl);
+            gameUrl = URL.createObjectURL(new Blob([bytes], { type: 'text/html;charset=utf-8' }));
+            el('hub-game-frame').src = gameUrl;
+            el('hub-game-overlay').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        function closeGame() {
+            el('hub-game-overlay').style.display = 'none';
+            el('hub-game-frame').src = 'about:blank';
+            if (gameUrl) { URL.revokeObjectURL(gameUrl); gameUrl = null; }
+            document.body.style.overflow = '';
+        }
+
+        // ==========================================
         // Start
         // ==========================================
         function hubInit() {
@@ -8002,6 +8291,7 @@ video {
                 renderPronunciation();
                 renderWriting();
                 renderExercises();
+                renderGames();
 
                 loadSentences();
                 renderSentLessonChips();
@@ -8012,6 +8302,7 @@ video {
 
                 loadVerbProgress();
                 wireVerbs();
+                if (PS_VERBS.length) { var psNav = el('hub-nav-pastverbs'); if (psNav) psNav.classList.remove('hidden'); }
             }
 
             renderLessonChips();
