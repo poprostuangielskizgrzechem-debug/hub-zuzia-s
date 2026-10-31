@@ -2100,7 +2100,13 @@ video {
 
       /* --- panel wysylki --- */
       .hub-share { border-top:1px solid var(--hub-line); margin-top:20px; padding-top:20px; }
-      .hub-share-actions { display:flex; flex-direction:column; gap:10px; }
+      /* Przyciski wysylki w jednym wierszu (2026-10-31): w kolumnie byly za duze i robily balagan.
+         Ikona nad krotka etykieta, kazdy przycisk ta sama szerokosc. */
+      .hub-share-actions { display:flex; flex-direction:row; flex-wrap:nowrap; gap:6px; }
+      .hub-share-actions > .hub-cta { flex:1 1 0; min-width:0; display:flex; flex-direction:column; align-items:center; gap:2px;
+                                      padding:8px 4px; font-size:12.5px; line-height:1.2; border-radius:10px; white-space:nowrap; }
+      .hub-share-actions > .hidden { display:none !important; }
+      .hub-cta-ico { font-size:17px; line-height:1; }
       .hub-cta { font-family:'Plus Jakarta Sans', Arial, sans-serif; font-size:15px; font-weight:800;
                  border-radius:12px; padding:14px 18px; cursor:pointer; border:1px solid transparent;
                  text-align:center; text-decoration:none; display:block; transition:all .15s ease; }
@@ -2555,8 +2561,18 @@ video {
         <!-- === HUB MODULE - START (exercises view) === -->
         <style>
             /* Karty cwiczen - wzor: osobne pliki z testami (future-forms.html) */
-            .hub-ex-lesson { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--hub-muted, #6b7280); margin: 22px 4px 8px; padding-bottom: 6px; border-bottom: 1px solid var(--hub-line); }
-            .hub-ex-lesson:first-child { margin-top: 0; }
+            /* Kafelek lekcji (2026-10-31): wszystkie cwiczenia jednej lekcji + panel wysylki w jednej ramce */
+            .hub-ex-ltile { border: 2px solid #c9d8ee; border-radius: 18px; background: #f4f8fd; padding: 0 14px 14px; margin: 0 0 28px; overflow: hidden; }
+            .hub-ex-ltile-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+                margin: 0 -14px 16px; padding: 12px 18px; background: #1e5aae; color: #fff;
+                font-family: 'Plus Jakarta Sans', Arial, sans-serif; font-size: 18px; font-weight: 800; }
+            .hub-ex-ltile-date { font-size: 13.5px; font-weight: 600; opacity: .85; }
+            .hub-ex-ltile .hub-ex-lshare { margin: 0; padding-top: 14px; }
+            @media (max-width: 640px) {
+                .hub-ex-ltile { padding: 0 8px 10px; }
+                .hub-ex-ltile-head { margin: 0 -8px 12px; padding: 10px 14px; font-size: 16.5px; }
+                .hub-ex-ltile .hub-ex-card { padding: 14px 12px 12px; }
+            }
             .hub-ex-card { background: #fff; border: 1px solid var(--hub-line); border-radius: 16px; padding: 18px 20px 16px;
                 margin: 0 0 18px; box-shadow: 0 6px 20px rgba(22,24,29,.05); }
             .hub-ex-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; list-style: none; }
@@ -2565,6 +2581,8 @@ video {
             .hub-ex-title::before { content: '\25B8'; display: inline-block; margin-right: 8px; color: var(--hub-muted); transition: transform .15s; }
             .hub-ex-card[open] .hub-ex-title::before { transform: rotate(90deg); }
             .hub-ex-score { font-size: 13px; font-weight: 700; color: #1e5aae; background: #e9f0fa; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+            .hub-ex-speak { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 4px; }
+            .hub-ex-speak-btn { border: 1px solid var(--hub-border, #d1d5db); background: transparent; color: inherit; border-radius: 999px; padding: 6px 14px; font-size: 16px; font-weight: 600; cursor: pointer; }
             .hub-ex-instr { color: var(--hub-muted); font-size: 14px; line-height: 1.5; margin: 10px 0 12px; white-space: pre-line; }
             .hub-ex-item { padding: 11px 0; border-top: 1px solid var(--hub-line); line-height: 1.9; font-size: 15.5px; }
             .hub-ex-item:first-of-type { border-top: none; }
@@ -2745,10 +2763,10 @@ video {
 
                     <div class="hub-share" id="hub-share-panel">
                         <div class="hub-share-actions">
-                            <button type="button" class="hub-cta hub-cta-alt hidden" id="hub-share-native">&#128228; Udost&#281;pnij</button>
-                            <a class="hub-cta hub-cta-wa" id="hub-share-wa" href="#" target="_blank" rel="noopener">&#128172; Wy&#347;lij na WhatsApp</a>
-                            <button type="button" class="hub-cta hub-cta-alt" id="hub-share-copy">&#128203; Kopiuj tekst</button>
-                            <a class="hub-cta hub-cta-alt" id="hub-share-mail" href="#">&#9993;&#65039; Wy&#347;lij mailem</a>
+                            <button type="button" class="hub-cta hub-cta-alt hidden" id="hub-share-native"><span class="hub-cta-ico">&#128228;</span>Udost&#281;pnij</button>
+                            <a class="hub-cta hub-cta-wa" id="hub-share-wa" href="#" target="_blank" rel="noopener"><span class="hub-cta-ico">&#128172;</span>WhatsApp</a>
+                            <button type="button" class="hub-cta hub-cta-alt" id="hub-share-copy"><span class="hub-cta-ico">&#128203;</span>Kopiuj</button>
+                            <a class="hub-cta hub-cta-alt" id="hub-share-mail" href="#"><span class="hub-cta-ico">&#9993;&#65039;</span>Mail</a>
                         </div>
                         <p class="hub-share-status" id="hub-share-status"></p>
                         <textarea class="hub-share-fallback hidden" id="hub-share-fallback" readonly></textarea>
@@ -2833,10 +2851,10 @@ video {
 
                         <div class="hub-share hidden" id="hub-verbs-share">
                             <div class="hub-share-actions">
-                                <button type="button" class="hub-cta hub-cta-alt hidden" id="hub-verbs-share-native">&#128228; Udost&#281;pnij</button>
-                                <a class="hub-cta hub-cta-wa" id="hub-verbs-share-wa" href="#" target="_blank" rel="noopener">&#128172; Wy&#347;lij na WhatsApp</a>
-                                <button type="button" class="hub-cta hub-cta-alt" id="hub-verbs-share-copy">&#128203; Kopiuj tekst</button>
-                                <a class="hub-cta hub-cta-alt" id="hub-verbs-share-mail" href="#">&#9993;&#65039; Wy&#347;lij mailem</a>
+                                <button type="button" class="hub-cta hub-cta-alt hidden" id="hub-verbs-share-native"><span class="hub-cta-ico">&#128228;</span>Udost&#281;pnij</button>
+                                <a class="hub-cta hub-cta-wa" id="hub-verbs-share-wa" href="#" target="_blank" rel="noopener"><span class="hub-cta-ico">&#128172;</span>WhatsApp</a>
+                                <button type="button" class="hub-cta hub-cta-alt" id="hub-verbs-share-copy"><span class="hub-cta-ico">&#128203;</span>Kopiuj</button>
+                                <a class="hub-cta hub-cta-alt" id="hub-verbs-share-mail" href="#"><span class="hub-cta-ico">&#9993;&#65039;</span>Mail</a>
                             </div>
                             <p class="hub-share-status" id="hub-verbs-share-status"></p>
                             <textarea class="hub-share-fallback hidden" id="hub-verbs-share-fallback" readonly></textarea>
@@ -3258,7 +3276,7 @@ video {
         "teacherWhatsApp": "",
         "storageKey": "hub_zuzia-s_2026-10",
         "studentKey": "hub_zuzia-s",
-        "stamp": "aktualizacja po lekcji 4, 24.10.2026",
+        "stamp": "aktualizacja po lekcji 4, 31.10.2026",
         "lastLessonPhrase": "lekcji 4",
         "lessons": [
                 {
@@ -8188,6 +8206,14 @@ video {
             });
         }
 
+        // Glosniczki pod tytulem cwiczenia (ex.speakWords), jeden delegowany listener.
+        document.addEventListener('click', function (e) {
+            var btn = e.target.closest ? e.target.closest('[data-ex-speak]') : null;
+            if (!btn) return;
+            btn.blur();
+            speak(btn.getAttribute('data-ex-speak'), 'en-GB');
+        });
+
         // ==========================================
         // Teksty (dawniej Pisanie/Mowienie)
         // ==========================================
@@ -8433,10 +8459,22 @@ video {
             mom: 'mum', math: 'maths', aluminum: 'aluminium', jewelry: 'jewellery', plow: 'plough', donut: 'doughnut',
             catalog: 'catalogue', dialog: 'dialogue', analog: 'analogue', skeptical: 'sceptical', mustache: 'moustache',
             gotten: 'got', fall: 'autumn', apartment: 'flat', vacation: 'holiday', cookie: 'biscuit', cookies: 'biscuits' };
+        // Skroty wpisane bez apostrofu (hasnt, its, im): po usunieciu apostrofow obie
+        // strony rozwijaja sie tak samo. Pomijamy slowa, ktore same sa slowami (were,
+        // well, id, hell, shell, wed). "its" zawsze = it is, takze zaimek dzierzawczy,
+        // co po obu stronach daje to samo.
+        var EX_CONTR = { isnt: 'is not', arent: 'are not', wasnt: 'was not', werent: 'were not',
+            hasnt: 'has not', havent: 'have not', hadnt: 'had not', doesnt: 'does not', dont: 'do not',
+            didnt: 'did not', cant: 'cannot', wont: 'will not', couldnt: 'could not', shouldnt: 'should not',
+            wouldnt: 'would not', mustnt: 'must not', im: 'i am', ive: 'i have', youve: 'you have',
+            weve: 'we have', theyve: 'they have', youre: 'you are', theyre: 'they are',
+            its: 'it is', hes: 'he is', shes: 'she is', thats: 'that is', whats: 'what is', theres: 'there is' };
         function exLoose(x) {
-            return exNorm(x).replace(/can't/g, 'cannot').replace(/won't/g, 'will not').replace(/n't/g, ' not')
+            return exNorm(x).replace(/'s got\b/g, ' has got').replace(/\b(it|he|she|that|there|what|who)s got\b/g, '$1 has got')
+                .replace(/can't/g, 'cannot').replace(/won't/g, 'will not').replace(/n't/g, ' not')
                 .replace(/'re /g, ' are ').replace(/'ve /g, ' have ').replace(/'m /g, ' am ').replace(/'ll /g, ' will ').replace(/'/g, '').replace(/[.,!?;:"()“”„–—-]+/g, ' ')
                 .replace(/\s+/g, ' ').trim().split(' ').map(function (w) {
+                    if (EX_CONTR[w]) return EX_CONTR[w];
                     if (EX_US_UK[w]) return EX_US_UK[w];
                     return w.replace(/^([a-z]*(col|fav|flav|hon|hum|lab|neighb|beh|harb|rum|vap|arm|rig|vig))or(s|ed|ing|ite|ites|ful|able|ly|hood)?$/, '$1our$3')
                         .replace(/([a-z]{2})(i|y)z(e|es|ed|ing|ation|ations)$/, '$1$2s$3')
@@ -8625,7 +8663,6 @@ video {
                 return;
             }
             EXERCISES.forEach(function (ex, exIdx) { if (ex.layout === 'wordform') wfPrepare(exIdx, false); });
-            var exMultiLesson = EXERCISES.some(function (e) { return e.lessonLabel !== EXERCISES[0].lessonLabel; });
             function exCardsHtml(openIdx) { return EXERCISES.map(function (ex, exIdx) {
                 var gapNo = 0;
                 // Szerokosc pola wg najdluzszej odpowiedzi w calym cwiczeniu (nie w luce),
@@ -8743,20 +8780,25 @@ video {
                     : '';
                 // Rozwiniete tylko pierwsze cwiczenie - cala lista naraz przytlacza.
                 var gapTotal = ex.items.reduce(function (s, it) { return s + (it.answers || []).length; }, 0);
-                // Podzial na lekcje (2026-10-07): naglowek przed pierwszym cwiczeniem
-                // kazdej lekcji, tylko gdy cwiczenia pochodza z wiecej niz jednej lekcji.
-                var sep = (exMultiLesson && (exIdx === 0 || EXERCISES[exIdx - 1].lessonLabel !== ex.lessonLabel))
-                    ? '<h3 class="hub-ex-lesson">' + escapeHtml(ex.lessonLabel || '') +
-                      (ex.dateLabel ? ' &middot; ' + escapeHtml(ex.dateLabel) : '') + '</h3>'
+                // Kafelek lekcji (2026-10-31, zamiast samego naglowka z 2026-10-07): cwiczenia
+                // jednej lekcji razem z panelem wysylki siedza w jednej ramce z tytulem
+                // "Lekcja N · data", bo uczniowie nie widzieli, gdzie lekcja sie zaczyna i konczy.
+                var firstOfLesson = exIdx === 0 || EXERCISES[exIdx - 1].lessonLabel !== ex.lessonLabel;
+                var sep = firstOfLesson
+                    ? '<section class="hub-ex-ltile"><h3 class="hub-ex-ltile-head"><span>' + escapeHtml(ex.lessonLabel || '') + '</span>' +
+                      (ex.dateLabel ? '<span class="hub-ex-ltile-date">' + escapeHtml(ex.dateLabel) + '</span>' : '') + '</h3>'
                     : '';
                 if (ex.group && (exIdx === 0 || EXERCISES[exIdx - 1].group !== ex.group || sep)) sep += '<h4 class="hub-ex-group">' + escapeHtml(ex.group) + '</h4>';
                 // Wysylka wynikow pod kazda lekcja osobno (2026-10-24), nie jedna na caly okres.
                 var lastOfLesson = exIdx === EXERCISES.length - 1 || EXERCISES[exIdx + 1].lessonLabel !== ex.lessonLabel;
-                var tail = lastOfLesson ? exSharePanelHtml(ex.lessonLabel || '') : '';
+                var tail = lastOfLesson ? exSharePanelHtml(ex.lessonLabel || '') + '</section>' : '';
                 return sep + '<details class="hub-lesson-group hub-ex-card"' + (exIdx === openIdx ? ' open' : '') + '>' +
                     '<summary class="hub-ex-head"><span class="hub-ex-title">' + escapeHtml(ex.title || '') + '</span>' +
                     (isSelf ? '' : '<span class="hub-ex-score" data-ex-score="' + exIdx + '" data-ex-total="' + gapTotal + '">&ndash; / ' + gapTotal + '</span>') +
                     '</summary>' +
+                    (ex.speakWords && ex.speakWords.length ? '<div class="hub-ex-speak">' + ex.speakWords.map(function (w) {
+                        return '<button type="button" class="hub-ex-speak-btn" data-ex-speak="' + escapeHtml(w) + '">&#128264; ' + escapeHtml(w) + '</button>';
+                    }).join('') + '</div>' : '') +
                     (ex.instructions ? '<p class="hub-ex-instr">' + escapeHtml(ex.instructions) + '</p>' : '') +
                     (ex.passage ? '<div class="hub-ex-passage">' + escapeHtml(ex.passage).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>') + '</div>' : '') +
                     (ex.figure ? '<div class="hub-ex-figure">' + ex.figure + '</div>' : '') +
@@ -9256,10 +9298,10 @@ video {
             return '<div class="hub-share hub-ex-lshare" data-exs="' + k + '">' +
                 '<p class="hub-ex-lshare-title">Wy&#347;lij wyniki: ' + k + '</p>' +
                 '<div class="hub-share-actions">' +
-                (typeof navigator.share === 'function' ? '<button type="button" class="hub-cta hub-cta-alt" data-exs-native="' + k + '">&#128228; Udost&#281;pnij</button>' : '') +
-                '<a class="hub-cta hub-cta-wa" data-exs-wa="' + k + '" href="#" target="_blank" rel="noopener">&#128172; Wy&#347;lij na WhatsApp</a>' +
-                '<button type="button" class="hub-cta hub-cta-alt" data-exs-copy="' + k + '">&#128203; Kopiuj tekst</button>' +
-                '<a class="hub-cta hub-cta-alt" data-exs-mail="' + k + '" href="#">&#9993;&#65039; Wy&#347;lij mailem</a>' +
+                (typeof navigator.share === 'function' ? '<button type="button" class="hub-cta hub-cta-alt" data-exs-native="' + k + '"><span class="hub-cta-ico">&#128228;</span>Udost&#281;pnij</button>' : '') +
+                '<a class="hub-cta hub-cta-wa" data-exs-wa="' + k + '" href="#" target="_blank" rel="noopener"><span class="hub-cta-ico">&#128172;</span>WhatsApp</a>' +
+                '<button type="button" class="hub-cta hub-cta-alt" data-exs-copy="' + k + '"><span class="hub-cta-ico">&#128203;</span>Kopiuj</button>' +
+                '<a class="hub-cta hub-cta-alt" data-exs-mail="' + k + '" href="#"><span class="hub-cta-ico">&#9993;&#65039;</span>Mail</a>' +
                 '</div><p class="hub-share-status" data-exs-status="' + k + '"></p>' +
                 '<textarea class="hub-share-fallback hidden" data-exs-fallback="' + k + '" readonly></textarea></div>';
         }
@@ -9312,10 +9354,10 @@ video {
                 if (t.hasAttribute('data-exs-native')) {
                     try {
                         navigator.share({ text: text }).catch(function () {
-                            setExStatus(panel, 'Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj tekst.', false);
+                            setExStatus(panel, 'Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj.', false);
                         });
                     } catch (err) {
-                        setExStatus(panel, 'Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj tekst.', false);
+                        setExStatus(panel, 'Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj.', false);
                     }
                     return;
                 }
@@ -9564,10 +9606,10 @@ video {
             return '<div class="hub-share">' +
                 '<div class="hub-share-actions">' +
                 (typeof navigator.share === 'function'
-                    ? '<button type="button" class="hub-cta hub-cta-alt" data-wq-native="' + flatIdx + '">&#128228; Udost&#281;pnij</button>' : '') +
-                '<a class="hub-cta hub-cta-wa" data-wq-wa="' + flatIdx + '" href="#" target="_blank" rel="noopener">&#128172; Wy&#347;lij na WhatsApp</a>' +
-                '<button type="button" class="hub-cta hub-cta-alt" data-wq-copy="' + flatIdx + '">&#128203; Kopiuj tekst</button>' +
-                '<a class="hub-cta hub-cta-alt" data-wq-mail="' + flatIdx + '" href="#">&#9993;&#65039; Wy&#347;lij mailem</a>' +
+                    ? '<button type="button" class="hub-cta hub-cta-alt" data-wq-native="' + flatIdx + '"><span class="hub-cta-ico">&#128228;</span>Udost&#281;pnij</button>' : '') +
+                '<a class="hub-cta hub-cta-wa" data-wq-wa="' + flatIdx + '" href="#" target="_blank" rel="noopener"><span class="hub-cta-ico">&#128172;</span>WhatsApp</a>' +
+                '<button type="button" class="hub-cta hub-cta-alt" data-wq-copy="' + flatIdx + '"><span class="hub-cta-ico">&#128203;</span>Kopiuj</button>' +
+                '<a class="hub-cta hub-cta-alt" data-wq-mail="' + flatIdx + '" href="#"><span class="hub-cta-ico">&#9993;&#65039;</span>Mail</a>' +
                 '</div>' +
                 '<p class="hub-share-status" data-wq-status="' + flatIdx + '"></p>' +
                 '<textarea class="hub-share-fallback hidden" data-wq-fallback="' + flatIdx + '" readonly></textarea>' +
@@ -9608,10 +9650,10 @@ video {
             if (wqAct.hasAttribute('data-wq-copy')) { wqCopy(aKey, aText); return true; }
             try {
                 navigator.share({ text: aText }).catch(function () {
-                    wqStatus(aKey, 'Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj tekst.', false);
+                    wqStatus(aKey, 'Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj.', false);
                 });
             } catch (err) {
-                wqStatus(aKey, 'Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj tekst.', false);
+                wqStatus(aKey, 'Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj.', false);
             }
             return true;
         }
@@ -9818,7 +9860,7 @@ video {
                 mail.classList.add('is-disabled');
                 wa.setAttribute('href', '#');
                 mail.setAttribute('href', '#');
-                setStatus('Za długa wiadomość na jeden link - użyj przycisku Kopiuj tekst i wklej ręcznie.', true);
+                setStatus('Za długa wiadomość na jeden link - użyj przycisku Kopiuj i wklej ręcznie.', true);
                 return;
             }
 
@@ -9963,10 +10005,10 @@ video {
                     }
                     try {
                         navigator.share({ text: buildShareText() }).catch(function () {
-                            setStatus('Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj tekst.', false);
+                            setStatus('Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj.', false);
                         });
                     } catch (e) {
-                        setStatus('Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj tekst.', false);
+                        setStatus('Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj.', false);
                     }
                 });
             }
@@ -10310,10 +10352,10 @@ video {
                     nativeBtn.blur();
                     try {
                         navigator.share({ text: buildVerbShareText() }).catch(function () {
-                            setVerbShareStatus('Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj tekst.', false);
+                            setVerbShareStatus('Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj.', false);
                         });
                     } catch (e) {
-                        setVerbShareStatus('Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj tekst.', false);
+                        setVerbShareStatus('Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj.', false);
                     }
                 });
             }
